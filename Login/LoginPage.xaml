@@ -40,6 +40,7 @@
 
             <StackLayout Padding="60,0"> <!--padding-->
                 <!--row 1, column 1-->
+                <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" />
                 <Label LineBreakMode="WordWrap" HorizontalOptions="Center" Margin="0,50">
                     <Label.FormattedText>
                         <FormattedString>
@@ -78,6 +79,7 @@
                     <Entry
                         Placeholder="Enter your password"
                         Grid.Row="4"
+                        IsPassword="True"
                         TextColor="Black"
                     />
                 </Border>
