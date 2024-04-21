@@ -58,14 +58,12 @@ public partial class LoginPage : ContentPage
       
 			 loggedInUsernames.Add(Username);
             // Authentication successful
-            
             Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-            //Navigation.PushAsync(new MainPage());
-       
+
     }
 
     private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
     {
-        Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+        Navigation.PushAsync(new ForgotPassword());
     }
 }
