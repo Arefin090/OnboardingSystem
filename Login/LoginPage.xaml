@@ -121,6 +121,7 @@
                     Placeholder="Enter your username"
                     Grid.Row="2"
                     Grid.Column="1"
+                    Text="{Binding Username, Mode=TwoWay}" 
                     Style="{StaticResource Entry_Text}"
                 />
             </Border>
@@ -144,6 +145,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     IsPassword="True"
+                    Text="{Binding Password, Mode=TwoWay}"
                     Style="{StaticResource Entry_Text}"
                 />
             </Border>

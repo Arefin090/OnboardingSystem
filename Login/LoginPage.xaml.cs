@@ -1,11 +1,22 @@
 namespace OnboardingSystem;
-
 public partial class LoginPage : ContentPage
-{   private List<string> loggedInUsernames = new List<string>(); 
+{
     private string _username;
     private string _password;
     private bool _hasError;
     private string _errorMessage;
+    private System.Timers.Timer _errorTimer;
+    private string _loggedInEmail;
+
+    public string LoggedInEmail
+    {
+        get => _loggedInEmail;
+        private set
+        {
+            _loggedInEmail = value;
+            OnPropertyChanged(nameof(LoggedInEmail));
+        }
+    }
 
     public string Username
     {
@@ -13,7 +24,6 @@ public partial class LoginPage : ContentPage
         set
         {
             _username = value;
-            OnPropertyChanged(nameof(Username));
         }
     }
 
@@ -23,7 +33,6 @@ public partial class LoginPage : ContentPage
         set
         {
             _password = value;
-            OnPropertyChanged(nameof(Password));
         }
     }
 
@@ -51,19 +60,36 @@ public partial class LoginPage : ContentPage
     {
         InitializeComponent();
         BindingContext = this;
+        _errorTimer = new System.Timers.Timer(4000); // 4 seconds
+        _errorTimer.Elapsed += ErrorTimer_Elapsed;
     }
 
     private void ToMain(object sender, EventArgs e)
     {
-      
-			 loggedInUsernames.Add(Username);
-            // Authentication successful
+        var (isValid, errorMessage) = UserAuthenticator.ValidateUser(Username, Password);
+    if (isValid) // Authentication successful
+        {
+            LoggedInEmail = Username;
             Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-
+        }
+        else
+        {
+            HasError = true;
+            ErrorMessage = errorMessage;
+            _errorTimer.Start();
+        }
     }
 
     private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
     {
         Navigation.PushAsync(new ForgotPassword());
+    }
+
+    private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        _errorTimer.Stop();
+        HasError = false;
+        ErrorMessage = string.Empty;
+        LoggedInEmail = string.Empty;
     }
 }
