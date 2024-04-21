@@ -64,4 +64,8 @@ public partial class LoginPage : ContentPage
        
     }
 
+    private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
+    {
+        Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+    }
 }

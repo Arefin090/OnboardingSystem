@@ -5,23 +5,72 @@
              Title=""
              Shell.NavBarIsVisible="False"> <!--Disable top bar-->
 
+    <ContentPage.Resources>
+        <Style x:Key="Image_Background" TargetType="BoxView"> <!--Image Background-->
+            <Setter Property="Color" Value="Black" />
+        </Style>
+
+        <Style x:Key="Content_Background" TargetType="BoxView"> <!--Content Background-->
+            <Setter Property="Color" Value="#E2E3DD" />
+        </Style>
+
+        <Style x:Key="Content_Padding" TargetType="StackLayout"> <!--Content Padding-->
+            <Setter Property="Padding" Value="80,0" /> <!--horizontal,vertical-->
+        </Style>
+
+        <Style x:Key="Title" TargetType="Label"> <!--Title-->
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="#361702" />
+            <Setter Property="Margin" Value="0,50" /> <!--horizontal,vertical-->
+        </Style>
+
+        <Style x:Key="Entry_Title" TargetType="Label"> <!--Entry Bar Label-->
+            <Setter Property="TextColor" Value="Black" />
+            <Setter Property="Margin" Value="0,20,0,0" /> <!--left,up,right,down-->
+        </Style>
+
+        <Style x:Key="Entry_Border" TargetType="Border"> <!--Entry Bar Border-->
+            <Setter Property="Stroke" Value="Black" />
+            <Setter Property="StrokeThickness" Value="2" />
+        </Style>
+
+        <Style x:Key="Entry_Text" TargetType="Entry"> <!--Entry Bar Text-->
+            <Setter Property="TextColor" Value="Black" />
+        </Style>
+
+        <Style x:Key="Login_Button" TargetType="Button"> <!--Entry Bar Text-->
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="Background" Value="#361702" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="Margin" Value="0,20,0,0" /> <!--left,up,right,down-->
+        </Style>
+
+        <Style x:Key="Forgot_Password" TargetType="Label"> <!--Entry Bar Label-->
+            <Setter Property="TextColor" Value="#545454" />
+            <Setter Property="TextDecorations" Value="Underline" />
+            <Setter Property="HorizontalOptions" Value="End" />
+            <Setter Property="Margin" Value="0,20,0,0" /> <!--left,up,right,down-->
+        </Style>
+    </ContentPage.Resources>
+
     <Grid> <!--Grid, 1 row, 2 columns-->
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/> <!--row 1-->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".30*"/> <!--column 1-->
-            <ColumnDefinition Width=".70*"/> <!--column 2-->
+            <ColumnDefinition Width=".35*"/> <!--column 1-->
+            <ColumnDefinition Width=".65*"/> <!--column 2-->
         </Grid.ColumnDefinitions>
 
         <!--row 1, column 1-->
-        <BoxView Color="Black" />
-
-<!--
-        <ItemGroup>
+        <BoxView 
+            Style="{StaticResource Image_Background}"
+        />
+        <!--<ItemGroup>
             <MauiIcon Include="logo.png" />
-        </ItemGroup>
--->
+        </ItemGroup>-->
         <!--<WebView Source="logo.png"></WebView>-->
         <Image
             Source="logo.png"
@@ -30,10 +79,10 @@
 
         <!--row 1, column 2-->
         <BoxView
-            Color="White" 
+            Style="{StaticResource Content_Background}"
             Grid.Column="1"
         />
-        <Grid Grid.Column="1" Margin="5"> <!--Grid, 6 rows, 1 column-->
+        <Grid Grid.Column="1"> <!--Grid, 6 rows, 1 column-->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> <!--row 1-->
                 <RowDefinition Height="Auto"/> <!--row 2-->
@@ -41,36 +90,34 @@
                 <RowDefinition Height="Auto"/> <!--row 4-->
                 <RowDefinition Height="Auto"/> <!--row 5-->
                 <RowDefinition Height="Auto"/> <!--row 6-->
+                <RowDefinition Height="Auto"/> <!--row 7-->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/> <!--column 1-->
             </Grid.ColumnDefinitions>
 
-            <StackLayout Padding="60,0"> <!--padding-->
+            <StackLayout Style="{StaticResource Content_Padding}"> <!--padding-->
                 <!--row 1, column 1-->
                 <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" />
-                <Label LineBreakMode="WordWrap" HorizontalOptions="Center" Margin="0,50">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="Login to Management System" TextColor="Black" FontAttributes="Bold" FontSize="20"/>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
+
+                <Label
+                    Text="Login to Management System"
+                    Style="{StaticResource Title}"
+                />
 
                 <!--row 2, column 1-->
                 <Label
                     Text="Username"
                     Grid.Row="1"
-                    Margin="0,20,0,0"
-                    TextColor="Black"
+                    Style="{StaticResource Entry_Title}"
                 />
 
                 <!--row 3, column 1-->
-                <Border Stroke="Black" StrokeThickness="2">
+                <Border Style="{StaticResource Entry_Border}">
                     <Entry
                         Placeholder="Enter your username"
                         Grid.Row="2"
-                        TextColor="Black"
+                        Style="{StaticResource Entry_Text}"
                     />
                 </Border>
 
@@ -78,28 +125,37 @@
                 <Label
                     Text="Password"
                     Grid.Row="3"
-                    Margin="0,20,0,0"
-                    TextColor="Black"
+                    Style="{StaticResource Entry_Title}"
                 />
 
                 <!--row 5, column 1-->
-                <Border Stroke="Black" StrokeThickness="2">
+                <Border Style="{StaticResource Entry_Border}">
                     <Entry
                         Placeholder="Enter your password"
                         Grid.Row="4"
                         IsPassword="True"
-                        TextColor="Black"
+                        Style="{StaticResource Entry_Text}"
                     />
                 </Border>
 
                 <!--row 6, column 1-->
                 <Button
                     Text="Login" 
-                    HorizontalOptions="Fill"
                     Clicked="ToMain"
                     Grid.Row="5"
-                    Margin="0,20,0,0"
+                    Style="{StaticResource Login_Button}"
                 />
+
+                <!--row 7, column 1-->
+                <Label
+                    Text="Forgot Password?"
+                    Grid.Row="6"
+                    Style="{StaticResource Forgot_Password}"
+                >
+                    <Label.GestureRecognizers> <!--Click Event-->
+                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
             </StackLayout>
         </Grid>
     </Grid>
