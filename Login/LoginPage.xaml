@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnboardingSystem.LoginPage"
-             Title="LoginPage">
+             Title=""
+             Shell.NavBarIsVisible="False"> <!--Disable top bar-->
 
     <Grid> <!--Grid, 1 row, 2 columns-->
         <Grid.RowDefinitions>
@@ -15,6 +16,13 @@
 
         <!--row 1, column 1-->
         <BoxView Color="Black" />
+
+<!--
+        <ItemGroup>
+            <MauiIcon Include="logo.png" />
+        </ItemGroup>
+-->
+        <!--<WebView Source="logo.png"></WebView>-->
         <Image
             Source="logo.png"
             Aspect="AspectFit"

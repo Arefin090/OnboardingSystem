@@ -53,12 +53,14 @@ public partial class LoginPage : ContentPage
         BindingContext = this;
     }
 
-    private async void ToMain(object sender, EventArgs e)
+    private void ToMain(object sender, EventArgs e)
     {
       
 			 loggedInUsernames.Add(Username);
             // Authentication successful
-            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            
+            Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            //Navigation.PushAsync(new MainPage());
        
     }
 
