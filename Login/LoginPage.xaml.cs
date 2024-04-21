@@ -66,7 +66,6 @@ public partial class LoginPage : ContentPage
 
     private void ToMain(object sender, EventArgs e)
     {
-<<<<<<< HEAD
         var (isValid, errorMessage) = UserAuthenticator.ValidateUser(Username, Password);
     if (isValid)
         {
@@ -79,22 +78,19 @@ public partial class LoginPage : ContentPage
             ErrorMessage = errorMessage;
             _errorTimer.Start();
         }
-=======
       
 			 loggedInUsernames.Add(Username);
             // Authentication successful
             
             Shell.Current.GoToAsync($"//{nameof(MainPage)}");
             //Navigation.PushAsync(new MainPage());
-       
->>>>>>> 6f9bd79970878548432067acdef23d0a6b88bff7
+
     }
 
     private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
     {
         Shell.Current.GoToAsync($"//{nameof(MainPage)}");
     }
-<<<<<<< HEAD
 
     private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
@@ -103,6 +99,4 @@ public partial class LoginPage : ContentPage
         ErrorMessage = string.Empty;
         LoggedInEmail = string.Empty;
     }
-=======
->>>>>>> 6f9bd79970878548432067acdef23d0a6b88bff7
 }
