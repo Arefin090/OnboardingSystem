@@ -1,12 +1,12 @@
 namespace OnboardingSystem;
 public partial class LoginPage : ContentPage
 {
-    private string _username;
-    private string _password;
+    private string _username = "";
+    private string _password = "";
     private bool _hasError;
-    private string _errorMessage;
+    private string _errorMessage = "";
     private System.Timers.Timer _errorTimer;
-    private string _loggedInEmail;
+    private string _loggedInEmail = "";
 
     public string LoggedInEmail
     {
@@ -80,9 +80,10 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
+    private async void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
     {
-        Navigation.PushAsync(new ForgotPassword());
+        await Shell.Current.GoToAsync($"//{nameof(ForgotPassword)}");
+        //Navigation.PushAsync(new ForgotPassword());
     }
 
     private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
