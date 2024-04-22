@@ -73,8 +73,8 @@ public partial class ForgotPassword : ContentPage
 		if (isValid) // Authentication successful
         {
             LoggedInEmail = Username;
-			Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-			//Navigation.PopAsync();
+			//Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+			Navigation.PopAsync();
         }
         else
         {

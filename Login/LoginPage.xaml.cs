@@ -80,10 +80,10 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private async void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
+    private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
     {
-        await Shell.Current.GoToAsync($"//{nameof(ForgotPassword)}");
-        //Navigation.PushAsync(new ForgotPassword());
+        //await Shell.Current.GoToAsync($"//{nameof(ForgotPassword)}");
+        Navigation.PushAsync(new ForgotPassword());
     }
 
     private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
