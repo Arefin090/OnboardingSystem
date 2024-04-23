@@ -74,7 +74,6 @@ public partial class ForgotPassword : ContentPage
         {
             LoggedInEmail = Username;
 			Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-			//Navigation.PopAsync();
         }
         else
         {
@@ -82,23 +81,11 @@ public partial class ForgotPassword : ContentPage
             ErrorMessage = errorMessage;
             _errorTimer.Start();
         }
+    }
 
-		// if (Email.Default.IsComposeSupported)
-		// {
-		// 	string subject = "New Password";
-		// 	string body = "Here is your temporary password: (???)";
-		// 	string[] recipients = new[] { $"{change_text}" };
-
-		// 	var message = new EmailMessage
-		// 	{
-		// 		Subject = subject,
-		// 		Body = body,
-		// 		BodyFormat = EmailBodyFormat.PlainText,
-		// 		To = new List<string>(recipients)
-		// 	};
-
-		// 	Email.Default.ComposeAsync(message);
-		// }
+	private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args) //Go to Login Page
+    {
+        Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
     }
 
 	private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

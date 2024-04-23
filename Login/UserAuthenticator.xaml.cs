@@ -2,13 +2,13 @@ namespace OnboardingSystem
 {
     public class UserAuthenticator
     {
-        private static readonly Dictionary<string, string> UserDatabase = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> UserDatabase = new Dictionary<string, string> //temporary database
         {
             { "j@j.com", "123" },
             { "m@m.com", "456" }
         };
 
-        public static (bool isValid, string errorMessage) ValidateUser(string email, string password)
+        public static (bool isValid, string errorMessage) ValidateUser(string email, string password) //validate email, password
         {
             if (string.IsNullOrEmpty(email))
             {
