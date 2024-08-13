@@ -4,9 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:OnboardingSystem"
-    FlyoutBehavior="Flyout"
-    Title="OnboardingSystem" FlyoutBackgroundColor="DarkOrange" TitleColor="White">
-
+    TabBarIsVisible="False"
+    Title="Onboarding System" FlyoutBackgroundColor="Orange" TitleColor="White">
+    
     <Shell.ItemTemplate>
         <DataTemplate>
             <Grid ColumnDefinitions="50,*" Padding="10">
@@ -31,7 +31,8 @@
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
-    
+
+
     <FlyoutItem Title="Index">
         <ShellContent Title="Index" ContentTemplate="{DataTemplate local:MainPage }"/>
     </FlyoutItem >
@@ -44,4 +45,5 @@
     <FlyoutItem Title="Option 3">
         <ShellContent Title="Option 3"/>
     </FlyoutItem >
+    
 </Shell>

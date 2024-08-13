@@ -1,5 +1,4 @@
 ﻿using OnboardingSystem.Global.Menu;
-
 namespace OnboardingSystem;
 
 public partial class App : Application
