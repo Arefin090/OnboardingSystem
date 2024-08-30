@@ -4,46 +4,101 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:OnboardingSystem"
+    FlyoutBehavior="Flyout"
     TabBarIsVisible="False"
-    Title="Onboarding System" FlyoutBackgroundColor="Orange" TitleColor="White">
+    TitleColor="White"
+    BackgroundColor="Gray"
+    >
+    <Shell.FlyoutHeader >
+        <VerticalStackLayout >
+            <Image Source="dotnet_bot.png" WidthRequest="100"></Image>
+            <Label Margin="0,0,0,15" Text="Onboarding System" HorizontalTextAlignment="Center"></Label>
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
     
-    <Shell.ItemTemplate>
-        <DataTemplate>
-            <Grid ColumnDefinitions="50,*" Padding="10">
-                <!-- <Image Source="{Binding Icon}"></Image> -->
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="Orange"></Setter>
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Selected">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="OrangeRed"></Setter>
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </VisualStateManager.VisualStateGroups>
-                <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black" FontAttributes="Bold"/>
-            </Grid>
-        </DataTemplate>
-    </Shell.ItemTemplate>
-
-
-    <FlyoutItem Title="Index">
-        <ShellContent Title="Index" ContentTemplate="{DataTemplate local:MainPage }"/>
-    </FlyoutItem >
-    <FlyoutItem Title="Option 1">
-        <ShellContent Title="Option 2"/>
-    </FlyoutItem >
-    <FlyoutItem Title="Option 2">
-        <ShellContent Title="Option 2"/>
-    </FlyoutItem >
-    <FlyoutItem Title="Option 3">
-        <ShellContent Title="Option 3"/>
-    </FlyoutItem >
+    <!-- <Shell.ItemTemplate> -->
+    <!--     <DataTemplate > -->
+    <!--         <Grid Margin="0, 5, 0, 0" BackgroundColor="DimGray" ColumnDefinitions=".30*, .70*" RowDefinitions="*,*,*" RowSpacing="10" ColumnSpacing="10"> -->
+    <!--             <HorizontalStackLayout Grid.Row="1" Spacing="10"> -->
+    <!--                 <Image Source="{Binding FlyoutIcon}" VerticalOptions="Center" WidthRequest="50" HeightRequest="50"></Image> -->
+    <!--                 <Label  Text="{Binding Title}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label> -->
+    <!--             </HorizontalStackLayout> -->
+    <!--         </Grid> -->
+    <!--     </DataTemplate> -->
+    <!-- </Shell.ItemTemplate> -->
     
+
+    <Shell.FlyoutContent>
+        <ScrollView>
+            <VerticalStackLayout
+                BindableLayout.ItemsSource="{Binding MenuItems}"
+                VerticalOptions="Start"
+                >
+                
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid BackgroundColor="LightGray" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,0" Padding="10,0,2,0">
+                            <HorizontalStackLayout Spacing="10">
+                                <Image 
+                                   Source="{Binding Icon}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="50"
+                                   WidthRequest="50"
+                                />
+                                <Label
+                                    Text="{Binding Title}"
+                                    FontSize="16"
+                                    VerticalTextAlignment="Center"
+                                    Margin="10,0,0,0"
+                                />
+                            </HorizontalStackLayout>
+                            <!-- <Grid.GestureRecognizers> -->
+                            <!--     <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer> -->
+                            <!-- </Grid.GestureRecognizers> -->
+                            
+                            <!-- Visual States for hover and press effects -->
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="DimGray"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Gray"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Shell.FlyoutContent>
+    
+    <FlyoutItem Title="Home" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage"
+            Icon="dotnet_bot.png"
+            />
+        <ShellContent
+            Title="ContactUs"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Icon="dotnet_bot.png"
+        />
+        <ShellContent
+            Title="ContactUs"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Icon="dotnet_bot.png"
+        />
+    </FlyoutItem>
 </Shell>
