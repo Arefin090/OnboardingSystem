@@ -9,9 +9,9 @@ public partial class AppShell : Shell
     private ShellContent[] _shellItems = new[]
     {
         new ShellContent()
-            { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(MainPage)), Icon = "dashboard_96dp_icon.png" },
+            { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "dashboard_96dp_icon.png", Route = "LogIn"},
         new ShellContent()
-            { Title = "Profile", ContentTemplate = new DataTemplate(typeof(MainPage)), Icon = "group_96dp_icon.png" },
+            { Title = "Profile", ContentTemplate = new DataTemplate(typeof(MainPage)), Icon = "group_96dp_icon.png", Route = "MainPage"},
         new ShellContent()
             { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(MainPage)), Icon = "logout_96dp_icon.png" }
     };
