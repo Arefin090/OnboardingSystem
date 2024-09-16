@@ -11,7 +11,7 @@ public partial class AppShell : Shell
     private ShellContent[] _shellItems = new[]
     {
         new ShellContent()
-            { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(MainPage)), Icon = "dashboard_96dp_icon.png", Route = $"{nameof(MainPage)}"},
+            { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp_icon.png", Route = $"{nameof(DashboardPage)}"},
         new ShellContent()
             { Title = "Profile", ContentTemplate = new DataTemplate(typeof(ManagementPage)), Icon = "group_96dp_icon.png", Route = $"{nameof(ManagementPage)}"},
         new ShellContent()
