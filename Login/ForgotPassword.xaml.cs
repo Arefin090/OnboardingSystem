@@ -68,19 +68,9 @@ public partial class ForgotPassword : ContentPage
 
 	private void SendEmail(object sender, EventArgs e)
     {
-		var (isValid, errorMessage) = UserAuthenticator.ValidateUser(Username, Password);
+		
 
-		if (isValid) // Authentication successful
-        {
-            LoggedInEmail = Username;
-			Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-        }
-        else
-        {
-            HasError = true;
-            ErrorMessage = errorMessage;
-            _errorTimer.Start();
-        }
+
     }
 
 	private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args) //Go to Login Page

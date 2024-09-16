@@ -64,29 +64,35 @@ public partial class LoginPage : ContentPage
         _errorTimer.Elapsed += ErrorTimer_Elapsed;
     }
 
-    private void ToMain(object sender, EventArgs e)
+    private async void ToMain(object sender, EventArgs e)
     {
-        var (isValid, errorMessage) = UserAuthenticator.ValidateUser(Username, Password);
-    if (isValid) // Authentication successful
+        // Validate user through the UserAuthenticator and handle response
+        var (isValid, errorMessage) = await UserAuthenticator.ValidateUserAsync(Username, Password);
+        
+        if (isValid)
         {
             LoggedInEmail = Username;
-            Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            // Navigate to the MainPage after successful login
+            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
         }
         else
         {
+            // Display error message if login fails
             HasError = true;
             ErrorMessage = errorMessage;
             _errorTimer.Start();
         }
     }
 
-    private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args) //Go to Forgot Password Page
+    private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
     {
+        // Navigate to Forgot Password Page
         Shell.Current.GoToAsync($"//{nameof(ForgotPassword)}");
     }
 
     private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
+        // Reset error after the timer
         _errorTimer.Stop();
         HasError = false;
         ErrorMessage = string.Empty;
