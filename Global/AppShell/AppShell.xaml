@@ -5,22 +5,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:OnboardingSystem"
     FlyoutBehavior="Flyout"
-    
     TabBarIsVisible="False"
     TitleColor="White"
-    BackgroundColor="Gray"
+    BackgroundColor="{DynamicResource Primary}"
+
+    Height="45"
     >
     <Shell.FlyoutHeader >
-        <VerticalStackLayout >
+        <VerticalStackLayout  ZIndex="-99">
             <Image Source="dotnet_bot.png" WidthRequest="100"></Image>
             <Label Margin="0,0,0,15" Text="Onboarding System" HorizontalTextAlignment="Center"></Label>
         </VerticalStackLayout>
     </Shell.FlyoutHeader>
 
     
-    <Shell.ItemTemplate>
-        <DataTemplate >
-            <Grid Margin="0, 5, 0, 0" BackgroundColor="DimGray" ColumnDefinitions=".30*, .70*" RowDefinitions="*,*,*" RowSpacing="10" ColumnSpacing="10">
+    <Shell.ItemTemplate >
+        <DataTemplate  >
+            <Grid ZIndex="-99" Margin="0, 5, 0, 0" BackgroundColor="DimGray" ColumnDefinitions=".30*, .70*" RowDefinitions="*,*,*" RowSpacing="10" ColumnSpacing="10">
                 <HorizontalStackLayout Grid.Row="1" Spacing="10" Padding="20 ,0, 0, 0">
                     <Image Source="{Binding Icon}" VerticalOptions="Center" WidthRequest="50" HeightRequest="50"></Image>
                     <Label  Text="{Binding Title}" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
