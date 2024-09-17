@@ -84,12 +84,6 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private void OnTapGestureRecognizerTapped(object sender, TappedEventArgs args)
-    {
-        // Navigate to Forgot Password Page
-        Shell.Current.GoToAsync($"//{nameof(ForgotPassword)}");
-    }
-
     private void ErrorTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
         // Reset error after the timer

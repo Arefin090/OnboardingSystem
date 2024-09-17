@@ -16,9 +16,4 @@
         Title="Login"
         ContentTemplate="{DataTemplate local:LoginPage}"
         Route="LoginPage" />
-
-    <ShellContent
-        Title="Forgot"
-        ContentTemplate="{DataTemplate local:ForgotPassword}"
-        Route="ForgotPassword" />
 </Shell>

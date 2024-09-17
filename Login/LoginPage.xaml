@@ -137,8 +137,6 @@
                     </Grid.ColumnDefinitions>
 
                     <!--row 1-->
-                    <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" Grid.Column="1" />
-
                     <Label
                         Style="{StaticResource Title}"
                         Grid.Column="1"
@@ -196,16 +194,8 @@
                     </Border>
 
                     <!--row 6-->
-                    <Label
-                        Text="Forgot Password?"
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Style="{StaticResource Forgot_Password}"
-                    >
-                        <Label.GestureRecognizers> <!--Click Event-->
-                            <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                    <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" Grid.Row="5" Grid.Column="1" />
+                    <Label Text="" Grid.Row="5" Grid.Column="1" />
 
                     <!--row 7-->
                     <Button
