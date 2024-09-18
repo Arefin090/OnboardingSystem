@@ -15,7 +15,7 @@ public partial class AppShell : Shell
         new ShellContent()
             { Title = "Profile", ContentTemplate = new DataTemplate(typeof(ManagementPage)), Icon = "group_96dp_icon.png", Route = $"{nameof(ManagementPage)}"},
         new ShellContent()
-            { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"}
+            { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"},
     };
     public  AppShell()
     {
@@ -31,7 +31,6 @@ public partial class AppShell : Shell
         {
             flyoutItems.Items.Add(item);
         }
-        
         Items.Add(flyoutItems);
     }
 }
