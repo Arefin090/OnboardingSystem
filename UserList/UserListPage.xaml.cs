@@ -7,14 +7,16 @@ using Microsoft.Maui.Controls;
 using static CommunityToolkit.Maui.Markup.GridRowsColumns;
 
 namespace OnboardingSystem;
-public partial class StaffManagementPage : ContentPage
+public partial class UserListPage : ContentPage
 {
-	// URL of the API endpoint for staff management
-	private static readonly string ApiUrl = "https://localhost:44339/api/User";
+	// URL of the API endpoint
+	private static readonly string ApiUrl = "https://localhost:44339/api/User/List";
 	private readonly HttpClient _httpClient;
+
+	//Data from database
 	public ObservableCollection<JsonObject> Items { get; set; }
 
-	public StaffManagementPage()
+	public UserListPage()
 	{
 		InitializeComponent();
 		//CreateDynamicTable();
@@ -46,7 +48,7 @@ public partial class StaffManagementPage : ContentPage
 			_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", "Bearer " + token);
 
 			var response = await _httpClient.GetStringAsync(""); // GET request
-			System.Diagnostics.Debug.WriteLine("API Response: " + response);
+			//System.Diagnostics.Debug.WriteLine("API Response: " + response);
 
 			var itemsList = JsonNode.Parse(response)?.AsArray();
 
@@ -62,14 +64,15 @@ public partial class StaffManagementPage : ContentPage
 				}
 
 				// Setup dynamic template after loading data
-				Setup();
+				//Setup();
+				GenerateTable();
 			}
-			var sampleItem = Items.FirstOrDefault();
-			System.Diagnostics.Debug.WriteLine(sampleItem);
-			foreach (var key in sampleItem)
-			{
-				System.Diagnostics.Debug.WriteLine(key.Key);
-			}
+			//var sampleItem = Items.FirstOrDefault();
+			//System.Diagnostics.Debug.WriteLine(sampleItem);
+			//foreach (var key in sampleItem)
+			//{
+			//	System.Diagnostics.Debug.WriteLine(key.Key);
+			//}
 		}
 		catch (Exception ex)
 		{
@@ -77,43 +80,83 @@ public partial class StaffManagementPage : ContentPage
 		}
 	}
 
-	private void SetupDynamicItemTemplate()
+	private async void GenerateTable()
 	{
-		var collectionView = new CollectionView
+		var headers = new List<string> { "ID", "Username", "First Name", "Last Name", "Phone Number", "Role" };
+
+		// Clear any existing column definitions
+		HeaderGrid.ColumnDefinitions.Clear();
+		var columnWidths = GetColumnDefinitions(headers.Count);
+		foreach (var width in columnWidths)
 		{
-			ItemsSource = Items,
-			ItemTemplate = new DataTemplate(() =>
+			HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
+		}
+
+		// Add labels to the grid
+		for (int i = 0; i < headers.Count; i++)
+		{
+			var label = new Label
 			{
-				var stackLayout = new StackLayout
-				{
-					Orientation = StackOrientation.Vertical,
-					Padding = 10,
-					Spacing = 5
-				};
+				Text = headers[i],
+				FontAttributes = FontAttributes.Bold,
+				HorizontalOptions = LayoutOptions.Start,
+				VerticalOptions = LayoutOptions.Center
+			};
+			HeaderGrid.Children.Add(label);
+			HeaderGrid.SetColumn(label, i);
+		}
+		AddCollectionView(headers.Count());
+	}
 
-				var sampleItem = Items.FirstOrDefault();
-				if (sampleItem != null)
+	private List<GridLength> GetColumnDefinitions(int numOfColumns)
+	{
+		var columnWidths = new List<GridLength>();
+		for (int i = 0; i < numOfColumns; i++)
+		{
+			columnWidths.Add(new GridLength(1, GridUnitType.Star)); // Defines Column Size
+		}
+		return columnWidths;
+	}
+
+	private void AddCollectionView(int numOfColumns)
+	{
+		GridCollection.ItemsSource = Items;
+		var columnWidths = GetColumnDefinitions(numOfColumns);
+		GridCollection.ItemTemplate = new DataTemplate(() =>
+		{
+			var grid = new Grid { Padding = 10 };
+			foreach (var width in columnWidths)
+			{
+				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
+			}
+			foreach (var row in Items)
+			{
+				int column = 0;
+				foreach (var key in row)
 				{
-					foreach (var key in sampleItem)
+					var item = new Label();
+					item.SetBinding(Label.TextProperty, $"[{key.Key}]");
+					item.Margin = new Thickness(2, 0, 2, 0);
+					grid.Children.Add(item);
+					grid.SetColumn(item, column);
+
+					var separator = new BoxView
 					{
-						var label = new Label
-						{
-							FontSize = 14,
-							TextColor = Color.FromRgb(100,100,100),
-						};
+						HeightRequest = 1, // Line thickness
+						BackgroundColor = Colors.Gray, // Line color
+						HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
+						Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
+					};
+					grid.Children.Add(separator);
+					grid.SetColumn(separator, column);
 
-						// Dynamically create the binding
-						label.SetBinding(Label.TextProperty, new Binding(key.Key));
-						stackLayout.Children.Add(label);
-					}
+					column++;
 				}
+			}
 
-				return new ViewCell { View = stackLayout };
-			})
-		};
+			return grid;
+		});
 
-		// Replace existing CollectionView with the dynamically created one
-		Content = collectionView;
 	}
 
 	private void Setup()
@@ -236,5 +279,43 @@ public partial class StaffManagementPage : ContentPage
 		//		}
 		//	}
 		//};
+	}
+	private void SetupDynamicItemTemplate()
+	{
+		var collectionView = new CollectionView
+		{
+			ItemsSource = Items,
+			ItemTemplate = new DataTemplate(() =>
+			{
+				var stackLayout = new StackLayout
+				{
+					Orientation = StackOrientation.Vertical,
+					Padding = 10,
+					Spacing = 5
+				};
+
+				var sampleItem = Items.FirstOrDefault();
+				if (sampleItem != null)
+				{
+					foreach (var key in sampleItem)
+					{
+						var label = new Label
+						{
+							FontSize = 14,
+							TextColor = Color.FromRgb(100, 100, 100),
+						};
+
+						// Dynamically create the binding
+						label.SetBinding(Label.TextProperty, new Binding(key.Key));
+						stackLayout.Children.Add(label);
+					}
+				}
+
+				return new ViewCell { View = stackLayout };
+			})
+		};
+
+		// Replace existing CollectionView with the dynamically created one
+		Content = collectionView;
 	}
 }

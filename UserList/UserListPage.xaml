@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="OnboardingSystem.StaffManagementPage"
+             x:Class="OnboardingSystem.UserListPage"
              Title=""
              Shell.NavBarIsVisible="False"> <!--Disable top bar-->
 
@@ -88,4 +88,24 @@
             </CollectionView>
         </Grid>
     </ScrollView>-->
+
+    <VerticalStackLayout Spacing="10" Padding="20">
+        <HorizontalStackLayout>
+            <SearchBar HorizontalOptions="StartAndExpand" Placeholder="Search..." Margin="10" />
+            <Button Text="Filters" Margin="10"/>
+            <Button Text="Add user" Margin="10" />
+            <Button Text="Delete" Margin="10" />
+        </HorizontalStackLayout>
+
+        <Grid x:Name="HeaderGrid" Padding="10" />
+        <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" />
+
+        <CollectionView x:Name="GridCollection"/>
+
+        <!--<HorizontalStackLayout Margin="12, 0, 12, 0" HorizontalOptions="Center" VerticalOptions="Center">
+            <Button Text="Prev" />
+            <Label VerticalOptions="Center" Margin="8,0,8,0" Text="1-5 of 23" HorizontalOptions="CenterAndExpand" />
+            <Button Text="Next" />
+        </HorizontalStackLayout>-->
+    </VerticalStackLayout>
 </ContentPage>
