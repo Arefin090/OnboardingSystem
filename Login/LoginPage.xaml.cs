@@ -70,7 +70,7 @@ public partial class LoginPage : ContentPage
     if (isValid) // Authentication successful
         {
             LoggedInEmail = Username;
-            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            await Shell.Current.GoToAsync($"//{nameof(DashboardPage)}");
         }
         else
         {
