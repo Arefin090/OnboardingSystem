@@ -20,6 +20,8 @@ public class ManagementViewModel : INotifyPropertyChanged
                 { "Name", "Sara Who"}, 
                 { "Role", "Customer Service"}, 
                 { "Phone", "0000"},
+                { "Address", "0000"},
+                { "Branch", "Frankston"},
             },
             // new Staff { StaffId = "M2345", Name = "Max What", Role = "Inventory Manager", Phone = "0000", Address = "...", Branch = "Frankston" },
             // new Staff { StaffId = "M1234", Name = "Sara Who", Role = "Customer Service", Phone = "0000", Address = "...", Branch = "Dandenong" },
