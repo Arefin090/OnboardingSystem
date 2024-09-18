@@ -64,13 +64,13 @@ public partial class LoginPage : ContentPage
         _errorTimer.Elapsed += ErrorTimer_Elapsed;
     }
 
-    private void ToMain(object sender, EventArgs e)
+    private async void ToMain(object sender, EventArgs e)
     {
         var (isValid, errorMessage) = UserAuthenticator.ValidateUser(Username, Password);
     if (isValid) // Authentication successful
         {
             LoggedInEmail = Username;
-            Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
         }
         else
         {

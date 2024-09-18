@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="OnboardingSystem.Global.Menu.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:OnboardingSystem"
+    FlyoutBehavior="Flyout"
+    TabBarIsVisible="False"
+    TitleColor="White"
+    BackgroundColor="{DynamicResource Primary}"
+
+    Height="45"
+    >
+    <Shell.FlyoutHeader >
+        <VerticalStackLayout  ZIndex="-99">
+            <Image Source="dotnet_bot.png" WidthRequest="100"></Image>
+            <Label Margin="0,0,0,15" Text="Onboarding System" HorizontalTextAlignment="Center"></Label>
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
+
+    
+    <Shell.ItemTemplate >
+        <DataTemplate  >
+            <Grid ZIndex="-99" Margin="0, 5, 0, 0" BackgroundColor="DimGray" ColumnDefinitions=".30*, .70*" RowDefinitions="*,*,*" RowSpacing="10" ColumnSpacing="10">
+                <HorizontalStackLayout Grid.Row="1" Spacing="10" Padding="20 ,0, 0, 0">
+                    <Image Source="{Binding Icon}" VerticalOptions="Center" WidthRequest="50" HeightRequest="50"></Image>
+                    <Label  Text="{Binding Title}" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                </HorizontalStackLayout>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="CommonStates">
+                        <VisualState Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="DimGray"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Gray"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Grid>
+            
+        </DataTemplate>
+    </Shell.ItemTemplate>
+    
+
+    <!-- <Shell.FlyoutContent> -->
+    <!--     <ScrollView> -->
+    <!--         <VerticalStackLayout -->
+    <!--              -->
+    <!--             VerticalOptions="Start" -->
+    <!--             > -->
+    <!-- -->
+    <!--             <BindableLayout.ItemTemplate> -->
+    <!--                 <DataTemplate> -->
+    <!--                     <Grid BackgroundColor="LightGray" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,0" Padding="10,0,2,0"> -->
+    <!--                         <HorizontalStackLayout Spacing="10"> -->
+    <!--                             <Image -->
+    <!--                                Source="{Binding Icon}" -->
+    <!--                                Aspect="AspectFill" -->
+    <!--                                HeightRequest="50" -->
+    <!--                                WidthRequest="50" -->
+    <!--                             /> -->
+    <!--                             <Label -->
+    <!--                                 Text="{Binding Title}" -->
+    <!--                                 FontSize="16" -->
+    <!--                                 VerticalTextAlignment="Center" -->
+    <!--                                 Margin="10,0,0,0" -->
+    <!--                             /> -->
+    <!--                         </HorizontalStackLayout> -->
+    <!--                         ~1~ <Grid.GestureRecognizers> @1@ -->
+    <!--                         ~1~     <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer> @1@ -->
+    <!--                         ~1~ </Grid.GestureRecognizers> @1@ -->
+    <!-- -->
+    <!--                         ~1~ Visual States for hover and press effects @1@ -->
+    <!--                         <VisualStateManager.VisualStateGroups> -->
+    <!--                             <VisualStateGroup Name="CommonStates"> -->
+    <!--                                 <VisualState Name="Normal"> -->
+    <!--                                     <VisualState.Setters> -->
+    <!--                                         <Setter Property="BackgroundColor" Value="Transparent"/> -->
+    <!--                                     </VisualState.Setters> -->
+    <!--                                 </VisualState> -->
+    <!--                                 <VisualState Name="PointerOver"> -->
+    <!--                                     <VisualState.Setters> -->
+    <!--                                         <Setter Property="BackgroundColor" Value="DimGray"/> -->
+    <!--                                     </VisualState.Setters> -->
+    <!--                                 </VisualState> -->
+    <!--                                 <VisualState Name="Pressed"> -->
+    <!--                                     <VisualState.Setters> -->
+    <!--                                         <Setter Property="BackgroundColor" Value="Gray"/> -->
+    <!--                                     </VisualState.Setters> -->
+    <!--                                 </VisualState> -->
+    <!--                             </VisualStateGroup> -->
+    <!--                         </VisualStateManager.VisualStateGroups> -->
+    <!--                     </Grid> -->
+    <!--                 </DataTemplate> -->
+    <!--             </BindableLayout.ItemTemplate> -->
+    <!--         </VerticalStackLayout> -->
+    <!--     </ScrollView> -->
+    <!-- </Shell.FlyoutContent> -->
+    <!-- -->
+    <!-- <FlyoutItem Title="Home" FlyoutDisplayOptions="AsMultipleItems"> -->
+    <!--     <ShellContent -->
+    <!--         Title="Home" -->
+    <!--         ContentTemplate="{DataTemplate local:MainPage}" -->
+    <!--         Route="MainPage" -->
+    <!--         Icon="dotnet_bot.png" -->
+    <!--         /> -->
+    <!--     <ShellContent -->
+    <!--         Title="ContactUs" -->
+    <!--         ContentTemplate="{DataTemplate local:MainPage}" -->
+    <!--         Icon="dotnet_bot.png" -->
+    <!--     /> -->
+    <!--     <ShellContent -->
+    <!--         Title="ContactUs" -->
+    <!--         ContentTemplate="{DataTemplate local:MainPage}" -->
+    <!--         Icon="dotnet_bot.png" -->
+    <!--     /> -->
+    <!-- </FlyoutItem> -->
+</Shell>
