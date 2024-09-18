@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnboardingSystem.Management.ManagementPage">
@@ -14,28 +13,19 @@
                 <Button Text="Add staff" />
                 <Button Text="Delete" />
             </HorizontalStackLayout>
+            
+
+            <!-- Table Headers (Column Labels) -->
+            <!-- ColumnDefinitions="Auto,*,*,*,*,*,*,*,*" -->
+            <Grid x:Name="HeaderGrid" Padding="10" />
+            <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" />
 
             <!-- Staff Details Grid -->
-            <CollectionView ItemsSource="{Binding StaffMembers}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="10" ColumnDefinitions="Auto,*,*,*,*,Auto,Auto">
-                            <CheckBox IsChecked="{Binding IsSelected}" Grid.Column="0"/>
-                            <Label Text="{Binding StaffId}" Grid.Column="1" />
-                            <Label Text="{Binding Name}" Grid.Column="2" />
-                            <Label Text="{Binding Role}" Grid.Column="3" />
-                            <Label Text="{Binding Phone}" Grid.Column="4" />
-                            <Label Text="{Binding Address}" Grid.Column="5" />
-                            <Label Text="{Binding Branch}" Grid.Column="6" />
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
+            <CollectionView x:Name="GridCollection"/>
             <!-- Pagination -->
-            <HorizontalStackLayout>
-                <Button Text="Previous" />
-                <Label Text="1-5 of 23" HorizontalOptions="CenterAndExpand" />
+            <HorizontalStackLayout Margin="12, 0, 12, 0" HorizontalOptions="Center" VerticalOptions="Center">
+                <Button Text="Prev" />
+                <Label VerticalOptions="Center" Margin="8,0,8,0" Text="1-5 of 23" HorizontalOptions="CenterAndExpand" />
                 <Button Text="Next" />
             </HorizontalStackLayout>
 
