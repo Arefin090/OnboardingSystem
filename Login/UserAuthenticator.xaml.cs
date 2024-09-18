@@ -87,7 +87,18 @@ namespace OnboardingSystem
                 }
             }
         }
-    }
+
+		public async Task<bool> IsUserAuthorizedAsync()
+		{
+			var token = await SecureStorage.GetAsync("auth_token");
+			return !string.IsNullOrEmpty(token); // Return true if the token is present
+		}
+
+		public async Task<string> GetTokenAsync()
+		{
+			return await SecureStorage.GetAsync("auth_token");
+		}
+	}
 
     public class TokenResponse
     {
