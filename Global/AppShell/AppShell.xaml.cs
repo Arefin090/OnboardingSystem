@@ -14,7 +14,9 @@ public partial class AppShell : Shell
             { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp_icon.png", Route = $"{nameof(DashboardPage)}"},
         new ShellContent()
             { Title = "Profile", ContentTemplate = new DataTemplate(typeof(ManagementPage)), Icon = "group_96dp_icon.png", Route = $"{nameof(ManagementPage)}"},
-        new ShellContent()
+		new ShellContent()
+			{ Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "group_96dp_icon.png", Route = $"{nameof(UserListPage)}"},
+		new ShellContent()
             { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"},
     };
     public  AppShell()
