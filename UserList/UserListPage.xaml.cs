@@ -16,6 +16,8 @@ public partial class UserListPage : ContentPage
 	//Data from database
 	public ObservableCollection<JsonObject> Items { get; set; }
 
+	private ObservableCollection<JsonObject> _itemList;
+
 	public UserListPage()
 	{
 		InitializeComponent();
@@ -23,6 +25,7 @@ public partial class UserListPage : ContentPage
 		_httpClient = new HttpClient { BaseAddress = new Uri(ApiUrl) };
 
 		Items = new ObservableCollection<JsonObject>();
+		_itemList = new ObservableCollection<JsonObject>();
 
 		BindingContext = this;
 
@@ -48,35 +51,50 @@ public partial class UserListPage : ContentPage
 			_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", "Bearer " + token);
 
 			var response = await _httpClient.GetStringAsync(""); // GET request
-			//System.Diagnostics.Debug.WriteLine("API Response: " + response);
 
 			var itemsList = JsonNode.Parse(response)?.AsArray();
 
 			if (itemsList != null)
 			{
 				Items.Clear();
+				_itemList.Clear();
 				foreach (var item in itemsList)
 				{
-
-					System.Diagnostics.Debug.WriteLine(item.AsObject());
 					var jsonObject = item.AsObject();
-					Items.Add(jsonObject); // Add to the ObservableCollection
+
+					// Add to the ObservableCollection
+					Items.Add(jsonObject);
+					_itemList.Add(jsonObject);
 				}
 
 				// Setup dynamic template after loading data
-				//Setup();
 				GenerateTable();
 			}
-			//var sampleItem = Items.FirstOrDefault();
-			//System.Diagnostics.Debug.WriteLine(sampleItem);
-			//foreach (var key in sampleItem)
-			//{
-			//	System.Diagnostics.Debug.WriteLine(key.Key);
-			//}
 		}
 		catch (Exception ex)
 		{
 			await DisplayAlert("Error", $"Failed to load data: {ex.Message}", "OK");
+		}
+	}
+
+	private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
+	{
+		// Get the search text
+		string searchText = e.NewTextValue.ToLower();
+
+		// Clear the current Items collection
+		Items.Clear();
+
+		// Filter the _allItems collection and add matching items to Items
+		foreach (var item in _itemList)
+		{
+			// Assuming "Username", "FirstName", "LastName" are fields you want to search
+			if (item["username"]?.ToString().ToLower().Contains(searchText) == true ||
+				item["firstName"]?.ToString().ToLower().Contains(searchText) == true ||
+				item["lastName"]?.ToString().ToLower().Contains(searchText) == true)
+			{
+				Items.Add(item); // Add matching item to filtered Items collection
+			}
 		}
 	}
 
@@ -156,166 +174,88 @@ public partial class UserListPage : ContentPage
 
 			return grid;
 		});
-
 	}
 
-	private void Setup()
+
+	private async void OnAddUserClicked(object sender, EventArgs e)
 	{
-		CollectionView collectionView = new CollectionView();
-		collectionView.SetBinding(ItemsView.ItemsSourceProperty, "Items");
-		collectionView.ItemTemplate = new DataTemplate(() =>
-		{
-			Grid grid = new Grid { Padding = 10 };
-			grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+		string username = await DisplayPromptAsync("Add User", "Enter username:");
+		string firstName = await DisplayPromptAsync("Add User", "Enter first name:");
+		string lastName = await DisplayPromptAsync("Add User", "Enter last name:");
+		string phone = await DisplayPromptAsync("Add User", "Enter phone number:");
+		string role = await DisplayPromptAsync("Add User", "Enter role:");
+		string password = await DisplayPromptAsync("Add User", "Enter password:");
 
-			Label idLabel = new Label { FontAttributes = FontAttributes.Bold };
-			idLabel.SetBinding(Label.TextProperty, "[id]");
-
-			Label usernameLabel = new Label { FontAttributes = FontAttributes.Bold };
-			usernameLabel.SetBinding(Label.TextProperty, "[username]");
-
-			Label firstnameLabel = new Label { FontAttributes = FontAttributes.Bold };
-			firstnameLabel.SetBinding(Label.TextProperty, "[firstName]");
-
-			Label lastnameLabel = new Label { FontAttributes = FontAttributes.Bold };
-			lastnameLabel.SetBinding(Label.TextProperty, "[lastName]");
-
-			Label phoneLabel = new Label { FontAttributes = FontAttributes.Bold };
-			phoneLabel.SetBinding(Label.TextProperty, "[phone]");
-
-			Label roleLabel = new Label { FontAttributes = FontAttributes.Bold };
-			roleLabel.SetBinding(Label.TextProperty, "[role]");
-
-			//Label locationLabel = new Label { FontAttributes = FontAttributes.Italic, VerticalOptions = LayoutOptions.End };
-			//locationLabel.SetBinding(Label.TextProperty, "[role]");
-
-			grid.Add(idLabel);
-			grid.Add(usernameLabel, 1, 0);
-			grid.Add(firstnameLabel, 2, 0);
-			grid.Add(lastnameLabel, 3, 0);
-			grid.Add(phoneLabel, 4, 0);
-			grid.Add(roleLabel, 5, 0);
-
-			return grid;
-		});
-		Content = collectionView;
-		//Content = new ScrollView
-		//{
-		//	Content = new Grid
-		//	{
-		//		RowDefinitions = Rows.Define((Auto), (Auto)),
-
-		//		Children =
-		//		{
-		//			new Grid
-		//			{
-		//				RowDefinitions = Rows.Define(Auto),
-
-		//				ColumnDefinitions = Columns.Define((Stars(.35)), (Stars(.2)), (Stars(.15)), (Stars(.15)), (Stars(.15))),
-
-		//				Children =
-		//				{
-		//					new Entry
-		//					{
-		//						Keyboard = Keyboard.Numeric,
-		//						BackgroundColor = Colors.AliceBlue,
-		//					}.Column(0)
-		//						.FontSize(15)
-		//						.Placeholder("Search")
-		//						.TextColor(Colors.Black)
-		//						//.Height(44)
-		//						//.Margin(6, 6)
-		//						.Bind(Entry.TextProperty, "Apples", BindingMode.TwoWay),
-
-		//					new Button
-		//					{
-		//					}.Text("Add")
-		//					.Column(2),
-		//					new Button
-		//					{
-		//					}.Text("Delete")
-		//					.Column(3),
-		//					new Button
-		//					{
-		//					}.Text("Filter")
-		//					.Column(4)
-		//				}
-		//			},
-
-		//			new Grid
-		//			{
-		//				RowDefinitions = Rows.Define(Auto),
-
-		//				ColumnDefinitions = Columns.Define((Star), (Star), (Star), (Star), (Star)),
-
-		//				Children =
-		//				{
-		//					new Label()
-		//						.Text("Customer name:")
-		//						.Column(0),
-		//					new Label()
-		//						.Text("Customer name:")
-		//						.Column(1),
-		//					new Label()
-		//						.Text("Customer name:")
-		//						.Column(2),
-		//					new Label()
-		//						.Text("Customer name:")
-		//						.Column(3),
-		//					new Label()
-		//						.Text("Customer name:")
-		//						.Column(4),
-		//					new Label()
-		//						.Text("Customer name:")
-		//						.Column(5),
-		//				}
-		//			}.Row(1),
-		//		}
-		//	}
-		//};
+		// Call the method to register a user
+		await RegisterUserAsync(username, firstName, lastName, phone, role, password);
 	}
-	private void SetupDynamicItemTemplate()
+
+	private async void OnDeleteUserClicked(object sender, EventArgs e)
 	{
-		var collectionView = new CollectionView
+		string delete = await DisplayPromptAsync("Delete User", "Enter user id:");
+
+		// Call the method to delete a use
+		try
 		{
-			ItemsSource = Items,
-			ItemTemplate = new DataTemplate(() =>
-			{
-				var stackLayout = new StackLayout
-				{
-					Orientation = StackOrientation.Vertical,
-					Padding = 10,
-					Spacing = 5
-				};
+			await DeleteUserAsync(Int32.Parse(delete));
+		}
+		catch (Exception ex)
+		{}
+	}
 
-				var sampleItem = Items.FirstOrDefault();
-				if (sampleItem != null)
-				{
-					foreach (var key in sampleItem)
-					{
-						var label = new Label
-						{
-							FontSize = 14,
-							TextColor = Color.FromRgb(100, 100, 100),
-						};
 
-						// Dynamically create the binding
-						label.SetBinding(Label.TextProperty, new Binding(key.Key));
-						stackLayout.Children.Add(label);
-					}
-				}
-
-				return new ViewCell { View = stackLayout };
-			})
+	private async Task RegisterUserAsync(string username, string firstName, string lastName, string phone, string role, string password)
+	{
+		var newUser = new
+		{
+			Username = username,
+			FirstName = firstName,
+			LastName = lastName,
+			Phone = phone,
+			Role = role,
+			Password = password
 		};
 
-		// Replace existing CollectionView with the dynamically created one
-		Content = collectionView;
+		try
+		{
+			var response = await _httpClient.PostAsJsonAsync("https://localhost:44339/api/User/register", newUser);
+			if (response.IsSuccessStatusCode)
+			{
+				await DisplayAlert("Success", "User registered successfully.", "OK");
+				LoadData(); // Reload the user list after registration
+			}
+			else
+			{
+				var error = await response.Content.ReadAsStringAsync();
+				await DisplayAlert("Error", $"Registration failed: {error}", "OK");
+			}
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+		}
 	}
+
+	private async Task DeleteUserAsync(int userId)
+	{
+		try
+		{
+			var response = await _httpClient.DeleteAsync($"https://localhost:44339/api/User/{userId}");
+			if (response.IsSuccessStatusCode)
+			{
+				await DisplayAlert("Success", "User deleted successfully.", "OK");
+				LoadData(); // Reload the user list after deletion
+			}
+			else
+			{
+				var error = await response.Content.ReadAsStringAsync();
+				await DisplayAlert("Error", $"Deletion failed: {error}", "OK");
+			}
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+		}
+	}
+
 }
