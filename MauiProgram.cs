@@ -1,6 +1,7 @@
 ﻿using Microcharts.Maui;
 using CommunityToolkit.Maui.Markup;
 using Microsoft.Extensions.Logging;
+using OnboardingSystem.Authentication;
 
 namespace OnboardingSystem;
 
@@ -18,6 +19,20 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+
+		builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        builder.Services.AddSingleton<HttpClient>();
+		builder.Services.AddSingleton<IUserService, UserService>();
+		builder.Services.AddSingleton<HttpClient>();
+		builder.Services.AddTransient<UserListPage>(sp => 
+    new UserListPage(
+        sp.GetRequiredService<IAuthenticationService>(),
+        sp.GetRequiredService<IUserService>()
+    )
+);
+
+        // Register your pages
+        builder.Services.AddTransient<LoginPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();
