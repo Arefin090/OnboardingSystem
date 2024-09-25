@@ -2,6 +2,8 @@ using Microcharts;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json; // For serialization
 
 namespace OnboardingSystem;
 
@@ -14,6 +16,7 @@ public partial class DashboardPage : ContentPage
         InitializeComponent();
         staticDataTables = InitializeStaticData();
         LoadTables();
+        LoadConfig();
     }
 
     private Dictionary<string, List<Dictionary<string, object>>> InitializeStaticData()
@@ -566,5 +569,107 @@ public partial class DashboardPage : ContentPage
     private bool IsNumericField(Type type)
     {
         return type == typeof(int) || type == typeof(float) || type == typeof(double) || type == typeof(decimal);
+    }
+    
+    //
+    //
+    //Save State functions - Save to C:\Users\<YourUserName>\AppData\Local\<YourAppName>\chartConfig.json
+    //
+    //
+    private async void OnSaveClicked(object sender, EventArgs e)
+    {
+        // Create a new ChartConfig object and assign picker values
+        var config = new ChartConfig
+        {
+            // Bar Chart Config
+            BarChartTable = barChartTablePicker.SelectedItem?.ToString(),
+            BarChartXAxis = barChartXAxisPicker.SelectedItem?.ToString(),
+            BarChartYAxis = barChartYAxisPicker.SelectedItem?.ToString(),
+            AggregateFunction = aggregateFunctionPicker.SelectedItem?.ToString(),
+
+            // Pie Chart Config
+            PieChartTable = pieChartTablePicker.SelectedItem?.ToString(),
+            PieChartXAxis = pieChartXAxisPicker.SelectedItem?.ToString(),
+            PieChartYAxis = pieChartYAxisPicker.SelectedItem?.ToString(),
+
+            // Line Chart Config
+            LineChartTable = lineChartTablePicker.SelectedItem?.ToString(),
+            LineChartXAxis = xAxisPicker.SelectedItem?.ToString(),
+            LineChartYAxis = yAxisPicker.SelectedItem?.ToString(),
+            DateGrouping = dateGroupingPicker.SelectedItem?.ToString()
+        };
+
+        // Serialize the config to JSON format
+        var jsonConfig = JsonSerializer.Serialize(config);
+
+        // Define the file path (platform-specific)
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "chartConfig.json");
+
+        // Save to file
+        await File.WriteAllTextAsync(filePath, jsonConfig);
+
+        // Optionally display a message
+        await DisplayAlert("Save", "Configuration saved successfully!", "OK");
+    }
+
+    private async void LoadConfig()
+    {
+        try
+        {
+            // Define the file path (platform-specific)
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "chartConfig.json");
+
+            if (File.Exists(filePath))
+            {
+                // Read the file
+                var jsonConfig = await File.ReadAllTextAsync(filePath);
+
+                // Deserialize the configuration
+                var config = JsonSerializer.Deserialize<ChartConfig>(jsonConfig);
+
+                // Restore the picker values
+                barChartTablePicker.SelectedItem = config.BarChartTable;
+                barChartXAxisPicker.SelectedItem = config.BarChartXAxis;
+                barChartYAxisPicker.SelectedItem = config.BarChartYAxis;
+                aggregateFunctionPicker.SelectedItem = config.AggregateFunction;
+
+                pieChartTablePicker.SelectedItem = config.PieChartTable;
+                pieChartXAxisPicker.SelectedItem = config.PieChartXAxis;
+                pieChartYAxisPicker.SelectedItem = config.PieChartYAxis;
+
+                lineChartTablePicker.SelectedItem = config.LineChartTable;
+                xAxisPicker.SelectedItem = config.LineChartXAxis;
+                yAxisPicker.SelectedItem = config.LineChartYAxis;
+                dateGroupingPicker.SelectedItem = config.DateGrouping;
+
+                await DisplayAlert("Load", "Configuration loaded successfully!", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to load configuration: {ex.Message}", "OK");
+        }
+    }
+
+    private void OnLoadClicked(object sender, EventArgs e)
+    {
+        LoadConfig();
+    }
+
+    public class ChartConfig
+    {
+        public string? BarChartTable { get; set; }
+        public string? BarChartXAxis { get; set; }
+        public string? BarChartYAxis { get; set; }
+        public string? AggregateFunction { get; set; }
+
+        public string? PieChartTable { get; set; }
+        public string? PieChartXAxis { get; set; }
+        public string? PieChartYAxis { get; set; }
+
+        public string? LineChartTable { get; set; }
+        public string? LineChartXAxis { get; set; }
+        public string? LineChartYAxis { get; set; }
+        public string? DateGrouping { get; set; }
     }
 }
