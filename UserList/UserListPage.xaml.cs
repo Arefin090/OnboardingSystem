@@ -1,81 +1,89 @@
 using System.Collections.ObjectModel;
-using System.Data.Common;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
-using CommunityToolkit.Maui.Markup;
-using Microsoft.Maui.Controls;
-using static CommunityToolkit.Maui.Markup.GridRowsColumns;
+using OnboardingSystem.Authentication;
+using OnboardingSystem.Helpers;
 
-namespace OnboardingSystem;
-public partial class UserListPage : ContentPage
+
+namespace OnboardingSystem
 {
-	// URL of the API endpoint
-	private static readonly string ApiUrl = "https://localhost:44339/api/User/List";
-	private readonly HttpClient _httpClient;
+    public partial class UserListPage : ContentPage, IDisposable
+    {
+        private readonly IAuthenticationService _authService;
+        private readonly IUserService _userService;
+        private readonly HttpClient _httpClient;
+        private readonly Authorization _authHelper;
 
-	//Data from database
-	public ObservableCollection<JsonObject> Items { get; set; }
+        public ObservableCollection<JsonObject> Items { get; set; }
 
-	private ObservableCollection<JsonObject> _itemList;
+		private ObservableCollection<JsonObject> _itemList;
 
-	public UserListPage()
-	{
-		InitializeComponent();
-		//CreateDynamicTable();
-		_httpClient = new HttpClient { BaseAddress = new Uri(ApiUrl) };
+        public UserListPage(IAuthenticationService authService, IUserService userService)
+        {
+            InitializeComponent();
 
-		Items = new ObservableCollection<JsonObject>();
-		_itemList = new ObservableCollection<JsonObject>();
+            _authService = authService;
+            _userService = userService;
+            _httpClient = new HttpClient { BaseAddress = new Uri(Constants.API_BASE_URL) };
+            _authHelper = new Authorization(_authService);
 
-		BindingContext = this;
+            Items = new ObservableCollection<JsonObject>();
+			_itemList = new ObservableCollection<JsonObject>();
+            BindingContext = this;
 
-		LoadData();
-	}
+            LoadData();
+        }
 
-	private async void LoadData()
-	{
-		var auth = new UserAuthenticator();
+        private async void LoadData()
+        {
+            if (!await _authHelper.IsUserAuthorized(Constants.ROLE_ADMIN, Constants.ROLE_STAFF))
+            {
+                return;
+            }
 
-		// Check if the user is authorized
-		bool isAuthorized = await auth.IsUserAuthorizedAsync();
+            try
+            {
+                var token = await _authHelper.GetValidTokenAsync();
+                if (string.IsNullOrEmpty(token))
+                {
+                    await DisplayAlert("Error", "Failed to obtain a valid token. Please log in again.", "OK");
+                    return;
+                }
 
-		if (!isAuthorized)
-		{
-			await DisplayAlert("Unauthorized", "You are not authorized to access this data.", "OK");
-			return;
-		}
+                var userList = await FetchUserListAsync(token);
+                if (userList != null)
+                {
+                    UpdateItemsList(userList);
+                    GenerateTable();
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Failed to parse user list.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to load data: {ex.Message}", "OK");
+            }
+        }
 
-		try
-		{
-			var token = await auth.GetTokenAsync();
-			_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", "Bearer " + token);
+        private async Task<JsonArray> FetchUserListAsync(string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.GetStringAsync(Constants.GET_USER_LIST_ENDPOINT);
+            return JsonNode.Parse(response)?.AsArray();
+        }
 
-			var response = await _httpClient.GetStringAsync(""); // GET request
-
-			var itemsList = JsonNode.Parse(response)?.AsArray();
-
-			if (itemsList != null)
-			{
-				Items.Clear();
-				_itemList.Clear();
-				foreach (var item in itemsList)
-				{
-					var jsonObject = item.AsObject();
-
-					// Add to the ObservableCollection
-					Items.Add(jsonObject);
-					_itemList.Add(jsonObject);
-				}
-
-				// Setup dynamic template after loading data
-				GenerateTable();
-			}
-		}
-		catch (Exception ex)
-		{
-			await DisplayAlert("Error", $"Failed to load data: {ex.Message}", "OK");
-		}
-	}
+        private void UpdateItemsList(JsonArray userList)
+        {
+			_itemList.Clear();
+			Items.Clear();
+            foreach (var item in userList)
+            {
+				_itemList.Add(item.AsObject());
+				Items.Add(item.AsObject());
+            }
+        }
 
 	private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
 	{
@@ -258,4 +266,9 @@ public partial class UserListPage : ContentPage
 		}
 	}
 
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
+        }
+    }
 }
