@@ -28,7 +28,7 @@ namespace OnboardingSystem
             _authHelper = new Authorization(_authService);
 
             Items = new ObservableCollection<JsonObject>();
-		   _itemList = new ObservableCollection<JsonObject>();
+			_itemList = new ObservableCollection<JsonObject>();
             BindingContext = this;
 
             LoadData();
@@ -76,10 +76,12 @@ namespace OnboardingSystem
 
         private void UpdateItemsList(JsonArray userList)
         {
-            Items.Clear();
+			_itemList.Clear();
+			Items.Clear();
             foreach (var item in userList)
             {
-                Items.Add(item.AsObject());
+				_itemList.Add(item.AsObject());
+				Items.Add(item.AsObject());
             }
         }
 
