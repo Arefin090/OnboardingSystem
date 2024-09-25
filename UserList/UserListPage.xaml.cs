@@ -74,14 +74,16 @@ namespace OnboardingSystem
             return JsonNode.Parse(response)?.AsArray();
         }
 
-        private void UpdateItemsList(JsonArray userList)
-        {
-            Items.Clear();
-            foreach (var item in userList)
-            {
-                Items.Add(item.AsObject());
-            }
-        }
+		private void UpdateItemsList(JsonArray userList)
+		{
+			_itemList.Clear();
+			Items.Clear();
+			foreach (var item in userList)
+			{
+				_itemList.Add(item.AsObject());
+				Items.Add(item.AsObject());
+			}
+		}
 
 	private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
 	{
