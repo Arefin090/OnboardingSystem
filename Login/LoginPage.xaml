@@ -200,7 +200,7 @@
                     <!--row 7-->
                     <Button
                         Text="Login" 
-                        Clicked="ToMain"
+                        Clicked="OnLoginClicked"
                         Grid.Row="6"
                         Grid.Column="1"
                         Style="{StaticResource Login_Button}"
