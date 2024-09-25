@@ -1,107 +1,143 @@
 using Newtonsoft.Json;
+using OnboardingSystem.Models;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnboardingSystem
+
+namespace OnboardingSystem.Authentication
 {
-    public class UserAuthenticator
+    public interface IAuthenticationService
     {
-        // URL of the API endpoint for user login
-        private static readonly string ApiUrl = "https://localhost:44339/api/User/login";
+        Task<(bool isValid, string errorMessage)> ValidateUserAsync(string email, string password);
+        Task<bool> IsAuthenticatedAsync();
+        Task<string> GetTokenAsync();
+        Task<(bool Success, string AccessToken, string RefreshToken)> RefreshTokenAsync(string refreshToken);
+    }
 
-        public static async Task<(bool isValid, string errorMessage)> ValidateUserAsync(string email, string password)
+    public interface IUserService
+    {
+        Task<string> GetUserListAsync();
+    }
+
+    public class AuthenticationService : IAuthenticationService
+    {
+        private readonly HttpClient _httpClient;
+
+        public AuthenticationService(HttpClient httpClient)
         {
-            // Check if email is provided
-            if (string.IsNullOrEmpty(email))
-            {
-                return (false, "Email cannot be empty.");
-            }
+            _httpClient = httpClient;
+        }
 
-            // Validate email format
-            if (!email.Contains('@'))
-            {
+        public async Task<(bool isValid, string errorMessage)> ValidateUserAsync(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || !email.Contains('@'))
                 return (false, "Invalid email format.");
-            }
 
-            // Check if password is provided
             if (string.IsNullOrEmpty(password))
-            {
                 return (false, "Password cannot be empty.");
+
+            var loginRequest = new { Username = email, Password = password };
+            var content = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await _httpClient.PostAsync($"{Constants.API_BASE_URL}{Constants.LOGIN_ENDPOINT}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
+
+                    await SecureStorage.SetAsync(Constants.ACCESS_TOKEN_KEY, tokenResponse.Token);
+                    await SecureStorage.SetAsync(Constants.REFRESH_TOKEN_KEY, tokenResponse.RefreshToken);
+
+                    return (true, Constants.LOGIN_SUCCESS);
+                }
+                
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    return (false, Constants.UNAUTHORIZED_ERROR);
+
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                return (false, $"Login failed: {errorResponse}");
             }
-
-            // Create the login request object
-            var loginRequest = new
+            catch (HttpRequestException)
             {
-                Username = email,
-                Password = password
-            };
-
-            // Serialize the request object to JSON
-            string jsonContent = JsonConvert.SerializeObject(loginRequest);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            // Create an HttpClient instance to send the request
-            using (var httpClient = new HttpClient())
+                return (false, Constants.NETWORK_ERROR);
+            }
+            catch (Exception)
             {
-                try
-                {
-                    // Send the POST request to the API
-                    var response = await httpClient.PostAsync(ApiUrl, content);
-
-                    // Check if the response is successful
-                    if (response.IsSuccessStatusCode)
-                    {
-                        // Read and deserialize the response content
-                        string jsonResponse = await response.Content.ReadAsStringAsync();
-                        var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
-
-                        // Store the authentication token securely
-                        await SecureStorage.SetAsync("auth_token", tokenResponse.Token);
-
-                        return (true, string.Empty);
-                    }
-                    else
-                    {
-                        // Handle specific HTTP error responses
-                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                        {
-                            return (false, "Invalid credentials. Please try again.");
-                        }
-                        else
-                        {
-                            string errorResponse = await response.Content.ReadAsStringAsync();
-                            return (false, "Login failed: " + errorResponse);
-                        }
-                    }
-                }
-                catch (HttpRequestException ex)
-                {
-                    // Handle network errors
-                    return (false, "Network error: " + ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    // Handle unexpected errors
-                    return (false, "Unexpected error: " + ex.Message);
-                }
+                return (false, Constants.GENERIC_ERROR);
             }
         }
-		public async Task<bool> IsUserAuthorizedAsync()
-		{
-			var token = await SecureStorage.GetAsync("auth_token");
-			return !string.IsNullOrEmpty(token); // Return true if the token is present
-		}
 
-		public async Task<string> GetTokenAsync()
-		{
-			return await SecureStorage.GetAsync("auth_token");
-		}
-	}
+        public async Task<bool> IsAuthenticatedAsync()
+        {
+            var token = await SecureStorage.GetAsync(Constants.ACCESS_TOKEN_KEY);
+            return !string.IsNullOrEmpty(token);
+        }
 
-    public class TokenResponse
-    {
-        public string Token { get; set; }
-        public string RefreshToken { get; set; }
+        public async Task<string> GetTokenAsync()
+        {
+            return await SecureStorage.GetAsync(Constants.ACCESS_TOKEN_KEY);
+        }
+         public async Task<(bool Success, string AccessToken, string RefreshToken)> RefreshTokenAsync(string refreshToken)
+        {
+            var refreshRequest = new { RefreshToken = refreshToken };
+            var content = new StringContent(JsonConvert.SerializeObject(refreshRequest), Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await _httpClient.PostAsync($"{Constants.API_BASE_URL}{Constants.REFRESH_TOKEN_ENDPOINT}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
+
+                    await SecureStorage.SetAsync(Constants.ACCESS_TOKEN_KEY, tokenResponse.Token);
+                    await SecureStorage.SetAsync(Constants.REFRESH_TOKEN_KEY, tokenResponse.RefreshToken);
+
+                    return (true, tokenResponse.Token, tokenResponse.RefreshToken);
+                }
+
+                return (false, null, null);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if you have a logging mechanism
+                Console.WriteLine($"Error refreshing token: {ex.Message}");
+                return (false, null, null);
+            }
+        }
     }
+
+    public class UserService : IUserService
+    {
+        private readonly HttpClient _httpClient;
+        private readonly IAuthenticationService _authService;
+
+        public UserService(HttpClient httpClient, IAuthenticationService authService)
+        {
+            _httpClient = httpClient;
+            _authService = authService;
+        }
+
+        public async Task<string> GetUserListAsync()
+        {
+            var token = await _authService.GetTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"{Constants.API_BASE_URL}{Constants.GET_USER_LIST_ENDPOINT}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            
+            // Handle errors as necessary
+            return null;
+        }
+    }
+
 }
