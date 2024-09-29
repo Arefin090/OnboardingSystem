@@ -47,7 +47,7 @@
                         </VisualState>
                         <VisualState Name="PointerOver">
                             <VisualState.Setters>
-                                <Setter Property="BackgroundColor" Value="DimGray"/>
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray200}}"/>
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState Name="Pressed">

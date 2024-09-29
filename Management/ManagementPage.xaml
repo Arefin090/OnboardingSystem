@@ -10,7 +10,7 @@
             <HorizontalStackLayout>
                 <SearchBar HorizontalOptions="StartAndExpand" Placeholder="Search..." />
                 <Button Text="Filters" />
-                <Button Text="Add staff" />
+                <Button Text="Insert" Clicked="InsertButton_Clicked"/>
                 <Button Text="Delete" />
             </HorizontalStackLayout>
             

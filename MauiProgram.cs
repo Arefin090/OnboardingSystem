@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Markup;
 using Microsoft.Extensions.Logging;
 using OnboardingSystem.Authentication;
+using CommunityToolkit.Maui;
 
 namespace OnboardingSystem;
 
@@ -11,7 +12,8 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>()
+			.UseMauiApp<App>()	
+			.UseMauiCommunityToolkit()
 			.UseMicrocharts()
 			.UseMauiCommunityToolkitMarkup()
 			.ConfigureFonts(fonts =>
@@ -30,7 +32,8 @@ public static class MauiProgram
         sp.GetRequiredService<IUserService>()
     )
 );
-
+        MenuInitializer.CreateTables();
+		Console.WriteLine("ASdasd");
         // Register your pages
         builder.Services.AddTransient<LoginPage>();
 
