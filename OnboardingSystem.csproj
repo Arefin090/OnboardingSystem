@@ -58,7 +58,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.3" />
+	  <None Remove="Resources\Images\dashboard_96dp.png" />
+	  <None Remove="Resources\Images\group_96dp.png" />
+	  <None Remove="Resources\Images\logout_96dp.png" />
+	  <None Remove="Resources\Images\table_view_96dp.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
 		<PackageReference Include="IdentityModel" Version="7.0.0" />
 		<PackageReference Include="Microcharts.Maui" Version="0.9.5.9" />
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.1.0" />
@@ -77,10 +84,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Profile\ProfilePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="UserList\AddUserPopup.xaml">
+	  <MauiXaml Update="Management\Components\DynamicUpdateForm.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="UserList\UserListPage.xaml">

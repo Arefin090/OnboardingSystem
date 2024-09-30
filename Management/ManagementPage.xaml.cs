@@ -1,55 +1,81 @@
 using OnboardingSystem.ViewModel;
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
+using CommunityToolkit.Maui.Views;
+using OnboardingSystem.Management.Components;
+using OnboardingSystem.Enums;
 
 namespace OnboardingSystem.Management;
 
 public partial class ManagementPage : ContentPage
 {
     private ManagementViewModel _viewModel;
+    private String _route;
 
     public ManagementPage()
     {
         InitializeComponent();
-        _viewModel = new ManagementViewModel();
+        
         BindingContext = _viewModel;
 
         // Programmatically modify UI or add labels dynamically if needed
-        AddDataGrid();
+        
+    }
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        _route = Shell.Current.CurrentState.Location.ToString().TrimStart('/');
+        _viewModel = new ManagementViewModel(_route);
+        AddDataGrid(_route);
     }
 
-    private async void AddDataGrid()
+    private void AddDataGrid(string route)
     {
-        var headers = new List<string> { "Staff ID", "Name", "Role", "Phone", "Address", "Branch" };
+        var table = MenuInitializer.menu.Find(table => table.TableName == route);
+        var headers = table?.ColumnDefinitions.Select(c => c.Name).ToList();
 
         // Clear any existing column definitions
         HeaderGrid.ColumnDefinitions.Clear();
         var columnWidths = GetColumnDefinitions(headers.Count);
-        foreach (var width in columnWidths)
+        foreach (var width in columnWidths) 
         {
             HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
         }
 
         // Add labels to the grid
-        for (int i = 0; i < headers.Count; i++)
+        int i = 0;
+        for (i = 0; i < headers.Count; i++)
         {
             var label = new Label
             {
                 Text = headers[i],
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                FontSize = 18
             };
             HeaderGrid.Children.Add(label);
             HeaderGrid.SetColumn(label, i);
         }
+        i++;
+        var updateButtonLabel = new Label
+        {
+            Text = "Operation",
+            FontAttributes = FontAttributes.Bold,
+            HorizontalOptions = LayoutOptions.Start,
+            VerticalOptions = LayoutOptions.Center,
+            FontSize = 18
+        };
+        HeaderGrid.Children.Add(updateButtonLabel);
+        HeaderGrid.SetColumn(updateButtonLabel, i);
+
         AddCollectionView(headers.Count());
     }
 
     private List<GridLength> GetColumnDefinitions(int numOfColumns)
     {
         var columnWidths = new List<GridLength>();
-        for (int i = 0; i < numOfColumns; i++)
+        for (int i = 0; i <= numOfColumns; i++)
         {
             columnWidths.Add(new GridLength(1, GridUnitType.Star)); // Defines Column Size
         }
@@ -58,7 +84,7 @@ public partial class ManagementPage : ContentPage
 
     private void AddCollectionView(int numOfColumns)
     {
-        GridCollection.ItemsSource = _viewModel.StaffMembers;
+        GridCollection.ItemsSource = _viewModel.Rows;
         var columnWidths = GetColumnDefinitions(numOfColumns);
         GridCollection.ItemTemplate = new DataTemplate(() =>
         {
@@ -67,7 +93,7 @@ public partial class ManagementPage : ContentPage
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
             }
-            foreach (var row in _viewModel.StaffMembers)
+            foreach (var row in _viewModel.Rows)
             {   
                 int column = 0;
                 foreach (var key in row.Keys)
@@ -79,10 +105,34 @@ public partial class ManagementPage : ContentPage
                     grid.SetColumn(item, column);
                     column++;
                 }
+                var button = new Button
+                {
+                    Text = "Update",
+                    TextColor = Colors.White,
+                    BackgroundColor = (Color)Application.Current.Resources["Primary"],
+                    CornerRadius = 10,
+                    FontSize = 18,
+                    HorizontalOptions = LayoutOptions.Start // or LayoutOptions.Center
+                };
+                button.Clicked += (sender, e) => {
+                    
+                };
+                grid.Children.Add(button);
+                Grid.SetColumn(button, column);
             }
 
             return grid;
         });
 
+    }
+
+    private void InsertButton_Clicked(object sender, EventArgs e)
+    {
+        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel, "Insert Form", CrudOperation.CREATE));
+    }
+
+    private void FilterButton_Clicked(object sender, EventArgs e)
+    {
+        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel, "Search Form", CrudOperation.READ));
     }
 }
