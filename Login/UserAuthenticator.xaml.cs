@@ -10,7 +10,7 @@ namespace OnboardingSystem.Authentication
 {
     public interface IAuthenticationService
     {
-        Task<(bool isValid, string errorMessage)> ValidateUserAsync(string email, string password);
+        Task<(bool isValid, string errorMessage)> ValidateUserAsync(string username, string password);
         Task<bool> IsAuthenticatedAsync();
         Task<string> GetTokenAsync();
         Task<(bool Success, string AccessToken, string RefreshToken)> RefreshTokenAsync(string refreshToken);
@@ -30,15 +30,15 @@ namespace OnboardingSystem.Authentication
             _httpClient = httpClient;
         }
 
-        public async Task<(bool isValid, string errorMessage)> ValidateUserAsync(string email, string password)
+        public async Task<(bool isValid, string errorMessage)> ValidateUserAsync(string username, string password)
         {
-            if (string.IsNullOrEmpty(email) || !email.Contains('@'))
-                return (false, "Invalid email format.");
+            if (string.IsNullOrEmpty(username))
+                return (false, "Username cannot be empty");
 
             if (string.IsNullOrEmpty(password))
                 return (false, "Password cannot be empty.");
 
-            var loginRequest = new { Username = email, Password = password };
+            var loginRequest = new { Username = username, Password = password };
             var content = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
 
             try

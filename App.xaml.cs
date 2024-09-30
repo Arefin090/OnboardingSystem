@@ -15,7 +15,7 @@ namespace OnboardingSystem
         }
         private async void GoToInitPage()
         {
-            await Shell.Current.GoToAsync($"//product");
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
     }
 }
