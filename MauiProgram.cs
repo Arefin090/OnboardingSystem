@@ -2,6 +2,9 @@
 using CommunityToolkit.Maui.Markup;
 using Microsoft.Extensions.Logging;
 using OnboardingSystem.Authentication;
+using OnboardingSystem.Global.Menu;
+using OnboardingSystem.ViewModels;
+using OnboardingSystem.Management;
 using CommunityToolkit.Maui;
 
 namespace OnboardingSystem;
@@ -22,24 +25,21 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-		builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
-        builder.Services.AddSingleton<HttpClient>();
-		builder.Services.AddSingleton<IUserService, UserService>();
-		builder.Services.AddSingleton<HttpClient>();
-		builder.Services.AddTransient<UserListPage>(sp => 
-    new UserListPage(
-        sp.GetRequiredService<IAuthenticationService>(),
-        sp.GetRequiredService<IUserService>()
-    )
-);
-
-        // Register your pages
+        builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddSingleton<HttpClient>();
+        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddTransient<DashboardPage>();
+        builder.Services.AddTransient<ManagementPage>();
+        builder.Services.AddTransient<UserListPage>(sp => 
+            new UserListPage(
+                sp.GetRequiredService<IAuthenticationService>(),
+                sp.GetRequiredService<IUserService>()
+            )
+        );
+        builder.Services.AddSingleton<AppShell>();
 
-#if DEBUG
-		builder.Logging.AddDebug();
-#endif
-
-		return builder.Build();
-	}
+        return builder.Build();
+    }
 }

@@ -5,9 +5,11 @@ using OnboardingSystem.Models;
 namespace OnboardingSystem.Global.Menu;
 
 using Microsoft.Maui.Controls;
+using OnboardingSystem.Authentication;
 
 public partial class AppShell : Shell
 {
+    private readonly IAuthenticationService _authService;
     private ShellContent[] _defaultShellItem = new[]
     {
         new ShellContent()
@@ -17,10 +19,10 @@ public partial class AppShell : Shell
 		new ShellContent()
             { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"},
     };
-    public  AppShell()
+    public AppShell(IAuthenticationService authService)
     {
         InitializeComponent();
-        
+        _authService = authService;
         // var flyoutItems = new FlyoutItem()
         // {
         //     Title = "Main Page",
@@ -33,6 +35,7 @@ public partial class AppShell : Shell
         // }
         // Items.Add(flyoutItems);
         LoadMenuItems();
+         RegisterRoutes();
     }
     private void LoadMenuItems() {
         var flyoutItems = new FlyoutItem()
@@ -55,5 +58,30 @@ public partial class AppShell : Shell
         }
         flyoutItems.Items.Add(_defaultShellItem[2]);
         Items.Add(flyoutItems);
+    }
+
+    private void RegisterRoutes()
+    {
+        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+        Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
+        Routing.RegisterRoute(nameof(UserListPage), typeof(UserListPage));
+        Routing.RegisterRoute("Logout", typeof(LoginPage));
+        // Register other routes as needed
+    }
+    protected override async void OnNavigating(ShellNavigatingEventArgs args)
+    {
+        base.OnNavigating(args);
+
+        if (args.Target.Location.OriginalString.Contains("Logout"))
+        {
+            args.Cancel();
+            await PerformLogoutAsync();
+        }
+    }
+
+    private async Task PerformLogoutAsync()
+    {
+        await _authService.ClearAuthStateAsync();
+        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
     }
 }

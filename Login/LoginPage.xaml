@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:OnboardingSystem.ViewModels"
              x:Class="OnboardingSystem.LoginPage"
+             x:DataType="viewmodels:LoginViewModel"
              Title=""
-             Shell.NavBarIsVisible="False"> <!--Disable top bar-->
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <Style x:Key="Login_Background" TargetType="BoxView"> <!--Image Background-->
+        <Style x:Key="Login_Background" TargetType="BoxView">
             <Setter Property="Color" Value="#303030" />
         </Style>
 
         <Style x:Key="Entry_Title" TargetType="Label"> <!--Entry Bar Label-->
             <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,20,0,0" /> <!--left,up,right,down-->
+            <Setter Property="Margin" Value="0,20,0,0" />
         </Style>
 
-        <Style x:Key="Entry_Shape" TargetType="RoundRectangle"> <!--Entry Bar Label-->
+        <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
             <Setter Property="CornerRadius" Value="20" />
         </Style>
 
-        <Style x:Key="Entry_Text" TargetType="Entry"> <!--Entry Bar Text-->
+        <Style x:Key="Entry_Text" TargetType="Entry">
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Background" Value="#555555" />
         </Style>
@@ -28,12 +30,12 @@
     <ScrollView>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/> <!--row 1-->
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".49*"/> <!--column 1-->
-                <ColumnDefinition Width=".02*"/> <!--column 2-->
-                <ColumnDefinition Width=".49*"/> <!--column 3-->
+                <ColumnDefinition Width=".49*"/>
+                <ColumnDefinition Width=".02*"/>
+                <ColumnDefinition Width=".49*"/>
             </Grid.ColumnDefinitions>
 
             <!--column 1, Login image-->
@@ -90,18 +92,18 @@
                 <!--Form Content-->
                 <Grid Grid.Row="1" Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/> <!--row 1-->
-                        <RowDefinition Height="Auto"/> <!--row 2-->
-                        <RowDefinition Height="Auto"/> <!--row 3-->
-                        <RowDefinition Height="Auto"/> <!--row 4-->
-                        <RowDefinition Height="Auto"/> <!--row 5-->
-                        <RowDefinition Height="Auto"/> <!--row 6-->
-                        <RowDefinition Height="Auto"/> <!--row 7-->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".05*"/> <!--spacing column-->
-                        <ColumnDefinition Width=".5*"/> <!--content column-->
-                        <ColumnDefinition Width=".05*"/> <!--spacing column-->
+                        <ColumnDefinition Width=".05*"/>
+                        <ColumnDefinition Width=".5*"/>
+                        <ColumnDefinition Width=".05*"/>
                     </Grid.ColumnDefinitions>
 
                     <!--row 1, Form title-->
@@ -123,9 +125,7 @@
                     />
 
                     <!--row 3, username entry-->
-                    <Border
-                        Grid.Row="2"
-                        Grid.Column="1"
+                    <Border Grid.Row="2" Grid.Column="1"
                     >
                     <Border.StrokeShape>
                         <RoundRectangle Style="{StaticResource Entry_Shape}" />
@@ -134,7 +134,7 @@
                             Placeholder="Enter your username"
                             Grid.Row="2"
                             Grid.Column="1"
-                            Text="{Binding Username}" 
+                            Text="{Binding Username, Mode=TwoWay}" 
                             Style="{StaticResource Entry_Text}"
                         />
                     </Border>
@@ -148,17 +148,13 @@
                     />
 
                     <!--row 5, password entry-->
-                    <Border
-                        Grid.Row="4"
-                        Grid.Column="1"
+                    <Border Grid.Row="4" Grid.Column="1"
                     >
                     <Border.StrokeShape>
                         <RoundRectangle Style="{StaticResource Entry_Shape}" />
                     </Border.StrokeShape>
                         <Entry
                             Placeholder="Enter your password"
-                            Grid.Row="4"
-                            Grid.Column="1"
                             IsPassword="True"
                             Text="{Binding Password}"
                             Style="{StaticResource Entry_Text}"
@@ -166,7 +162,13 @@
                     </Border>
 
                     <!--row 6, error display-->
-                    <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" Grid.Row="5" Grid.Column="1" />
+                    <Label 
+                        Text="{Binding ErrorMessage}" 
+                        TextColor="Red" 
+                        IsVisible="{Binding HasError}" 
+                        Grid.Row="5" 
+                        Grid.Column="1" 
+                    />
                     <Label Text="" Grid.Row="5" Grid.Column="1" />
 
                     <!--row 7, submit button-->
@@ -177,7 +179,7 @@
                         CornerRadius="20"
                         HorizontalOptions="Fill"
                         Margin="0,10,0,20"
-                        Clicked="OnLoginClicked"
+                        Command="{Binding LoginCommand}"
                         Grid.Row="6"
                         Grid.Column="1"
                     />
