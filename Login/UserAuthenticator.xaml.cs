@@ -14,6 +14,7 @@ namespace OnboardingSystem.Authentication
         Task<bool> IsAuthenticatedAsync();
         Task<string> GetTokenAsync();
         Task<(bool Success, string AccessToken, string RefreshToken)> RefreshTokenAsync(string refreshToken);
+        Task ClearAuthStateAsync();
     }
 
     public interface IUserService
@@ -71,7 +72,19 @@ namespace OnboardingSystem.Authentication
                 return (false, Constants.GENERIC_ERROR);
             }
         }
-
+       public async Task ClearAuthStateAsync()
+            {
+                try
+                {
+                    SecureStorage.Remove(Constants.ACCESS_TOKEN_KEY);
+                    SecureStorage.Remove(Constants.REFRESH_TOKEN_KEY);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception if you have a logging mechanism
+                    Console.WriteLine($"Error clearing auth state: {ex.Message}");
+                }
+            }        
         public async Task<bool> IsAuthenticatedAsync()
         {
             var token = await SecureStorage.GetAsync(Constants.ACCESS_TOKEN_KEY);
@@ -111,6 +124,7 @@ namespace OnboardingSystem.Authentication
                 return (false, null, null);
             }
         }
+ 
     }
 
     public class UserService : IUserService

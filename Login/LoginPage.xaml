@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:OnboardingSystem.ViewModels"
              x:Class="OnboardingSystem.LoginPage"
+             x:DataType="viewmodels:LoginViewModel"
              Title=""
-             Shell.NavBarIsVisible="False"> <!--Disable top bar-->
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <Style x:Key="Login_Background" TargetType="BoxView"> <!--Image Background-->
+        <Style x:Key="Login_Background" TargetType="BoxView">
             <Setter Property="Color" Value="#303030" />
         </Style>
 
-        <Style x:Key="Login_Image" TargetType="Image"> <!--Image Background-->
+        <Style x:Key="Login_Image" TargetType="Image">
             <Setter Property="Source" Value="racket.png" />
             <Setter Property="Aspect" Value="AspectFit" />
             <Setter Property="Margin" Value="100,0,0,0" />
             <Setter Property="HorizontalOptions" Value="End" />
         </Style>
 
-        <Style x:Key="Login_Separater" TargetType="Line"> <!--Image Background-->
+        <Style x:Key="Login_Separater" TargetType="Line">
             <Setter Property="WidthRequest" Value="20" />
             <Setter Property="HeightRequest" Value="400" />
             <Setter Property="Y2" Value="380" />
@@ -26,181 +28,136 @@
             <Setter Property="StrokeThickness" Value="8" />
         </Style>
 
-        <Style x:Key="Login_Form" TargetType="BoxView"> <!--Image Background-->
+        <Style x:Key="Login_Form" TargetType="BoxView">
             <Setter Property="Color" Value="Black" />
             <Setter Property="CornerRadius" Value="30" />
             <Setter Property="Opacity" Value="0.15" />
         </Style>
 
-        <Style x:Key="Title" TargetType="Label"> <!--Title-->
+        <Style x:Key="Title" TargetType="Label">
             <Setter Property="Text" Value="Welcome..." />
             <Setter Property="FontSize" Value="30" />
             <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,40" /> <!--horizontal,vertical-->
+            <Setter Property="Margin" Value="0,40" />
         </Style>
 
-        <Style x:Key="Entry_Title" TargetType="Label"> <!--Entry Bar Label-->
+        <Style x:Key="Entry_Title" TargetType="Label">
             <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,20,0,0" /> <!--left,up,right,down-->
+            <Setter Property="Margin" Value="0,20,0,0" />
         </Style>
 
-        <Style x:Key="Entry_Shape" TargetType="RoundRectangle"> <!--Entry Bar Label-->
+        <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
             <Setter Property="CornerRadius" Value="20" />
         </Style>
 
-        <Style x:Key="Entry_Text" TargetType="Entry"> <!--Entry Bar Text-->
+        <Style x:Key="Entry_Text" TargetType="Entry">
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Background" Value="#555555" />
         </Style>
 
-        <Style x:Key="Forgot_Password" TargetType="Label"> <!--Go to Forgot Password-->
+        <Style x:Key="Forgot_Password" TargetType="Label">
             <Setter Property="TextColor" Value="White" />
             <Setter Property="TextDecorations" Value="Underline" />
-            <Setter Property="Margin" Value="0,10,0,0" /> <!--left,up,right,down-->
+            <Setter Property="Margin" Value="0,10,0,0" />
         </Style>
 
-        <Style x:Key="Login_Button" TargetType="Button"> <!--Login Button-->
+        <Style x:Key="Login_Button" TargetType="Button">
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Background" Value="#7D24EE" />
             <Setter Property="CornerRadius" Value="20" />
             <Setter Property="HorizontalOptions" Value="Fill" />
-            <Setter Property="Margin" Value="0,10,0,20" /> <!--left,up,right,down-->
+            <Setter Property="Margin" Value="0,10,0,20" />
         </Style>
     </ContentPage.Resources>
 
     <ScrollView>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/> <!--row 1-->
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".49*"/> <!--column 1-->
-                <ColumnDefinition Width=".02*"/> <!--column 2-->
-                <ColumnDefinition Width=".49*"/> <!--column 3-->
+                <ColumnDefinition Width=".49*"/>
+                <ColumnDefinition Width=".02*"/>
+                <ColumnDefinition Width=".49*"/>
             </Grid.ColumnDefinitions>
 
-            <!--column 1-->
-            <BoxView
-                Style="{StaticResource Login_Background}"
-            />
-            <Image
-                Style="{StaticResource Login_Image}"
-            />
+            <BoxView Style="{StaticResource Login_Background}" />
+            <Image Style="{StaticResource Login_Image}" />
 
-            <!--column 2-->
-            <BoxView
-                Style="{StaticResource Login_Background}"
-                Grid.Column="1"
-            />
-            <Line
-                Style="{StaticResource Login_Separater}"
-                Grid.Column="1"
-            />
+            <BoxView Style="{StaticResource Login_Background}" Grid.Column="1" />
+            <Line Style="{StaticResource Login_Separater}" Grid.Column="1" />
 
-            <!--column 3-->
-            <BoxView
-                Style="{StaticResource Login_Background}"
-                Grid.Column="2"
-            />
+            <BoxView Style="{StaticResource Login_Background}" Grid.Column="2" />
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                        <RowDefinition Height=".2*"/> <!--row 1-->
-                        <RowDefinition Height="*"/> <!--row 2-->
-                        <RowDefinition Height=".2*"/> <!--row 3-->
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".2*"/> <!--spacing column-->
-                        <ColumnDefinition Width="*"/> <!--content column-->
-                        <ColumnDefinition Width=".2*"/> <!--spacing column-->
-                    </Grid.ColumnDefinitions>
-                <BoxView
-                    Style="{StaticResource Login_Form}"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                />
+                    <RowDefinition Height=".2*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height=".2*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width=".2*"/>
+                </Grid.ColumnDefinitions>
+                <BoxView Style="{StaticResource Login_Form}" Grid.Row="1" Grid.Column="1" />
 
                 <Grid Grid.Row="1" Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/> <!--row 1-->
-                        <RowDefinition Height="Auto"/> <!--row 2-->
-                        <RowDefinition Height="Auto"/> <!--row 3-->
-                        <RowDefinition Height="Auto"/> <!--row 4-->
-                        <RowDefinition Height="Auto"/> <!--row 5-->
-                        <RowDefinition Height="Auto"/> <!--row 6-->
-                        <RowDefinition Height="Auto"/> <!--row 7-->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".05*"/> <!--spacing column-->
-                        <ColumnDefinition Width=".5*"/> <!--content column-->
-                        <ColumnDefinition Width=".05*"/> <!--spacing column-->
+                        <ColumnDefinition Width=".05*"/>
+                        <ColumnDefinition Width=".5*"/>
+                        <ColumnDefinition Width=".05*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!--row 1-->
-                    <Label
-                        Style="{StaticResource Title}"
-                        Grid.Column="1"
-                    />
+                    <Label Style="{StaticResource Title}" Grid.Column="1" />
 
-                    <!--row 2-->
-                    <Label
-                        Text="Username"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Style="{StaticResource Entry_Title}"
-                    />
+                    <Label Text="Username" Grid.Row="1" Grid.Column="1" Style="{StaticResource Entry_Title}" />
 
-                    <!--row 3-->
-                    <Border
-                        Grid.Row="2"
-                        Grid.Column="1"
-                    >
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
+                    <Border Grid.Row="2" Grid.Column="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                        </Border.StrokeShape>
                         <Entry
                             Placeholder="Enter your username"
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Text="{Binding Username, Mode=TwoWay}" 
+                            Text="{Binding Username}" 
                             Style="{StaticResource Entry_Text}"
                         />
                     </Border>
 
-                    <!--row 4-->
-                    <Label
-                        Text="Password"
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Style="{StaticResource Entry_Title}"
-                    />
+                    <Label Text="Password" Grid.Row="3" Grid.Column="1" Style="{StaticResource Entry_Title}" />
 
-                    <!--row 5-->
-                    <Border
-                        Grid.Row="4"
-                        Grid.Column="1"
-                    >
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
+                    <Border Grid.Row="4" Grid.Column="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                        </Border.StrokeShape>
                         <Entry
                             Placeholder="Enter your password"
-                            Grid.Row="4"
-                            Grid.Column="1"
                             IsPassword="True"
-                            Text="{Binding Password, Mode=TwoWay}"
+                            Text="{Binding Password}"
                             Style="{StaticResource Entry_Text}"
                         />
                     </Border>
 
-                    <!--row 6-->
-                    <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" Grid.Row="5" Grid.Column="1" />
-                    <Label Text="" Grid.Row="5" Grid.Column="1" />
+                    <Label 
+                        Text="{Binding ErrorMessage}" 
+                        TextColor="Red" 
+                        IsVisible="{Binding HasError}" 
+                        Grid.Row="5" 
+                        Grid.Column="1" 
+                    />
 
-                    <!--row 7-->
                     <Button
                         Text="Login" 
-                        Clicked="OnLoginClicked"
+                        Command="{Binding LoginCommand}"
                         Grid.Row="6"
                         Grid.Column="1"
                         Style="{StaticResource Login_Button}"
