@@ -1,8 +1,11 @@
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using CommunityToolkit.Maui.Views;
 using OnboardingSystem.Authentication;
 using OnboardingSystem.Helpers;
+using Windows.Networking;
 
 
 namespace OnboardingSystem
@@ -85,188 +88,189 @@ namespace OnboardingSystem
             }
         }
 
-		
-
-	private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
-	{
-		// Get the search text
-		string searchText = e.NewTextValue.ToLower();
-
-		// Clear the current Items collection
-		Items.Clear();
-
-		// Filter the _allItems collection and add matching items to Items
-		foreach (var item in _itemList)
+		private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
 		{
-			// Assuming "Username", "FirstName", "LastName" are fields you want to search
-			if (item["username"]?.ToString().ToLower().Contains(searchText) == true ||
-				item["firstName"]?.ToString().ToLower().Contains(searchText) == true ||
-				item["lastName"]?.ToString().ToLower().Contains(searchText) == true)
-			{
-				Items.Add(item); // Add matching item to filtered Items collection
-			}
-		}
-	}
+				// Get the search text
+				string searchText = e.NewTextValue.ToLower();
 
-	private async void GenerateTable()
-	{
-		var headers = new List<string> { "ID", "Username", "First Name", "Last Name", "Phone Number", "Role" };
+				// Clear the current Items collection
+				Items.Clear();
 
-		// Clear any existing column definitions
-		HeaderGrid.ColumnDefinitions.Clear();
-		var columnWidths = GetColumnDefinitions(headers.Count);
-		foreach (var width in columnWidths)
-		{
-			HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
+				// Filter the _allItems collection and add matching items to Items
+				foreach (var item in _itemList)
+				{
+					// Assuming "Username", "FirstName", "LastName" are fields you want to search
+					if (item["username"]?.ToString().ToLower().Contains(searchText) == true ||
+						item["firstName"]?.ToString().ToLower().Contains(searchText) == true ||
+						item["lastName"]?.ToString().ToLower().Contains(searchText) == true)
+					{
+						Items.Add(item); // Add matching item to filtered Items collection
+					}
+				}
 		}
 
-		// Add labels to the grid
-		for (int i = 0; i < headers.Count; i++)
+		private async void GenerateTable()
 		{
-			var label = new Label
-			{
-				Text = headers[i],
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.Start,
-				VerticalOptions = LayoutOptions.Center
-			};
-			HeaderGrid.Children.Add(label);
-			HeaderGrid.SetColumn(label, i);
-		}
-		AddCollectionView(headers.Count());
-	}
+			var headers = new List<string> { "ID", "Username", "First Name", "Last Name", "Phone Number", "Role" };
 
-	private List<GridLength> GetColumnDefinitions(int numOfColumns)
-	{
-		var columnWidths = new List<GridLength>();
-		for (int i = 0; i < numOfColumns; i++)
-		{
-			columnWidths.Add(new GridLength(1, GridUnitType.Star)); // Defines Column Size
-		}
-		return columnWidths;
-	}
-
-	private void AddCollectionView(int numOfColumns)
-	{
-		GridCollection.ItemsSource = Items;
-		var columnWidths = GetColumnDefinitions(numOfColumns);
-		GridCollection.ItemTemplate = new DataTemplate(() =>
-		{
-			var grid = new Grid { Padding = 10 };
+			// Clear any existing column definitions
+			HeaderGrid.ColumnDefinitions.Clear();
+			var columnWidths = GetColumnDefinitions(headers.Count);
 			foreach (var width in columnWidths)
 			{
-				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
+				HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
 			}
-			foreach (var row in Items)
+
+			// Add labels to the grid
+			for (int i = 0; i < headers.Count; i++)
 			{
-				int column = 0;
-				foreach (var key in row)
+				var label = new Label
 				{
-					var item = new Label();
-					item.SetBinding(Label.TextProperty, $"[{key.Key}]");
-					item.Margin = new Thickness(2, 0, 2, 0);
-					grid.Children.Add(item);
-					grid.SetColumn(item, column);
+					Text = headers[i],
+					FontAttributes = FontAttributes.Bold,
+					HorizontalOptions = LayoutOptions.Start,
+					VerticalOptions = LayoutOptions.Center
+				};
+				HeaderGrid.Children.Add(label);
+				HeaderGrid.SetColumn(label, i);
+			}
+			AddCollectionView(headers.Count());
+		}
 
-					var separator = new BoxView
+		private List<GridLength> GetColumnDefinitions(int numOfColumns)
+		{
+			var columnWidths = new List<GridLength>();
+			for (int i = 0; i < numOfColumns; i++)
+			{
+				columnWidths.Add(new GridLength(1, GridUnitType.Star)); // Defines Column Size
+			}
+			return columnWidths;
+		}
+
+		private void AddCollectionView(int numOfColumns)
+		{
+			GridCollection.ItemsSource = Items;
+			var columnWidths = GetColumnDefinitions(numOfColumns);
+			GridCollection.ItemTemplate = new DataTemplate(() =>
+			{
+				var grid = new Grid { Padding = 10 };
+				foreach (var width in columnWidths)
+				{
+					grid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
+				}
+				foreach (var row in Items)
+				{
+					int column = 0;
+					foreach (var key in row)
 					{
-						HeightRequest = 1, // Line thickness
-						BackgroundColor = Colors.Gray, // Line color
-						HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
-						Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
-					};
-					grid.Children.Add(separator);
-					grid.SetColumn(separator, column);
+						var item = new Label();
+						item.SetBinding(Label.TextProperty, $"[{key.Key}]");
+						item.Margin = new Thickness(2, 0, 2, 0);
+						grid.Children.Add(item);
+						grid.SetColumn(item, column);
 
-					column++;
+						var separator = new BoxView
+						{
+							HeightRequest = 1, // Line thickness
+							BackgroundColor = Colors.Gray, // Line color
+							HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
+							Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
+						};
+						grid.Children.Add(separator);
+						grid.SetColumn(separator, column);
+
+						column++;
+					}
+				}
+
+				return grid;
+			});
+	}
+
+		private async void OnAddUserClicked(object sender, EventArgs e)
+		{
+			var popup = new AddUserPopup();
+
+			var result = await this.ShowPopupAsync(popup) as dynamic;
+
+			// Call the method to add a user
+			if (result != null)
+			{
+				await RegisterUserAsync(result.username, result.firstName, result.lastName, result.phone, result.role, result.password);
+			}
+		}
+
+		private async void OnDeleteUserClicked(object sender, EventArgs e)
+		{
+			string delete = await DisplayPromptAsync("Delete User", "Enter user id:");
+
+			// Call the method to delete a user
+			if (!string.IsNullOrWhiteSpace(delete))
+			{
+				try
+				{
+					await DeleteUserAsync(Int32.Parse(delete));
+				}
+				catch (Exception ex)
+				{
+					await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
 				}
 			}
-
-			return grid;
-		});
-	}
-
-
-	private async void OnAddUserClicked(object sender, EventArgs e)
-	{
-		string username = await DisplayPromptAsync("Add User", "Enter username:");
-		string firstName = await DisplayPromptAsync("Add User", "Enter first name:");
-		string lastName = await DisplayPromptAsync("Add User", "Enter last name:");
-		string phone = await DisplayPromptAsync("Add User", "Enter phone number:");
-		string role = await DisplayPromptAsync("Add User", "Enter role:");
-		string password = await DisplayPromptAsync("Add User", "Enter password:");
-
-		// Call the method to register a user
-		await RegisterUserAsync(username, firstName, lastName, phone, role, password);
-	}
-
-	private async void OnDeleteUserClicked(object sender, EventArgs e)
-	{
-		string delete = await DisplayPromptAsync("Delete User", "Enter user id:");
-
-		// Call the method to delete a use
-		try
-		{
-			await DeleteUserAsync(Int32.Parse(delete));
 		}
-		catch (Exception ex)
-		{}
-	}
 
-
-	private async Task RegisterUserAsync(string username, string firstName, string lastName, string phone, string role, string password)
-	{
-		var newUser = new
+		private async Task RegisterUserAsync(string username, string firstName, string lastName, string phone, string role, string password)
 		{
-			Username = username,
-			FirstName = firstName,
-			LastName = lastName,
-			Phone = phone,
-			Role = role,
-			Password = password
-		};
-
-		try
-		{
-			var response = await _httpClient.PostAsJsonAsync("https://localhost:44339/api/User/register", newUser);
-			if (response.IsSuccessStatusCode)
+			var newUser = new
 			{
-				await DisplayAlert("Success", "User registered successfully.", "OK");
-				LoadData(); // Reload the user list after registration
+				Username = username,
+				FirstName = firstName,
+				LastName = lastName,
+				Phone = phone,
+				Role = role,
+				Password = password
+			};
+
+			try
+			{
+				var response = await _httpClient.PostAsJsonAsync("https://localhost:44339/api/User/register", newUser);
+				if (response.IsSuccessStatusCode)
+				{
+					await DisplayAlert("Success", "User registered successfully.", "OK");
+					LoadData(); // Reload the user list after registration
+				}
+				else
+				{
+					var error = await response.Content.ReadAsStringAsync();
+					await DisplayAlert("Error", $"Registration failed: {error}", "OK");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				var error = await response.Content.ReadAsStringAsync();
-				await DisplayAlert("Error", $"Registration failed: {error}", "OK");
+				await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
 			}
 		}
-		catch (Exception ex)
-		{
-			await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
-		}
-	}
 
-	private async Task DeleteUserAsync(int userId)
-	{
-		try
+		private async Task DeleteUserAsync(int userId)
 		{
-			var response = await _httpClient.DeleteAsync($"https://localhost:44339/api/User/{userId}");
-			if (response.IsSuccessStatusCode)
+			try
 			{
-				await DisplayAlert("Success", "User deleted successfully.", "OK");
-				LoadData(); // Reload the user list after deletion
+				var response = await _httpClient.DeleteAsync($"https://localhost:44339/api/User/{userId}");
+				if (response.IsSuccessStatusCode)
+				{
+					await DisplayAlert("Success", "User deleted successfully.", "OK");
+					LoadData(); // Reload the user list after deletion
+				}
+				else
+				{
+					var error = await response.Content.ReadAsStringAsync();
+					await DisplayAlert("Error", $"Deletion failed: {error}", "OK");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				var error = await response.Content.ReadAsStringAsync();
-				await DisplayAlert("Error", $"Deletion failed: {error}", "OK");
+				await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
 			}
 		}
-		catch (Exception ex)
-		{
-			await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
-		}
-	}
 
         public void Dispose()
         {

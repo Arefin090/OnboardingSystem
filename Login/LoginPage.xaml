@@ -10,36 +10,6 @@
             <Setter Property="Color" Value="#303030" />
         </Style>
 
-        <Style x:Key="Login_Image" TargetType="Image"> <!--Image Background-->
-            <Setter Property="Source" Value="racket.png" />
-            <Setter Property="Aspect" Value="AspectFit" />
-            <Setter Property="Margin" Value="100,0,0,0" />
-            <Setter Property="HorizontalOptions" Value="End" />
-        </Style>
-
-        <Style x:Key="Login_Separater" TargetType="Line"> <!--Image Background-->
-            <Setter Property="WidthRequest" Value="20" />
-            <Setter Property="HeightRequest" Value="400" />
-            <Setter Property="Y2" Value="380" />
-            <Setter Property="StrokeLineCap" Value="Round" />
-            <Setter Property="Stroke" Value="White" />
-            <Setter Property="StrokeThickness" Value="8" />
-        </Style>
-
-        <Style x:Key="Login_Form" TargetType="BoxView"> <!--Image Background-->
-            <Setter Property="Color" Value="Black" />
-            <Setter Property="CornerRadius" Value="30" />
-            <Setter Property="Opacity" Value="0.15" />
-        </Style>
-
-        <Style x:Key="Title" TargetType="Label"> <!--Title-->
-            <Setter Property="Text" Value="Welcome..." />
-            <Setter Property="FontSize" Value="30" />
-            <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,40" /> <!--horizontal,vertical-->
-        </Style>
-
         <Style x:Key="Entry_Title" TargetType="Label"> <!--Entry Bar Label-->
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Margin" Value="0,20,0,0" /> <!--left,up,right,down-->
@@ -52,20 +22,6 @@
         <Style x:Key="Entry_Text" TargetType="Entry"> <!--Entry Bar Text-->
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Background" Value="#555555" />
-        </Style>
-
-        <Style x:Key="Forgot_Password" TargetType="Label"> <!--Go to Forgot Password-->
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="TextDecorations" Value="Underline" />
-            <Setter Property="Margin" Value="0,10,0,0" /> <!--left,up,right,down-->
-        </Style>
-
-        <Style x:Key="Login_Button" TargetType="Button"> <!--Login Button-->
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Background" Value="#7D24EE" />
-            <Setter Property="CornerRadius" Value="20" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
-            <Setter Property="Margin" Value="0,10,0,20" /> <!--left,up,right,down-->
         </Style>
     </ContentPage.Resources>
 
@@ -80,25 +36,32 @@
                 <ColumnDefinition Width=".49*"/> <!--column 3-->
             </Grid.ColumnDefinitions>
 
-            <!--column 1-->
+            <!--column 1, Login image-->
             <BoxView
                 Style="{StaticResource Login_Background}"
             />
             <Image
-                Style="{StaticResource Login_Image}"
+                Source="racket.png"
+                Aspect="AspectFit"
+                Margin="100,0,0,0"
+                HorizontalOptions="End"
             />
 
-            <!--column 2-->
+            <!--column 2, Login separator line-->
             <BoxView
                 Style="{StaticResource Login_Background}"
                 Grid.Column="1"
             />
             <Line
-                Style="{StaticResource Login_Separater}"
+                HeightRequest="400"
+                Y2="380"
+                StrokeLineCap="Round"
+                Stroke="White"
+                StrokeThickness="8"
                 Grid.Column="1"
             />
 
-            <!--column 3-->
+            <!--column 3, Login form-->
             <BoxView
                 Style="{StaticResource Login_Background}"
                 Grid.Column="2"
@@ -114,12 +77,17 @@
                         <ColumnDefinition Width="*"/> <!--content column-->
                         <ColumnDefinition Width=".2*"/> <!--spacing column-->
                     </Grid.ColumnDefinitions>
+
+                <!--Form Background-->
                 <BoxView
-                    Style="{StaticResource Login_Form}"
+                    Color="Black"
+                    CornerRadius="30"
+                    Opacity=".15"
                     Grid.Row="1"
                     Grid.Column="1"
                 />
 
+                <!--Form Content-->
                 <Grid Grid.Row="1" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/> <!--row 1-->
@@ -136,13 +104,17 @@
                         <ColumnDefinition Width=".05*"/> <!--spacing column-->
                     </Grid.ColumnDefinitions>
 
-                    <!--row 1-->
+                    <!--row 1, Form title-->
                     <Label
-                        Style="{StaticResource Title}"
+                        Text="Welcome..."
+                        FontSize="30"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        Margin="0,40"
                         Grid.Column="1"
                     />
 
-                    <!--row 2-->
+                    <!--row 2, username label-->
                     <Label
                         Text="Username"
                         Grid.Row="1"
@@ -150,7 +122,7 @@
                         Style="{StaticResource Entry_Title}"
                     />
 
-                    <!--row 3-->
+                    <!--row 3, username entry-->
                     <Border
                         Grid.Row="2"
                         Grid.Column="1"
@@ -162,12 +134,12 @@
                             Placeholder="Enter your username"
                             Grid.Row="2"
                             Grid.Column="1"
-                            Text="{Binding Username, Mode=TwoWay}" 
+                            Text="{Binding Username}" 
                             Style="{StaticResource Entry_Text}"
                         />
                     </Border>
 
-                    <!--row 4-->
+                    <!--row 4, password label-->
                     <Label
                         Text="Password"
                         Grid.Row="3"
@@ -175,7 +147,7 @@
                         Style="{StaticResource Entry_Title}"
                     />
 
-                    <!--row 5-->
+                    <!--row 5, password entry-->
                     <Border
                         Grid.Row="4"
                         Grid.Column="1"
@@ -188,22 +160,26 @@
                             Grid.Row="4"
                             Grid.Column="1"
                             IsPassword="True"
-                            Text="{Binding Password, Mode=TwoWay}"
+                            Text="{Binding Password}"
                             Style="{StaticResource Entry_Text}"
                         />
                     </Border>
 
-                    <!--row 6-->
+                    <!--row 6, error display-->
                     <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" Grid.Row="5" Grid.Column="1" />
                     <Label Text="" Grid.Row="5" Grid.Column="1" />
 
-                    <!--row 7-->
+                    <!--row 7, submit button-->
                     <Button
                         Text="Login" 
+                        TextColor="White"
+                        BackgroundColor="#7D24EE"
+                        CornerRadius="20"
+                        HorizontalOptions="Fill"
+                        Margin="0,10,0,20"
                         Clicked="OnLoginClicked"
                         Grid.Row="6"
                         Grid.Column="1"
-                        Style="{StaticResource Login_Button}"
                     />
                 </Grid>
             </Grid>
