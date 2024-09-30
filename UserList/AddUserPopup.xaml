@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OnboardingSystem.AddUserPopup"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Size="400, 640">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+            <!-- Form Fields for Adding a User -->
+            <Label Text="Add User" TextColor="Black" HorizontalOptions="Center"/>
+            
+            <Label Text="Username:" TextColor="Black"/>
+            <Border>
+                <Entry x:Name="UsernameEntry" Placeholder="Username" TextColor="Black" />
+            </Border>
+
+            <Label Text="First Name:" TextColor="Black"/>
+            <Border>
+                <Entry x:Name="FirstNameEntry" Placeholder="First Name" TextColor="Black" />
+            </Border>
+
+            <Label Text="Last Name:" TextColor="Black"/>
+            <Border>
+                <Entry x:Name="LastNameEntry" Placeholder="Last Name" TextColor="Black" />
+            </Border>
+
+            <Label Text="Phone:" TextColor="Black"/>
+            <Border>
+                <Entry x:Name="PhoneEntry" Placeholder="Phone Number" Keyboard="Telephone" TextColor="Black" />
+            </Border>
+
+            <Label Text="Select Role:" TextColor="Black"/>
+            <Border>
+                <Picker x:Name="RolePicker" TextColor="Black" >
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Admin</x:String>
+                        <x:String>Staff</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            </Border>
+
+            <Label Text="Password:" TextColor="Black"/>
+            <Border>
+                <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" TextColor="Black" />
+            </Border>
+
+            <!-- Submit Button -->
+            <Button Text="Submit" Clicked="OnSubmitClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</toolkit:Popup>
