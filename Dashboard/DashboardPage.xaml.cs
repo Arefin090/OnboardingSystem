@@ -141,7 +141,7 @@ public partial class DashboardPage : ContentPage
         barChartYAxisPicker.SelectedIndex = -1;
         barChartXAxisPicker.ItemsSource = columns;
         barChartYAxisPicker.ItemsSource = columns;
-        aggregateFunctionPicker.ItemsSource = new List<string> { "Sum", "Average", "Max", "Min" };
+        aggregateFunctionPicker.ItemsSource = new List<string> { "Sum", "Count", "AVG", "Max", "Min" };
     }
 
     private void LoadColumnsForPieChartTable(string tableName)
@@ -338,12 +338,15 @@ public partial class DashboardPage : ContentPage
             if (response.IsSuccessStatusCode)
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API Response: " + jsonResponse);
+
                 var jsonDocument = JsonDocument.Parse(jsonResponse);
 
-                var values = jsonDocument.RootElement.GetProperty("data").GetProperty("$values");
+                // Navigate directly to the "data" array
+                var dataArray = jsonDocument.RootElement.GetProperty("data");
 
                 // Populate trendData with dynamic keys
-                foreach (var item in values.EnumerateArray())
+                foreach (var item in dataArray.EnumerateArray())
                 {
                     var trendEntry = new TrendData
                     {
@@ -489,30 +492,56 @@ public partial class DashboardPage : ContentPage
         barChartView.IsVisible = true;
     }
 
-    // Fetch data from the API for bar chart
     private async Task<List<Dictionary<string, object>>> FetchBarChartData(string table, string xAxis, string yAxis, string aggregationFunction)
     {
         var barChartData = new List<Dictionary<string, object>>();
+        int aggregationType = -1;
+
+        // Map aggregationFunction to its respective enum integer value
+        switch (aggregationFunction)
+        {
+            case "Sum":
+                aggregationType = 0;
+                break;
+            case "Count":
+                aggregationType = 1;
+                break;
+            case "AVG":
+                aggregationType = 2;
+                break;
+            case "Max":
+                aggregationType = 3;
+                break;
+            case "Min":
+                aggregationType = 4;
+                break;
+            default:
+                ShowErrorMessage("Invalid aggregation function.");
+                return barChartData;
+        }
 
         try
         {
-            var response = await _httpClient.GetAsync($"http://localhost:5087/api/Management/aggregate-chart?table={table}&x={xAxis}&y={yAxis}&aggregationType={aggregationFunction}");
+            // Make API call with the appropriate aggregation type
+            var response = await _httpClient.GetAsync($"http://localhost:5087/api/Management/aggregate-chart?table={table}&x={xAxis}&y={yAxis}&aggregationType={aggregationType}");
 
             if (response.IsSuccessStatusCode)
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API Response: " + jsonResponse);
+
                 var jsonDocument = JsonDocument.Parse(jsonResponse);
 
-                // Navigate to $values
-                var values = jsonDocument.RootElement.GetProperty("data").GetProperty("$values");
+                // Navigate directly to the "data" array
+                var dataArray = jsonDocument.RootElement.GetProperty("data");
 
                 // Populate the barChartData list
-                foreach (var item in values.EnumerateArray())
+                foreach (var item in dataArray.EnumerateArray())
                 {
                     var dataEntry = new Dictionary<string, object>
                     {
                         { "Label", item.GetProperty(xAxis).GetString() }, // Dynamically get X value
-                        { "Value", item.GetProperty($"SUM({yAxis})").GetInt32() } // Use the summed value directly
+                        { "Value", item.GetProperty($"{aggregationFunction.ToUpper()}({yAxis})").GetDouble() } // Get aggregated value dynamically
                     };
                     barChartData.Add(dataEntry);
                 }
@@ -529,6 +558,9 @@ public partial class DashboardPage : ContentPage
 
         return barChartData; // Return the list of dictionaries
     }
+
+    //
+    //
 
     //
     //
@@ -612,13 +644,15 @@ public partial class DashboardPage : ContentPage
             if (response.IsSuccessStatusCode)
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API Response: " + jsonResponse);
+
                 var jsonDocument = JsonDocument.Parse(jsonResponse);
 
-                // Navigate to $values
-                var values = jsonDocument.RootElement.GetProperty("data").GetProperty("$values");
+                // Navigate directly to the "data" array
+                var dataArray = jsonDocument.RootElement.GetProperty("data");
 
                 // Populate the pieChartData list
-                foreach (var item in values.EnumerateArray())
+                foreach (var item in dataArray.EnumerateArray())
                 {
                     var dataEntry = new Dictionary<string, object>
                     {
