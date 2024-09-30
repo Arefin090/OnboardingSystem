@@ -3,6 +3,7 @@ using Microsoft.Maui.Controls;
 using System.Collections.Generic;
 using CommunityToolkit.Maui.Views;
 using OnboardingSystem.Management.Components;
+using OnboardingSystem.Enums;
 
 namespace OnboardingSystem.Management;
 
@@ -42,7 +43,8 @@ public partial class ManagementPage : ContentPage
         }
 
         // Add labels to the grid
-        for (int i = 0; i < headers.Count; i++)
+        int i = 0;
+        for (i = 0; i < headers.Count; i++)
         {
             var label = new Label
             {
@@ -55,13 +57,25 @@ public partial class ManagementPage : ContentPage
             HeaderGrid.Children.Add(label);
             HeaderGrid.SetColumn(label, i);
         }
+        i++;
+        var updateButtonLabel = new Label
+        {
+            Text = "Operation",
+            FontAttributes = FontAttributes.Bold,
+            HorizontalOptions = LayoutOptions.Start,
+            VerticalOptions = LayoutOptions.Center,
+            FontSize = 18
+        };
+        HeaderGrid.Children.Add(updateButtonLabel);
+        HeaderGrid.SetColumn(updateButtonLabel, i);
+
         AddCollectionView(headers.Count());
     }
 
     private List<GridLength> GetColumnDefinitions(int numOfColumns)
     {
         var columnWidths = new List<GridLength>();
-        for (int i = 0; i < numOfColumns; i++)
+        for (int i = 0; i <= numOfColumns; i++)
         {
             columnWidths.Add(new GridLength(1, GridUnitType.Star)); // Defines Column Size
         }
@@ -91,6 +105,20 @@ public partial class ManagementPage : ContentPage
                     grid.SetColumn(item, column);
                     column++;
                 }
+                var button = new Button
+                {
+                    Text = "Update",
+                    TextColor = Colors.White,
+                    BackgroundColor = (Color)Application.Current.Resources["Primary"],
+                    CornerRadius = 10,
+                    FontSize = 18,
+                    HorizontalOptions = LayoutOptions.Start // or LayoutOptions.Center
+                };
+                button.Clicked += (sender, e) => {
+                    
+                };
+                grid.Children.Add(button);
+                Grid.SetColumn(button, column);
             }
 
             return grid;
@@ -100,6 +128,11 @@ public partial class ManagementPage : ContentPage
 
     private void InsertButton_Clicked(object sender, EventArgs e)
     {
-        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel));
+        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel, "Insert Form", CrudOperation.CREATE));
+    }
+
+    private void FilterButton_Clicked(object sender, EventArgs e)
+    {
+        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel, "Search Form", CrudOperation.READ));
     }
 }

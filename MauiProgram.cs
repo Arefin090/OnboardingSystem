@@ -32,8 +32,7 @@ public static class MauiProgram
         sp.GetRequiredService<IUserService>()
     )
 );
-        MenuInitializer.CreateTables();
-		Console.WriteLine("ASdasd");
+
         // Register your pages
         builder.Services.AddTransient<LoginPage>();
 

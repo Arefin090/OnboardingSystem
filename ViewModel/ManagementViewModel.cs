@@ -18,10 +18,10 @@ public class ManagementViewModel : INotifyPropertyChanged
         _tableName = tableName;
         // Populate the collection with initial data
         Rows = new ObservableCollection<Dictionary<string, string>>();
-        FetchData();
+        FetchData(new Dictionary<string, string>());
     }
 
-    public async void FetchData()
+    public async void FetchData(Dictionary<string, string> requestData)
     {
         HttpClient client = new HttpClient();
         client.BaseAddress = new Uri(Constants.API_BASE_URL);
@@ -29,7 +29,7 @@ public class ManagementViewModel : INotifyPropertyChanged
         try
         {
             // Perform the POST request
-            var response = await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={0}&PageSize=10", new Dictionary<string, string>());
+            var response = await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={0}&PageSize=20", requestData);
 
             // Ensure the response was successful
             response.EnsureSuccessStatusCode();
