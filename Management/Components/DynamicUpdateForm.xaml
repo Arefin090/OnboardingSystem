@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               x:Class="OnboardingSystem.Management.Components.DynamicUpdateForm"
+               xmlns:toolkit="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+               CanBeDismissedByTappingOutsideOfPopup="False">
+    <VerticalStackLayout WidthRequest="1200" Padding="20" BackgroundColor="#424242">
+        <Label 
+            Text="{Binding FormTitle}"
+            FontSize="26"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            TextColor="Black" 
+            FontAttributes="Bold"
+            Margin="0,0,0,20" />
+
+        <!-- StackLayout for Dynamic Entries -->
+        <StackLayout x:Name="DynamicEntryStack" />
+
+        <!-- Horizontal Stack for Buttons -->
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,0,20,0">
+            <!-- Submit Button -->
+            <Button 
+                Text="Submit" 
+                TextColor="Black"
+                CornerRadius="20"
+                HeightRequest="50"
+                FontSize="18"
+                Clicked="OnSubmitClicked" />
+
+            <!-- Cancel Button -->
+            <Button 
+                Text="Cancel" 
+                TextColor="Black"
+                CornerRadius="20"
+                HeightRequest="50"
+                FontSize="18"
+                Clicked="OnCancelClicked" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</toolkit:Popup>

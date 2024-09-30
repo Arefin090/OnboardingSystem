@@ -6,10 +6,15 @@ namespace OnboardingSystem
     public partial class App : Application
     {
        
+        private async void GoToInitPage()
+        {
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+        }
         public App(IAuthenticationService authService)
                 {
-                    InitializeComponent();
-                    MainPage = new AppShell(authService);
+			//GoToInitPage();
+			InitializeComponent();
+                    MainPage = new AppShell();
                     Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
                 }
     }

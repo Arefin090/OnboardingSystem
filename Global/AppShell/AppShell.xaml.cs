@@ -5,6 +5,8 @@ using OnboardingSystem.Models;
 namespace OnboardingSystem.Global.Menu;
 
 using Microsoft.Maui.Controls;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using OnboardingSystem.Authentication;
 
 public partial class AppShell : Shell
@@ -12,76 +14,85 @@ public partial class AppShell : Shell
     private readonly IAuthenticationService _authService;
     private ShellContent[] _defaultShellItem = new[]
     {
-        new ShellContent()
-            { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp_icon.png", Route = $"{nameof(DashboardPage)}"},
-		new ShellContent()
-			{ Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "group_96dp_icon.png", Route = $"{nameof(UserListPage)}"},
-		new ShellContent()
-            { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"},
+        new ShellContent() { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp.png", Route = $"{nameof(DashboardPage)}"},
+        new ShellContent() { Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "group_96dp.png", Route = $"{nameof(UserListPage)}"},
+        new ShellContent() { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp.png", Route = $"{nameof(LoginPage)}"},
     };
-    public AppShell(IAuthenticationService authService)
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private string _currentRoute;
+    public string CurrentRoute
+    {
+        get => _currentRoute;
+        set
+        {
+            if (_currentRoute != value)
+            {
+                _currentRoute = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public AppShell()
     {
         InitializeComponent();
-        _authService = authService;
-        // var flyoutItems = new FlyoutItem()
-        // {
-        //     Title = "Main Page",
-        //     // Route = $"//{nameof(LoginPage)}",
-        //     FlyoutDisplayOptions = FlyoutDisplayOptions.AsMultipleItems,
-        // };
-        // foreach (var item in _defaultShellItem)
-        // {
-        //     flyoutItems.Items.Add(item);
-        // }
-        // Items.Add(flyoutItems);
         LoadMenuItems();
-         RegisterRoutes();
     }
-    private void LoadMenuItems() {
+
+    private void LoadMenuItems()
+    {
         var flyoutItems = new FlyoutItem()
         {
             Title = "Main Page",
-            // Route = $"//{nameof(LoginPage)}",
             FlyoutDisplayOptions = FlyoutDisplayOptions.AsMultipleItems,
         };
+
+        // Adding default items
         flyoutItems.Items.Add(_defaultShellItem[0]);
         flyoutItems.Items.Add(_defaultShellItem[1]);
-        var menuItems = new MenuInitializer().menuItems;
-        foreach(var item in menuItems) {
-            var content = new ShellContent(){
+
+        // Load menu items from your initializer
+        var menuItems = MenuInitializer.menu;
+        foreach (var item in menuItems)
+        {
+            var content = new ShellContent()
+            {
                 Title = item.Title,
-                Route = item.TableName,
+                Route = item.TableName, // Ensure this is unique for each item
                 ContentTemplate = new DataTemplate(typeof(ManagementPage)),
                 Icon = item.Icon
             };
             flyoutItems.Items.Add(content);
         }
+
+        // Adding the last default item
         flyoutItems.Items.Add(_defaultShellItem[2]);
+
+        // Finally, add the FlyoutItem to the Shell
         Items.Add(flyoutItems);
     }
 
-    private void RegisterRoutes()
+private void OnNavigated(object sender, ShellNavigatedEventArgs e)
+{
+    if (e?.Current?.Location != null)
     {
-        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-        Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
-        Routing.RegisterRoute(nameof(UserListPage), typeof(UserListPage));
-        Routing.RegisterRoute("Logout", typeof(LoginPage));
-        // Register other routes as needed
+        CurrentRoute = e.Current.Location.ToString(); // Update the current route
+        // Notify the ManagementPage or any other pages that the route has changed
+        MessagingCenter.Send(this, "RouteChanged", CurrentRoute);
     }
-    protected override async void OnNavigating(ShellNavigatingEventArgs args)
-    {
-        base.OnNavigating(args);
+}
 
-        if (args.Target.Location.OriginalString.Contains("Logout"))
-        {
-            args.Cancel();
-            await PerformLogoutAsync();
-        }
+
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private async Task PerformLogoutAsync()
+    protected override void OnDisappearing()
     {
-        await _authService.ClearAuthStateAsync();
-        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+        base.OnDisappearing();
+        Shell.Current.Navigated -= OnNavigated; // Unsubscribe from the event
     }
 }
