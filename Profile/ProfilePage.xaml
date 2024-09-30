@@ -5,27 +5,122 @@
              Title=""
              Shell.NavBarIsVisible="False"> <!--Disable top bar-->
 
-    <ScrollView>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/> <!--row 1-->
-                <RowDefinition Height="*"/> <!--row 1-->
-                <RowDefinition Height="*"/> <!--row 1-->
-                <RowDefinition Height="*"/> <!--row 1-->
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/> <!--column 1-->
-                <ColumnDefinition Width="*"/> <!--column 3-->
-            </Grid.ColumnDefinitions>
+    <ContentPage.Resources>
+        <Style x:Key="Entry_Shape" TargetType="RoundRectangle"> <!--Entry Bar Label-->
+            <Setter Property="CornerRadius" Value="20" />
+        </Style>
+    </ContentPage.Resources>
 
+    <ScrollView>
+        <VerticalStackLayout>
             <Label
-                
+                Text="Edit Profile"    
+                HorizontalOptions="Center"
+                FontSize="30"
+                FontAttributes="Bold"
             />
-            <Border>
-                <Entry
-                    
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                    <RowDefinition Height="Auto"/> <!--row 1-->
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".2*"/> <!--column 1-->
+                    <ColumnDefinition Width=".5*"/> <!--column 3-->
+                    <ColumnDefinition Width=".2*"/> <!--column 3-->
+                    <ColumnDefinition Width=".5*"/> <!--column 1-->
+                    <ColumnDefinition Width=".2*"/> <!--column 3-->
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    Text="Username"
+                    Grid.Column="1"
                 />
-            </Border>
-        </Grid>
+                <Border Grid.Row="1" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        Text="{Binding Username}"
+                    />
+                </Border>
+
+                <Label
+                    Text="Password"
+                    Grid.Column="3"
+                />
+                <Border Grid.Row="1" Grid.Column="3">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        Text="{Binding Password}"
+                    />
+                </Border>
+
+                <Label
+                    Text="First Name"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                />
+                <Border Grid.Row="3" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        Text="{Binding FirstName}"
+                    />
+                </Border>
+
+                <Label
+                    Text="Role"
+                    Grid.Row="2"
+                    Grid.Column="3"
+                />
+                <Border Grid.Row="3" Grid.Column="3">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                    </Border.StrokeShape>
+                    <Label
+                        Text="{Binding Role}"
+                    />
+                </Border>
+
+                <Label
+                    Text="Last Name"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                />
+                <Border Grid.Row="5" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        Text="{Binding LastName}"
+                    />
+                </Border>
+
+                <Label
+                    Text="Phone"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                />
+                <Border Grid.Row="7" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        Text="{Binding Phone}"
+                    />
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
