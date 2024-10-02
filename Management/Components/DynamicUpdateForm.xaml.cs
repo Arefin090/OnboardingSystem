@@ -28,7 +28,7 @@ public partial class DynamicUpdateForm : Popup
     private void CreateDynamicEntries()
     {
         // Example entries to create
-        var tableSchema = MenuInitializer.menu.Find(x => x.TableName == _tableName);
+        var tableSchema = MenuInitializer.menuItems.Find(x => x.TableName == _tableName);
         var entryData = tableSchema.ColumnDefinitions.Select(col => new { Label = col.Name, Placeholder = $"Enter {col.Name}", Keyboard = Keyboard.Default, Key = col.Name }).ToList();
 
         foreach (var entry in entryData)
