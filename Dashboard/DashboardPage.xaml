@@ -39,18 +39,18 @@
                         VerticalOptions="Center"
                         Grid.ColumnSpan="2"
                         Margin="0,0,10,0">
-        <!-- Save Button -->
-        <Button Text="Save"
-                Clicked="OnSaveClicked"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-                Margin="0,0,10,0"/>
+                <!-- Save Button -->
+                <Button Text="Save"
+                        Clicked="OnSaveClicked"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        Margin="0,0,10,0"/>
 
-        <!-- Load Button -->
-        <Button Text="Reload"
-                Clicked="OnLoadClicked"
-                HorizontalOptions="End"
-                VerticalOptions="Center"/>
+                <!-- Load Button -->
+                <Button Text="Reload"
+                        Clicked="OnLoadClicked"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"/>
         </HorizontalStackLayout>
 
         <!-- Content Block 1 (Pickers + Bar Chart) -->

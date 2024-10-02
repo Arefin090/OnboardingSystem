@@ -1,6 +1,6 @@
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using OnboardingSystem.Management;
-using OnboardingSystem.Models;
+using OnboardingSystem.Models.Menu;
 
 namespace OnboardingSystem.Global.Menu;
 
@@ -51,7 +51,7 @@ public partial class AppShell : Shell
         flyoutItems.Items.Add(_defaultShellItem[1]);
 
         // Load menu items from your initializer
-        var menuItems = MenuInitializer.menu;
+        var menuItems = MenuInitializer.menuItems;
         foreach (var item in menuItems)
         {
             var content = new ShellContent()
@@ -59,8 +59,9 @@ public partial class AppShell : Shell
                 Title = item.Title,
                 Route = item.TableName, // Ensure this is unique for each item
                 ContentTemplate = new DataTemplate(typeof(ManagementPage)),
-                Icon = item.Icon
+                Icon = item.Icon                // Using the Icon from AppShellItem
             };
+
             flyoutItems.Items.Add(content);
         }
 
@@ -94,3 +95,4 @@ private void OnNavigated(object sender, ShellNavigatedEventArgs e)
         Shell.Current.Navigated -= OnNavigated; // Unsubscribe from the event
     }
 }
+

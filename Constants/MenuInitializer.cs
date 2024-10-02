@@ -6,35 +6,57 @@ using System.Net.Http.Json;
 
 namespace OnboardingSystem;
 public static class MenuInitializer {
-    /*
-     This is the dynamic array used to initialize a collection of table inside the database
-     */
-    public static List<AppShellItem> menu = new List<AppShellItem> {
-        new AppShellItem { Icon = "table_view_96dp.png", Title = "Staff", TableName = "staff", 
+    public static List<AppShellItem> menuItems = new List<AppShellItem> {
+        // Staff Table
+        new AppShellItem { 
+            Icon = "group_96dp_icon.png", 
+            Title = "Staff", 
+            TableName = "Staff", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "id", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
-                new ColumnDefinitions { Name = "firstname", Key=false, Type = "VARCHAR(40)" },
-                new ColumnDefinitions { Name = "lastname", Key=false, Type = "VARCHAR(40)" },
-                new ColumnDefinitions { Name = "address", Key=false, Type = "VARCHAR(60)" },
+                new ColumnDefinitions { Name = "StaffId", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "Name", Key=false, Type = "VARCHAR(100)" },
+                new ColumnDefinitions { Name = "Role", Key=false, Type = "VARCHAR(50)" },
+                new ColumnDefinitions { Name = "PhoneNumber", Key=false, Type = "VARCHAR(20)" },
+                new ColumnDefinitions { Name = "Branch", Key=false, Type = "VARCHAR(50)" },
             }
-         },
-        new AppShellItem { Icon = "table_view_96dp.png", Title = "Product", TableName = "product", 
+        },
+        // Products Table
+        new AppShellItem { 
+            Icon = "group_96dp_icon.png", 
+            Title = "Products", 
+            TableName = "Products", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "id", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
-                new ColumnDefinitions { Name = "name", Key=false, Type = "VARCHAR(40)" },
-                new ColumnDefinitions { Name = "description", Key=false, Type = "VARCHAR(255)" },
-                new ColumnDefinitions { Name = "price", Key=false, Type = "FLOAT(2)" },
+                new ColumnDefinitions { Name = "ProductId", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "ProductName", Key=false, Type = "VARCHAR(100)" },
+                new ColumnDefinitions { Name = "Details", Key=false, Type = "VARCHAR(255)" },
+                new ColumnDefinitions { Name = "Gender", Key=false, Type = "VARCHAR(10)" },
+                new ColumnDefinitions { Name = "Price", Key=false, Type = "DECIMAL(10,2)" },
+                new ColumnDefinitions { Name = "Stock", Key=false, Type = "INT" },
+            }
+        },
+
+        // Sales Table
+        new AppShellItem { 
+            Icon = "group_96dp_icon.png", 
+            Title = "Sales", 
+            TableName = "Sales", 
+            ColumnDefinitions = new List<ColumnDefinitions> {
+                new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "ProductId", Key=false, Type = "INT", Constraint = "FOREIGN KEY REFERENCES Products(ProductId)" },
+                new ColumnDefinitions { Name = "Qty", Key=false, Type = "INT" },
+                new ColumnDefinitions { Name = "Branch", Key=false, Type = "VARCHAR(50)" },
+                new ColumnDefinitions { Name = "Date", Key=false, Type = "DATE" },
             }
         }
     };
 
     private record CreateTableRequest(
-            List<TableSchema> menu
+        List<TableSchema> menu
     );
     private record TableSchema(
         String TableName,
         List<ColumnDefinitions> ColumnDefinitions
-       );
+    );
 
     public async static void CreateTables()
     {
@@ -43,7 +65,7 @@ public static class MenuInitializer {
             
         var tableSchemas = new List<TableSchema>();
 
-        foreach(var item in menu)
+        foreach(var item in menuItems)
         {
             var tableSchema = new TableSchema(item.TableName, item.ColumnDefinitions);
             tableSchemas.Add(tableSchema);
@@ -67,7 +89,7 @@ public static class MenuInitializer {
     }
     public static AppShellItem? GetItemByTableName(string tableName)
     {
-        var item = menu.Find(item => item.TableName == tableName);
+        var item = menuItems.Find(item => item.TableName == tableName);
         return item;
     }
 };

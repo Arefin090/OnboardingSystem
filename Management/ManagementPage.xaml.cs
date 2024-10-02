@@ -31,7 +31,7 @@ public partial class ManagementPage : ContentPage
 
     private void AddDataGrid(string route)
     {
-        var table = MenuInitializer.menu.Find(table => table.TableName == route);
+        var table = MenuInitializer.menuItems.Find(table => table.TableName == route);
         var headers = table?.ColumnDefinitions.Select(c => c.Name).ToList();
 
         // Clear any existing column definitions
