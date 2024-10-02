@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Markup;
 using Microsoft.Extensions.Logging;
 using OnboardingSystem.Authentication;
+using CommunityToolkit.Maui;
 
 namespace OnboardingSystem;
 
@@ -11,9 +12,11 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>()
+			.UseMauiApp<App>()	
+			.UseMauiCommunityToolkit()
 			.UseMicrocharts()
 			.UseMauiCommunityToolkitMarkup()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

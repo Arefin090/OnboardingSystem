@@ -15,12 +15,12 @@ namespace OnboardingSystem
         private string _password = "";
         private bool _hasError;
         private string _errorMessage = "";
-        private string _loggedInEmail = "";
+        private string _loggedInUsername = "";
 
-        public string LoggedInEmail
-        {
-            get => _loggedInEmail;
-            private set => SetProperty(ref _loggedInEmail, value);
+        public string LoggedInUsername
+		{
+            get => _loggedInUsername;
+            private set => SetProperty(ref _loggedInUsername, value);
         }
 
         public string Username
@@ -87,7 +87,7 @@ namespace OnboardingSystem
 
         protected virtual async Task HandleSuccessfulLoginAsync()
         {
-            LoggedInEmail = Username;
+			LoggedInUsername = Username;
             await Shell.Current.GoToAsync($"//{nameof(DashboardPage)}");
         }
 
@@ -98,7 +98,7 @@ namespace OnboardingSystem
             await Task.Delay(4000);
             HasError = false;
             ErrorMessage = string.Empty;
-            LoggedInEmail = string.Empty;
+			LoggedInUsername = string.Empty;
         }
 
         protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)

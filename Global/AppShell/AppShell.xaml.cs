@@ -5,75 +5,59 @@ using OnboardingSystem.Models.Menu;
 namespace OnboardingSystem.Global.Menu;
 
 using Microsoft.Maui.Controls;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 public partial class AppShell : Shell
 {
     private ShellContent[] _defaultShellItem = new[]
     {
-        new ShellContent()
-            { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp_icon.png", Route = $"{nameof(DashboardPage)}"},
-		new ShellContent()
-			{ Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "group_96dp_icon.png", Route = $"{nameof(UserListPage)}"},
-		new ShellContent()
-            { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"},
+        new ShellContent() { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp.png", Route = $"{nameof(DashboardPage)}"},
+        new ShellContent() { Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "group_96dp.png", Route = $"{nameof(UserListPage)}"},
+        new ShellContent() { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp.png", Route = $"{nameof(LoginPage)}"},
     };
-    public  AppShell()
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private string _currentRoute;
+    public string CurrentRoute
+    {
+        get => _currentRoute;
+        set
+        {
+            if (_currentRoute != value)
+            {
+                _currentRoute = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public AppShell()
     {
         InitializeComponent();
-        
-        // var flyoutItems = new FlyoutItem()
-        // {
-        //     Title = "Main Page",
-        //     // Route = $"//{nameof(LoginPage)}",
-        //     FlyoutDisplayOptions = FlyoutDisplayOptions.AsMultipleItems,
-        // };
-        // foreach (var item in _defaultShellItem)
-        // {
-        //     flyoutItems.Items.Add(item);
-        // }
-        // Items.Add(flyoutItems);
         LoadMenuItems();
     }
-    // private void LoadMenuItems() {
-    //     var flyoutItems = new FlyoutItem()
-    //     {
-    //         Title = "Main Page",
-    //         // Route = $"//{nameof(LoginPage)}",
-    //         FlyoutDisplayOptions = FlyoutDisplayOptions.AsMultipleItems,
-    //     };
-    //     flyoutItems.Items.Add(_defaultShellItem[0]);
-    //     flyoutItems.Items.Add(_defaultShellItem[1]);
-    //     List<string> menuItems = MenuInitializer.menuItems;
-    //     foreach(var item in menuItems) {
-    //         var content = new ShellContent(){
-    //             Title = item.Title,
-    //             Route = item.TableName,
-    //             ContentTemplate = new DataTemplate(typeof(ManagementPage)),
-    //             Icon = item.Icon
-    //         };
-    //         flyoutItems.Items.Add(content);
-    //     }
-    //     flyoutItems.Items.Add(_defaultShellItem[2]);
-    //     Items.Add(flyoutItems);
-    // }
 
-    private void LoadMenuItems() {
-        var flyoutItems = new FlyoutItem() {
+    private void LoadMenuItems()
+    {
+        var flyoutItems = new FlyoutItem()
+        {
             Title = "Main Page",
             FlyoutDisplayOptions = FlyoutDisplayOptions.AsMultipleItems,
         };
 
-        // Add the default shell items
+        // Adding default items
         flyoutItems.Items.Add(_defaultShellItem[0]);
         flyoutItems.Items.Add(_defaultShellItem[1]);
 
-        // Retrieve the menu items from the static class
-        List<AppShellItem> menuItems = MenuInitializer.menuItems; // Corrected type
-
-        foreach (var item in menuItems) {
-            var content = new ShellContent() {
-                Title = item.Title,             // Using AppShellItem's Title
-                Route = item.TableName,         // Using TableName as Route
+        // Load menu items from your initializer
+        var menuItems = MenuInitializer.menuItems;
+        foreach (var item in menuItems)
+        {
+            var content = new ShellContent()
+            {
+                Title = item.Title,
+                Route = item.TableName, // Ensure this is unique for each item
                 ContentTemplate = new DataTemplate(typeof(ManagementPage)),
                 Icon = item.Icon                // Using the Icon from AppShellItem
             };
@@ -81,11 +65,34 @@ public partial class AppShell : Shell
             flyoutItems.Items.Add(content);
         }
 
-        // Add the last default shell item
+        // Adding the last default item
         flyoutItems.Items.Add(_defaultShellItem[2]);
 
-        // Add the FlyoutItems to the Shell
+        // Finally, add the FlyoutItem to the Shell
         Items.Add(flyoutItems);
     }
 
+private void OnNavigated(object sender, ShellNavigatedEventArgs e)
+{
+    if (e?.Current?.Location != null)
+    {
+        CurrentRoute = e.Current.Location.ToString(); // Update the current route
+        // Notify the ManagementPage or any other pages that the route has changed
+        MessagingCenter.Send(this, "RouteChanged", CurrentRoute);
+    }
 }
+
+
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        Shell.Current.Navigated -= OnNavigated; // Unsubscribe from the event
+    }
+}
+

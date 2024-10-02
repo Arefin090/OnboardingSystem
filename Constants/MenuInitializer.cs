@@ -1,5 +1,9 @@
 using OnboardingSystem.Models.Menu;
 
+
+using System.Net;
+using System.Net.Http.Json;
+
 namespace OnboardingSystem;
 public static class MenuInitializer {
     public static List<AppShellItem> menuItems = new List<AppShellItem> {
@@ -45,4 +49,47 @@ public static class MenuInitializer {
             }
         }
     };
+
+    private record CreateTableRequest(
+        List<TableSchema> menu
+    );
+    private record TableSchema(
+        String TableName,
+        List<ColumnDefinitions> ColumnDefinitions
+    );
+
+    public async static void CreateTables()
+    {
+        HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri(Constants.API_BASE_URL);
+            
+        var tableSchemas = new List<TableSchema>();
+
+        foreach(var item in menuItems)
+        {
+            var tableSchema = new TableSchema(item.TableName, item.ColumnDefinitions);
+            tableSchemas.Add(tableSchema);
+        }
+
+        var requestData = new CreateTableRequest(tableSchemas);
+
+        var response = await client.PostAsJsonAsync("/api/Management/create-tables", requestData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Tables created successfully!");
+        }
+        else
+        {
+            response.EnsureSuccessStatusCode();
+            var errorContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
+
+        }
+    }
+    public static AppShellItem? GetItemByTableName(string tableName)
+    {
+        var item = menuItems.Find(item => item.TableName == tableName);
+        return item;
+    }
 };

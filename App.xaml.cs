@@ -7,9 +7,15 @@ namespace OnboardingSystem
        
         public App()
         {
-            InitializeComponent();
+            
             MainPage = new AppShell();
-            Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            GoToInitPage();
+            InitializeComponent();
+
+        }
+        private async void GoToInitPage()
+        {
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
     }
 }

@@ -3,14 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnboardingSystem.Management.ManagementPage">
     <ContentPage.Content>
+        <ScrollView>
         <!-- Main Layout -->
         <VerticalStackLayout Spacing="10" Padding="20">
 
             <!-- Search and Action Buttons -->
             <HorizontalStackLayout>
-                <SearchBar HorizontalOptions="StartAndExpand" Placeholder="Search..." />
-                <Button Text="Filters" />
-                <Button Text="Add staff" />
+                <Button Text="Filters" Clicked="FilterButton_Clicked" />
+                <Button Text="Insert" Clicked="InsertButton_Clicked"/>
                 <Button Text="Delete" />
             </HorizontalStackLayout>
             
@@ -25,10 +25,11 @@
             <!-- Pagination -->
             <HorizontalStackLayout Margin="12, 0, 12, 0" HorizontalOptions="Center" VerticalOptions="Center">
                 <Button Text="Prev" />
-                <Label VerticalOptions="Center" Margin="8,0,8,0" Text="1-5 of 23" HorizontalOptions="CenterAndExpand" />
+                <Label VerticalOptions="Center" Margin="8,0,8,0" Text="1" HorizontalOptions="CenterAndExpand" />
                 <Button Text="Next" />
             </HorizontalStackLayout>
 
         </VerticalStackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
