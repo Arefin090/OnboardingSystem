@@ -122,6 +122,7 @@
         <Label Text="Role" Style="{StaticResource ProfileLabelStyle}" Grid.Row="5" Grid.Column="1" />
         <!-- Role Entry -->
         <Entry
+            x:Name="RoleEntry"
             Text="{Binding Role}"
             IsReadOnly="True"
             Style="{StaticResource MaterialEntryStyle}"

@@ -1,5 +1,9 @@
 using System;
 using System.ComponentModel;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+
 
 namespace OnboardingSystem;
 
@@ -14,37 +18,127 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 
 	private bool isEditModeEnabled = false;  // This will track if the fields are editable
 
+	private HttpClient _httpClient;
+
 	public ProfilePage()
 	{
 		InitializeComponent();
 		// Ensure all fields are non-editable when the page loads
         SetFieldsEditable(false);
-		 SaveButton.IsVisible = false;
+		SaveButton.IsVisible = false;
+		_httpClient = new HttpClient(); // HttpClient instance
+
+
+        LoadUserProfile();  // Call to load the profile data on page load
 	}
 
+	// Properties to bind user data
 	public string Username
 	{
 		get => _username;
-		set => _username = value;
-	}
-
-	public string Password
-	{
-		get => _password;
-		set => _password = value;
+		set
+		{
+			_username = value;
+			OnPropertyChanged(nameof(Username)); // Notifying UI when value changes
+		}
 	}
 
 	public string FirstName
 	{
 		get => _firstName;
-		set => _firstName = value;
+		set
+		{
+			_firstName = value;
+			OnPropertyChanged(nameof(FirstName));
+		}
 	}
 
 	public string LastName
 	{
 		get => _lastName;
-		set => _lastName = value;
+		set
+		{
+			_lastName = value;
+			OnPropertyChanged(nameof(LastName));
+		}
 	}
+
+	public string Phone
+	{
+		get => _phone;
+		set
+		{
+			_phone = value;
+			OnPropertyChanged(nameof(Phone));
+		}
+	}
+
+	// Method to decode the JWT and extract the username
+	private string? GetUsernameFromToken(string token)
+	{
+		var handler = new JwtSecurityTokenHandler();
+		var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+		// Extract the "unique_name" field (which holds the username)
+		return jsonToken?.Claims.First(claim => claim.Type == "unique_name")?.Value;
+	}
+
+	 // Method to load user profile
+	private async Task LoadUserProfile()
+	{
+		try
+		{
+			// Retrieve the token securely
+			var token = await SecureStorage.GetAsync("access_token");
+
+			// Extract username from the token
+			var username = GetUsernameFromToken(token);
+
+			// Set the Authorization header with the token
+			_httpClient.DefaultRequestHeaders.Authorization =
+				new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+			// Make the GET request to fetch user profile
+			var response = await _httpClient.GetAsync($"http://localhost:5087/api/User/{username}");
+
+			if (response.IsSuccessStatusCode)
+			{
+				// Parse the response
+				var jsonResponse = await response.Content.ReadAsStringAsync();
+				var user = JsonConvert.DeserializeObject<User>(jsonResponse);
+
+				// Bind the user data to the UI fields
+				UsernameEntry.Text = user.Username;
+				FirstNameEntry.Text = user.FirstName;
+				LastNameEntry.Text = user.LastName;
+				PhoneEntry.Text = user.Phone;
+				 RoleEntry.Text = user.Role; 
+
+				//password fetching is unnecessary thus didn't
+				//PasswordEntry.Text = user.Password; 
+			}
+			else
+			{
+				// Handle the case where the request failed (e.g., display an error)
+				await DisplayAlert("Error", "Failed to load profile data", "OK");
+			}
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+		}
+	}
+
+		// Class to deserialize user data (this should match your User model from the backend)
+        public class User
+        {
+            public string? Username { get; set; }
+            public string? FirstName { get; set; }
+            public string? LastName { get; set; }
+            public string? Phone { get; set; }
+            public string? Password { get; set; }
+            public string? Role { get; set; }
+        }
 
 	// Event handler for the edit icon button click
     private void OnEditClicked(object sender, EventArgs e)
@@ -62,11 +156,13 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 	// Event handler for Save button click (optional)
     private void OnSaveClicked(object sender, EventArgs e)
     {
-        // Hide the Save button and set fields back to non-editable after saving
-        isEditModeEnabled = false;
-        SetFieldsEditable(false);
-        SaveButton.IsVisible = false;  // Hide the Save button after saving
+		 // Make the fields non-editable again after saving
+            isEditModeEnabled = false;
+            SetFieldsEditable(false);
+            SaveButton.IsVisible = false; // Hide the Save button
+		
     }
+	
 
 	// Helper method to find all Entry fields
     private IEnumerable<Entry> FindEntryFields()
