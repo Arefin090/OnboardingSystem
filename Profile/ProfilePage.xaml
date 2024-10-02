@@ -48,7 +48,7 @@
                 Text="Edit Profile"
                 FontSize="30"
                 FontAttributes="Bold"
-                TextColor="#1976D2" />
+                TextColor="Black" />
             <!-- Pen Icon Button -->
             <ImageButton
                 Source="edit_icon.png"  
@@ -68,7 +68,7 @@
             x:Name="UsernameEntry"
             Text="{Binding Username}"
             Style="{StaticResource MaterialEntryStyle}"
-            IsEnabled="False"
+            IsReadOnly="True"
             Grid.Row="2"
             Grid.Column="0" />
 
@@ -81,6 +81,7 @@
             Style="{StaticResource MaterialEntryStyle}"
             IsEnabled="False"
             IsPassword="True"
+            IsReadOnly="True"
             Grid.Row="2"
             Grid.Column="1" />
 
@@ -125,6 +126,7 @@
             x:Name="RoleEntry"
             Text="{Binding Role}"
             IsReadOnly="True"
+            IsEnabled="False"
             Style="{StaticResource MaterialEntryStyle}"
             Grid.Row="6"
             Grid.Column="1" />
@@ -135,7 +137,7 @@
             Text="Save Changes"
             Command="{Binding SaveCommand}"
             Clicked="OnSaveClicked"
-            BackgroundColor="#1976D2"
+            BackgroundColor="Black"
             TextColor="White"
             HeightRequest="50"
             WidthRequest="200"

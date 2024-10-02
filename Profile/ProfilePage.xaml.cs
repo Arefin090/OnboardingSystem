@@ -9,6 +9,7 @@ namespace OnboardingSystem;
 
 public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 {
+	 private string _id = "";
 	private string _username = "";
 	private string _password = "";
 	private string _firstName = "";
@@ -108,6 +109,7 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 				var user = JsonConvert.DeserializeObject<User>(jsonResponse);
 
 				// Bind the user data to the UI fields
+				 _id = user.Id.ToString();
 				UsernameEntry.Text = user.Username;
 				FirstNameEntry.Text = user.FirstName;
 				LastNameEntry.Text = user.LastName;
@@ -132,7 +134,8 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 		// Class to deserialize user data (this should match your User model from the backend)
         public class User
         {
-            public string? Username { get; set; }
+			 public int Id { get; set; }
+			 public string? Username { get; set; }
             public string? FirstName { get; set; }
             public string? LastName { get; set; }
             public string? Phone { get; set; }
@@ -154,15 +157,52 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
     }
 
 	// Event handler for Save button click (optional)
-    private void OnSaveClicked(object sender, EventArgs e)
-    {
-		 // Make the fields non-editable again after saving
-            isEditModeEnabled = false;
-            SetFieldsEditable(false);
-            SaveButton.IsVisible = false; // Hide the Save button
-		
-    }
-	
+   // Event handler for save button click
+        private async void OnSaveClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var token = await SecureStorage.GetAsync("access_token");
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var updateUser = new
+                {	
+					Id = int.Parse(_id),
+                    Username = UsernameEntry.Text,
+                    FirstName = FirstNameEntry.Text,
+                    LastName = LastNameEntry.Text,
+                    Phone = PhoneEntry.Text,
+					Role = RoleEntry.Text
+                };
+
+                var jsonContent = JsonConvert.SerializeObject(updateUser);
+				 Console.WriteLine($"Payload: {jsonContent}"); // Log the payload
+                var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+
+                // Send PUT request to update user data
+                var response = await _httpClient.PutAsync("http://localhost:5087/api/User/update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    await DisplayAlert("Success", "Profile updated successfully", "OK");
+                    SetFieldsEditable(false);
+                    SaveButton.IsVisible = false;
+                }
+                else
+                {
+					 var errorContent = await response.Content.ReadAsStringAsync();
+    				Console.WriteLine($"Error: {errorContent}");
+                    await DisplayAlert("Error", "Failed to save profile changes", "OK");
+					
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+            }
+        }
+
 
 	// Helper method to find all Entry fields
     private IEnumerable<Entry> FindEntryFields()
@@ -172,11 +212,13 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 	 // Method to set all Entry fields as editable or non-editable
     private void SetFieldsEditable(bool isEnabled)
     {
-        UsernameEntry.IsEnabled = isEnabled;
-        PasswordEntry.IsEnabled = isEnabled;
+		
+        UsernameEntry.IsEnabled = false;
+        PasswordEntry.IsEnabled = false;
         FirstNameEntry.IsEnabled = isEnabled;
         LastNameEntry.IsEnabled = isEnabled;
         PhoneEntry.IsEnabled = isEnabled;
+		RoleEntry.IsEnabled = false;
     }
 
 }
