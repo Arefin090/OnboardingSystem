@@ -67,6 +67,7 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
 		<PackageReference Include="IdentityModel" Version="7.0.0" />
+		<PackageReference Include="Material.Components.Maui" Version="0.2.2-preview" />
 		<PackageReference Include="Microcharts.Maui" Version="0.9.5.9" />
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />

@@ -1,31 +1,149 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
              x:Class="OnboardingSystem.ProfilePage"
              Title=""
-             Shell.NavBarIsVisible="False"> <!--Disable top bar-->
+             Shell.NavBarIsVisible="False">
 
-    <ScrollView>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/> <!--row 1-->
-                <RowDefinition Height="*"/> <!--row 1-->
-                <RowDefinition Height="*"/> <!--row 1-->
-                <RowDefinition Height="*"/> <!--row 1-->
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/> <!--column 1-->
-                <ColumnDefinition Width="*"/> <!--column 3-->
-            </Grid.ColumnDefinitions>
+    <ContentPage.Resources>
+        <!-- Updated the style to use Material components correctly -->
+        <Style x:Key="MaterialEntryStyle" TargetType="Entry">
+            <Setter Property="Margin" Value="10,5" />
+            <Setter Property="HeightRequest" Value="50" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="TextColor" Value="Black" />
+        </Style>
 
+        <!-- Style for the label in the profile page -->
+        <Style x:Key="ProfileLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="TextColor" Value="#424242" />
+            <Setter Property="Margin" Value="0,10,0,5" />
+        </Style>
+    </ContentPage.Resources>
+
+   <ScrollView>
+    <Grid Padding="20" RowSpacing="15" ColumnSpacing="20">
+        <!-- Define rows and columns for compact field placement -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /> <!-- Title row -->
+            <RowDefinition Height="Auto" /> <!-- Label Row for Username and Password -->
+            <RowDefinition Height="Auto" /> <!-- Entry Row for Username and Password -->
+            <RowDefinition Height="Auto" /> <!-- Label Row for First Name and Last Name -->
+            <RowDefinition Height="Auto" /> <!-- Entry Row for First Name and Last Name -->
+            <RowDefinition Height="Auto" /> <!-- Label Row for Phone and Role -->
+            <RowDefinition Height="Auto" /> <!-- Entry Row for Phone and Role -->
+            <RowDefinition Height="Auto" /> <!-- Row for Save Button -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" /> <!-- First column for left-side fields -->
+            <ColumnDefinition Width="*" /> <!-- Second column for right-side fields -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Title for the page with pen icon -->
+        <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2" HorizontalOptions="Center">
             <Label
-                
-            />
-            <Border>
-                <Entry
-                    
-                />
-            </Border>
-        </Grid>
-    </ScrollView>
+                Text="Edit Profile"
+                FontSize="30"
+                FontAttributes="Bold"
+                TextColor="#1976D2" />
+            <!-- Pen Icon Button -->
+            <ImageButton
+                Source="edit_icon.png"  
+                WidthRequest="5"
+                HeightRequest="5"
+                Clicked="OnEditClicked"
+                BackgroundColor="Transparent"
+                VerticalOptions="Center"
+                HorizontalOptions="Start"
+                Margin="10,0,0,0" />
+        </HorizontalStackLayout>
+
+        <!-- Username Label -->
+        <Label Text="Username" Style="{StaticResource ProfileLabelStyle}" Grid.Row="1" Grid.Column="0" />
+        <!-- Username Entry -->
+        <Entry
+            x:Name="UsernameEntry"
+            Text="{Binding Username}"
+            Style="{StaticResource MaterialEntryStyle}"
+            IsEnabled="False"
+            Grid.Row="2"
+            Grid.Column="0" />
+
+        <!-- Password Label -->
+        <Label Text="Password" Style="{StaticResource ProfileLabelStyle}" Grid.Row="1" Grid.Column="1" />
+        <!-- Password Entry -->
+        <Entry
+            x:Name="PasswordEntry"
+            Text="{Binding Password}"
+            Style="{StaticResource MaterialEntryStyle}"
+            IsEnabled="False"
+            IsPassword="True"
+            Grid.Row="2"
+            Grid.Column="1" />
+
+        <!-- First Name Label -->
+        <Label Text="First Name" Style="{StaticResource ProfileLabelStyle}" Grid.Row="3" Grid.Column="0" />
+        <!-- First Name Entry -->
+        <Entry
+            x:Name="FirstNameEntry"
+            Text="{Binding FirstName}"
+            Style="{StaticResource MaterialEntryStyle}"
+            IsEnabled="False"
+            Grid.Row="4"
+            Grid.Column="0" />
+
+        <!-- Last Name Label -->
+        <Label Text="Last Name" Style="{StaticResource ProfileLabelStyle}" Grid.Row="3" Grid.Column="1" />
+        <!-- Last Name Entry -->
+        <Entry
+            x:Name="LastNameEntry"
+            Text="{Binding LastName}"
+            Style="{StaticResource MaterialEntryStyle}"
+            IsEnabled="False"
+            Grid.Row="4"
+            Grid.Column="1" />
+
+        <!-- Phone Label -->
+        <Label Text="Phone" Style="{StaticResource ProfileLabelStyle}" Grid.Row="5" Grid.Column="0" />
+        <!-- Phone Entry -->
+        <Entry
+            x:Name="PhoneEntry"
+            Text="{Binding Phone}"
+            Style="{StaticResource MaterialEntryStyle}"
+            IsEnabled="False"
+            Keyboard="Telephone"
+            Grid.Row="6"
+            Grid.Column="0" />
+
+        <!-- Role Label -->
+        <Label Text="Role" Style="{StaticResource ProfileLabelStyle}" Grid.Row="5" Grid.Column="1" />
+        <!-- Role Entry -->
+        <Entry
+            Text="{Binding Role}"
+            IsReadOnly="True"
+            Style="{StaticResource MaterialEntryStyle}"
+            Grid.Row="6"
+            Grid.Column="1" />
+
+        <!-- Save Button -->
+        <Button
+            x:Name="SaveButton"
+            Text="Save Changes"
+            Command="{Binding SaveCommand}"
+            Clicked="OnSaveClicked"
+            BackgroundColor="#1976D2"
+            TextColor="White"
+            HeightRequest="50"
+            WidthRequest="200"
+            HorizontalOptions="Center"
+            Grid.Row="7"
+            IsVisible="False"
+            Grid.ColumnSpan="2" /> <!-- Span across both columns -->
+    </Grid>
+</ScrollView>
+
+
 </ContentPage>
