@@ -19,7 +19,7 @@ public partial class DashboardPage : ContentPage
 
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5087/api/") // Base URL
+            BaseAddress = new Uri($"{Constants.API_BASE_URL}/api/") // Base URL
         };
 
         LoadTables();
@@ -333,7 +333,7 @@ public partial class DashboardPage : ContentPage
 
         try
         {
-            var response = await _httpClient.GetAsync($"http://localhost:5087/api/Management/aggregate-chart?table={table}&x={columnX}&y={columnY}&aggregationType=0");
+            var response = await _httpClient.GetAsync($"{Constants.API_BASE_URL}{Constants.DASHBOARD_ENDPOINT}?table={table}&x={columnX}&y={columnY}&aggregationType=0");
 
             if (response.IsSuccessStatusCode)
             {
@@ -523,7 +523,7 @@ public partial class DashboardPage : ContentPage
         try
         {
             // Make API call with the appropriate aggregation type
-            var response = await _httpClient.GetAsync($"http://localhost:5087/api/Management/aggregate-chart?table={table}&x={xAxis}&y={yAxis}&aggregationType={aggregationType}");
+            var response = await _httpClient.GetAsync($"{Constants.API_BASE_URL}{Constants.DASHBOARD_ENDPOINT}?table={table}&x={xAxis}&y={yAxis}&aggregationType={aggregationType}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -639,7 +639,7 @@ public partial class DashboardPage : ContentPage
 
         try
         {
-            var response = await _httpClient.GetAsync($"http://localhost:5087/api/Management/aggregate-chart?table={table}&x={xAxis}&y={yAxis}&aggregationType=SUM");
+            var response = await _httpClient.GetAsync($"{Constants.API_BASE_URL}{Constants.DASHBOARD_ENDPOINT}?table={table}&x={xAxis}&y={yAxis}&aggregationType=SUM");
 
             if (response.IsSuccessStatusCode)
             {

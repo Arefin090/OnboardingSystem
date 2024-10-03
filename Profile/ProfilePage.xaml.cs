@@ -100,8 +100,8 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 				new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
 			// Make the GET request to fetch user profile
-			var response = await _httpClient.GetAsync($"http://localhost:5087/api/User/{username}");
-
+			var response = await _httpClient.GetAsync($"{Constants.API_BASE_URL}{Constants.GET_USERS_ENDPOINT}/{username}");
+			
 			if (response.IsSuccessStatusCode)
 			{
 				// Parse the response
@@ -177,11 +177,11 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
                 };
 
                 var jsonContent = JsonConvert.SerializeObject(updateUser);
-				 Console.WriteLine($"Payload: {jsonContent}"); // Log the payload
+				Console.WriteLine($"Payload: {jsonContent}"); // Log the payload
                 var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
 
                 // Send PUT request to update user data
-                var response = await _httpClient.PutAsync("http://localhost:5087/api/User/update", content);
+                var response = await _httpClient.PutAsync($"{Constants.API_BASE_URL}{Constants.UPDATE_USER_ENDPOINT}", content);
 
                 if (response.IsSuccessStatusCode)
                 {
