@@ -14,6 +14,7 @@ public partial class AppShell : Shell
     {
         new ShellContent() { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp.png", Route = $"{nameof(DashboardPage)}"},
         new ShellContent() { Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "group_96dp.png", Route = $"{nameof(UserListPage)}"},
+        new ShellContent() { Title = "Profile", ContentTemplate = new DataTemplate(typeof(ProfilePage)), Icon = "profile.png", Route = $"{nameof(ProfilePage)}"},
         new ShellContent() { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp.png", Route = $"{nameof(LoginPage)}"},
     };
 
@@ -49,6 +50,7 @@ public partial class AppShell : Shell
         // Adding default items
         flyoutItems.Items.Add(_defaultShellItem[0]);
         flyoutItems.Items.Add(_defaultShellItem[1]);
+        flyoutItems.Items.Add(_defaultShellItem[2]);
 
         // Load menu items from your initializer
         var menuItems = MenuInitializer.menuItems;
@@ -66,7 +68,7 @@ public partial class AppShell : Shell
         }
 
         // Adding the last default item
-        flyoutItems.Items.Add(_defaultShellItem[2]);
+        flyoutItems.Items.Add(_defaultShellItem[3]);
 
         // Finally, add the FlyoutItem to the Shell
         Items.Add(flyoutItems);
