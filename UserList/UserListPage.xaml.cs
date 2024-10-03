@@ -1,78 +1,86 @@
+using System;
 using System.Collections.ObjectModel;
-using System.Data;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
-using CommunityToolkit.Maui.Views;
+using System.Threading.Tasks;
 using OnboardingSystem.Authentication;
-using OnboardingSystem.Helpers;
-using Windows.Networking;
-
 
 namespace OnboardingSystem
 {
     public partial class UserListPage : ContentPage, IDisposable
     {
         private readonly IAuthenticationService _authService;
-        private readonly IUserService _userService;
         private readonly HttpClient _httpClient;
-        private readonly Authorization _authHelper;
 
-        public ObservableCollection<JsonObject> Items { get; set; }
+        public ObservableCollection<JsonObject> Items { get; private set; }
+        private ObservableCollection<JsonObject> _itemList;
 
-		private ObservableCollection<JsonObject> _itemList;
-
-        public UserListPage(IAuthenticationService authService, IUserService userService)
+        public UserListPage(IAuthenticationService authService)
         {
             InitializeComponent();
 
             _authService = authService;
-            _userService = userService;
             _httpClient = new HttpClient { BaseAddress = new Uri(Constants.API_BASE_URL) };
-            _authHelper = new Authorization(_authService);
 
             Items = new ObservableCollection<JsonObject>();
-			_itemList = new ObservableCollection<JsonObject>();
+            _itemList = new ObservableCollection<JsonObject>();
             BindingContext = this;
-
-            LoadData();
         }
 
-        private async void LoadData()
+        protected override async void OnAppearing()
         {
-            if (!await _authHelper.IsUserAuthorized(Constants.ROLE_ADMIN, Constants.ROLE_STAFF))
-            {
-                return;
-            }
+            base.OnAppearing();
+            await LoadData();
+        }
 
+        private async Task LoadData()
+        {
             try
             {
-                var token = await _authHelper.GetValidTokenAsync();
+                Console.WriteLine("Starting LoadData method");
+
+                var token = await _authService.GetValidTokenAsync();
                 if (string.IsNullOrEmpty(token))
                 {
-                    await DisplayAlert("Error", "Failed to obtain a valid token. Please log in again.", "OK");
+                    Console.WriteLine("Failed to obtain a valid token. Navigating to login page.");
+                    await DisplayAlert("Error", "Please log in to access this page.", "OK");
+                    await Shell.Current.GoToAsync("//LoginPage");
                     return;
                 }
 
-                var userList = await FetchUserListAsync(token);
+                Console.WriteLine("Valid token obtained. Fetching user list.");
+
+                var userList = await GetUserListAsync(token);
                 if (userList != null)
                 {
+                    Console.WriteLine($"User list fetched successfully. Count: {userList.Count}");
                     UpdateItemsList(userList);
                     GenerateTable();
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Failed to parse user list.", "OK");
+                    Console.WriteLine("Failed to parse user list.");
+                    await DisplayAlert("Error", "Failed to retrieve user list.", "OK");
                 }
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                Console.WriteLine("User is not authorized to access this resource.");
+                await DisplayAlert("Access Denied", "You do not have permission to view this page.", "OK");
+                await Shell.Current.GoToAsync("//DashboardPage"); // Or another appropriate page
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error in LoadData: {ex.Message}");
                 await DisplayAlert("Error", $"Failed to load data: {ex.Message}", "OK");
             }
         }
 
-        private async Task<JsonArray> FetchUserListAsync(string token)
+        private async Task<JsonArray> GetUserListAsync(string token)
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.GetStringAsync(Constants.GET_USER_LIST_ENDPOINT);
             return JsonNode.Parse(response)?.AsArray();
         }
