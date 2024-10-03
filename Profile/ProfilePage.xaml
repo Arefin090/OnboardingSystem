@@ -14,6 +14,7 @@
             <Setter Property="FontSize" Value="18" />
             <Setter Property="BackgroundColor" Value="White" />
             <Setter Property="TextColor" Value="Black" />
+            <Setter Property="CornerRadius" Value="10" />
         </Style>
 
         <!-- Style for the label in the profile page -->
@@ -56,9 +57,9 @@
                 HeightRequest="5"
                 Clicked="OnEditClicked"
                 BackgroundColor="Transparent"
-                VerticalOptions="Center"
+               
                 HorizontalOptions="Start"
-                Margin="10,0,0,0" />
+                Margin="0,0,0,0" />
         </HorizontalStackLayout>
 
         <!-- Username Label -->
