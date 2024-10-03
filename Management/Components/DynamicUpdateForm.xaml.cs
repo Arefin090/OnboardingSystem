@@ -46,8 +46,8 @@ public partial class DynamicUpdateForm : Popup
             {
                 Placeholder = entry.Placeholder,
                 Keyboard = entry.Keyboard,
-                TextColor = Colors.Black,
-               
+                TextColor = Colors.White,
+                BackgroundColor = Color.FromArgb("#303030"),
                 Margin = new Thickness(0, 5),
             };
 
@@ -58,11 +58,11 @@ public partial class DynamicUpdateForm : Popup
             {
                 StrokeShape = new RoundRectangle { CornerRadius = 10 },
                 Content = entryField,
-                HeightRequest = entryField.HeightRequest,
+                // HeightRequest = entryField.HeightRequest,
             };
             // Add to the StackLayout
             DynamicEntryStack.Children.Add(label);
-            DynamicEntryStack.Children.Add(border);
+            DynamicEntryStack.Children.Add(entryField);
         }
     }
     private Dictionary<string, string?> RetrieveEntryData()
@@ -113,6 +113,7 @@ public partial class DynamicUpdateForm : Popup
             default:
                 break;
         }
+        Close();
     }
 
     private void OnCancelClicked(object sender, EventArgs e)

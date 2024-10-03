@@ -5,15 +5,15 @@ using System.Net;
 using System.Net.Http.Json;
 
 namespace OnboardingSystem;
-public static class MenuInitializer {
+public class MenuInitializer {
     public static List<AppShellItem> menuItems = new List<AppShellItem> {
         // Staff Table
         new AppShellItem { 
-            Icon = "group_96dp_icon.png", 
+            Icon = "table_view_96dp.png", 
             Title = "Staff", 
             TableName = "Staff", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "StaffId", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "StaffId", Key=true, Type = "INT AUTO_INCREMENT", Constraint = "AUTO_INCREMENT" },
                 new ColumnDefinitions { Name = "Name", Key=false, Type = "VARCHAR(100)" },
                 new ColumnDefinitions { Name = "Role", Key=false, Type = "VARCHAR(50)" },
                 new ColumnDefinitions { Name = "PhoneNumber", Key=false, Type = "VARCHAR(20)" },
@@ -22,11 +22,11 @@ public static class MenuInitializer {
         },
         // Products Table
         new AppShellItem { 
-            Icon = "group_96dp_icon.png", 
+            Icon = "table_view_96dp.png", 
             Title = "Products", 
             TableName = "Products", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "ProductId", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "ProductId", Key=true, Type = "INT AUTO_INCREMENT", Constraint = "AUTO_INCREMENT" },
                 new ColumnDefinitions { Name = "ProductName", Key=false, Type = "VARCHAR(100)" },
                 new ColumnDefinitions { Name = "Details", Key=false, Type = "VARCHAR(255)" },
                 new ColumnDefinitions { Name = "Gender", Key=false, Type = "VARCHAR(10)" },
@@ -37,11 +37,11 @@ public static class MenuInitializer {
 
         // Sales Table
         new AppShellItem { 
-            Icon = "group_96dp_icon.png", 
+            Icon = "table_view_96dp.png", 
             Title = "Sales", 
             TableName = "Sales", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT AUTO_INCREMENT", Constraint = "AUTO_INCREMENT" },
                 new ColumnDefinitions { Name = "ProductId", Key=false, Type = "INT", Constraint = "FOREIGN KEY REFERENCES Products(ProductId)" },
                 new ColumnDefinitions { Name = "Qty", Key=false, Type = "INT" },
                 new ColumnDefinitions { Name = "Branch", Key=false, Type = "VARCHAR(50)" },
@@ -58,13 +58,12 @@ public static class MenuInitializer {
         List<ColumnDefinitions> ColumnDefinitions
     );
 
-    public async static void CreateTables()
+    public static async void CreateTables()
     {
         HttpClient client = new HttpClient();
         client.BaseAddress = new Uri(Constants.API_BASE_URL);
             
         var tableSchemas = new List<TableSchema>();
-
         foreach(var item in menuItems)
         {
             var tableSchema = new TableSchema(item.TableName, item.ColumnDefinitions);
@@ -74,7 +73,6 @@ public static class MenuInitializer {
         var requestData = new CreateTableRequest(tableSchemas);
 
         var response = await client.PostAsJsonAsync("/api/Management/create-tables", requestData);
-
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("Tables created successfully!");
@@ -84,7 +82,7 @@ public static class MenuInitializer {
             response.EnsureSuccessStatusCode();
             var errorContent = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
-
+            throw new Exception($"Error: {response.StatusCode}, Content: {errorContent}");
         }
     }
     public static AppShellItem? GetItemByTableName(string tableName)

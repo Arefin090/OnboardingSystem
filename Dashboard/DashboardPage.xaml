@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="OnboardingSystem.DashboardPage"
-             BackgroundColor="#121212">
+             >
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
@@ -62,13 +62,13 @@
             <StackLayout>
                 <!-- Data Selection -->
                 <StackLayout Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
-                    <Picker x:Name="barChartTablePicker" Title="Table" 
+                    <Picker x:Name="barChartTablePicker" TextColor="White" TitleColor="White" Title="Table" 
                             HorizontalOptions="StartAndExpand"/>
-                    <Picker x:Name="barChartXAxisPicker" Title="Category (X-Axis)"
+                    <Picker x:Name="barChartXAxisPicker" TextColor="White" TitleColor="White" Title="Category (X-Axis)"
                             HorizontalOptions="StartAndExpand"/>
-                    <Picker x:Name="barChartYAxisPicker" Title="Value (Y-Axis)"
+                    <Picker x:Name="barChartYAxisPicker" TextColor="White" TitleColor="White" Title="Value (Y-Axis)"
                             HorizontalOptions="StartAndExpand"/>
-                    <Picker x:Name="aggregateFunctionPicker" Title="Aggregation"
+                    <Picker x:Name="aggregateFunctionPicker" TextColor="White" TitleColor="White" Title="Aggregation"
                             HorizontalOptions="StartAndExpand"/>
                     <Button Text="Load Bar Chart"
                             Clicked="OnLoadBarChartClicked"
@@ -93,11 +93,11 @@
         <StackLayout>
                 <!-- Data Selection -->
                 <StackLayout Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
-                <Picker x:Name="pieChartTablePicker" Title="Table"
+                <Picker x:Name="pieChartTablePicker" TextColor="White" TitleColor="White" Title="Table"
                         HorizontalOptions="StartAndExpand"/>
-                <Picker x:Name="pieChartXAxisPicker" Title="Category (X-Axis)"
+                <Picker x:Name="pieChartXAxisPicker" TextColor="White" TitleColor="White" Title="Category (X-Axis)"
                         HorizontalOptions="StartAndExpand"/>
-                <Picker x:Name="pieChartYAxisPicker" Title="Value (Y-Axis)"
+                <Picker x:Name="pieChartYAxisPicker" TextColor="White" TitleColor="White" Title="Value (Y-Axis)"
                         HorizontalOptions="StartAndExpand"/>
                 <Button Text="Load Pie Chart"
                         Clicked="OnLoadPieChartClicked"
@@ -122,14 +122,14 @@
             <StackLayout>
                 <!-- Data Selection -->
                 <StackLayout Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
-                        <Picker x:Name= "lineChartTablePicker" Title="Table" 
+                        <Picker x:Name= "lineChartTablePicker" TextColor="White" TitleColor="White" Title="Table" 
                                 HorizontalOptions="StartAndExpand"/>
-                        <Picker x:Name="xAxisPicker" Title="Time (X-Axis)"
+                        <Picker x:Name="xAxisPicker" TextColor="White" TitleColor="White" Title="Time (X-Axis)"
                                 HorizontalOptions="StartAndExpand"/>
-                        <Picker x:Name="yAxisPicker" Title="Value (Y-Axis)"
+                        <Picker x:Name="yAxisPicker" TextColor="White" TitleColor="White" Title="Value (Y-Axis)"
                                 HorizontalOptions="StartAndExpand"/>
                         <!-- Date Grouping Picker -->
-                        <Picker x:Name="dateGroupingPicker" Title="Group By"
+                        <Picker x:Name="dateGroupingPicker" TextColor="White" TitleColor="White" Title="Group By"
                                 HorizontalOptions="StartAndExpand">
                                 <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">

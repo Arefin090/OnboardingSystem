@@ -10,6 +10,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
+		MenuInitializer.CreateTables();
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()	
