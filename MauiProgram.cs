@@ -3,6 +3,9 @@ using CommunityToolkit.Maui.Markup;
 using Microsoft.Extensions.Logging;
 using OnboardingSystem.Authentication;
 using CommunityToolkit.Maui;
+using OnboardingSystem.Global.Menu;
+using OnboardingSystem.Management;
+using OnboardingSystem.ViewModels;
 
 namespace OnboardingSystem;
 
@@ -11,7 +14,6 @@ public static class MauiProgram
 
 	public static MauiApp CreateMauiApp()
 	{
-		MenuInitializer.CreateTables();
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()	

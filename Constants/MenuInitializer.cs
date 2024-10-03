@@ -72,17 +72,37 @@ public class MenuInitializer {
 
         var requestData = new CreateTableRequest(tableSchemas);
 
-        var response = await client.PostAsJsonAsync("/api/Management/create-tables", requestData);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Console.WriteLine("Tables created successfully!");
+            var response = await client.PostAsJsonAsync("/api/Management/create-tables", requestData);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Tables created successfully!");
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
+                // Optionally, you could throw an exception here if needed
+            }
         }
-        else
+        catch (HttpRequestException ex)
         {
-            response.EnsureSuccessStatusCode();
-            var errorContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
-            throw new Exception($"Error: {response.StatusCode}, Content: {errorContent}");
+            // Handle specific network-related exceptions
+            Console.WriteLine($"Network error: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+        }
+        catch (TaskCanceledException ex)
+        {
+            // Handle timeout exceptions (if applicable)
+            Console.WriteLine($"Request timed out: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+        }
+        catch (Exception ex)
+        {
+            // Handle other unexpected exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
         }
     }
     public static AppShellItem? GetItemByTableName(string tableName)
