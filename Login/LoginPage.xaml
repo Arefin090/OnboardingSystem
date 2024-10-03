@@ -12,6 +12,7 @@
             <Setter Property="Color" Value="#303030" />
         </Style>
 
+
         <Style x:Key="Login_Image" TargetType="Image">
             <Setter Property="Source" Value="racket.png" />
             <Setter Property="Aspect" Value="AspectFit" />
@@ -43,6 +44,7 @@
         </Style>
 
         <Style x:Key="Entry_Title" TargetType="Label">
+
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Margin" Value="0,20,0,0" />
         </Style>
@@ -82,6 +84,7 @@
                 <ColumnDefinition Width=".49*"/>
             </Grid.ColumnDefinitions>
 
+
             <BoxView Style="{StaticResource Login_Background}" />
             <Image Style="{StaticResource Login_Image}" />
 
@@ -102,6 +105,7 @@
                 </Grid.ColumnDefinitions>
                 <BoxView Style="{StaticResource Login_Form}" Grid.Row="1" Grid.Column="1" />
 
+                <!--Form Content-->
                 <Grid Grid.Row="1" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -139,6 +143,7 @@
                         <Border.StrokeShape>
                             <RoundRectangle Style="{StaticResource Entry_Shape}" />
                         </Border.StrokeShape>
+
                         <Entry
                             Placeholder="Enter your password"
                             IsPassword="True"
@@ -146,6 +151,7 @@
                             Style="{StaticResource Entry_Text}"
                         />
                     </Border>
+
 
                     <Label 
                         Text="{Binding ErrorMessage}" 
@@ -160,7 +166,6 @@
                         Command="{Binding LoginCommand}"
                         Grid.Row="6"
                         Grid.Column="1"
-                        Style="{StaticResource Login_Button}"
                     />
                 </Grid>
             </Grid>
