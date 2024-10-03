@@ -27,15 +27,9 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddSingleton<HttpClient>();
-        builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<ManagementPage>();
-        builder.Services.AddTransient<UserListPage>(sp => 
-            new UserListPage(
-                sp.GetRequiredService<IAuthenticationService>(),
-                sp.GetRequiredService<IUserService>()
-            )
-        );
+        builder.Services.AddTransient<UserListPage>();
         builder.Services.AddSingleton<AppShell>();
 
         return builder.Build();

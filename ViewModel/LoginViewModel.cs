@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using OnboardingSystem.Authentication;
+using OnboardingSystem.Global.Menu;
 
 namespace OnboardingSystem.ViewModels
 {
@@ -66,11 +67,11 @@ namespace OnboardingSystem.ViewModels
 
         public ICommand LoginCommand { get; }
 
-        public LoginViewModel(IAuthenticationService authService)
-        {
-            _authService = authService;
-            LoginCommand = new Command(OnLoginClicked);
-        }
+       public LoginViewModel()
+    {
+        _authService = ServiceHelper.GetService<IAuthenticationService>();
+        LoginCommand = new Command(OnLoginClicked);
+    }
 
         private async void OnLoginClicked()
         {
@@ -95,6 +96,9 @@ namespace OnboardingSystem.ViewModels
 
         private async Task HandleSuccessfulLoginAsync()
         {
+            var appShell = new AppShell();
+            Application.Current.MainPage = appShell;
+        
             await Shell.Current.GoToAsync($"//{nameof(DashboardPage)}");
         }
 

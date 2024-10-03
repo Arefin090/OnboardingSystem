@@ -1,10 +1,11 @@
 using Newtonsoft.Json;
 using OnboardingSystem.Models;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
 
 namespace OnboardingSystem.Authentication
 {
@@ -13,13 +14,8 @@ namespace OnboardingSystem.Authentication
         Task<(bool isValid, string errorMessage)> ValidateUserAsync(string email, string password);
         Task<bool> IsAuthenticatedAsync();
         Task<string> GetTokenAsync();
-        Task<(bool Success, string AccessToken, string RefreshToken)> RefreshTokenAsync(string refreshToken);
+        Task<string> GetValidTokenAsync();
         Task ClearAuthStateAsync();
-    }
-
-    public interface IUserService
-    {
-        Task<string> GetUserListAsync();
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -72,19 +68,7 @@ namespace OnboardingSystem.Authentication
                 return (false, Constants.GENERIC_ERROR);
             }
         }
-       public async Task ClearAuthStateAsync()
-            {
-                try
-                {
-                    SecureStorage.Remove(Constants.ACCESS_TOKEN_KEY);
-                    SecureStorage.Remove(Constants.REFRESH_TOKEN_KEY);
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception if you have a logging mechanism
-                    Console.WriteLine($"Error clearing auth state: {ex.Message}");
-                }
-            }        
+
         public async Task<bool> IsAuthenticatedAsync()
         {
             var token = await SecureStorage.GetAsync(Constants.ACCESS_TOKEN_KEY);
@@ -95,7 +79,45 @@ namespace OnboardingSystem.Authentication
         {
             return await SecureStorage.GetAsync(Constants.ACCESS_TOKEN_KEY);
         }
-         public async Task<(bool Success, string AccessToken, string RefreshToken)> RefreshTokenAsync(string refreshToken)
+
+        public async Task<string> GetValidTokenAsync()
+        {
+            var token = await SecureStorage.GetAsync(Constants.ACCESS_TOKEN_KEY);
+            if (string.IsNullOrEmpty(token) || IsTokenExpired(token))
+            {
+                var refreshToken = await SecureStorage.GetAsync(Constants.REFRESH_TOKEN_KEY);
+                if (string.IsNullOrEmpty(refreshToken))
+                {
+                    return null;
+                }
+
+                var (success, newAccessToken, newRefreshToken) = await RefreshTokenAsync(refreshToken);
+                if (success)
+                {
+                    await SecureStorage.SetAsync(Constants.ACCESS_TOKEN_KEY, newAccessToken);
+                    await SecureStorage.SetAsync(Constants.REFRESH_TOKEN_KEY, newRefreshToken);
+                    return newAccessToken;
+                }
+                return null;
+            }
+            return token;
+        }
+
+        public async Task ClearAuthStateAsync()
+        {
+            try
+            {
+                SecureStorage.Remove(Constants.ACCESS_TOKEN_KEY);
+                SecureStorage.Remove(Constants.REFRESH_TOKEN_KEY);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if you have a logging mechanism
+                Console.WriteLine($"Error clearing auth state: {ex.Message}");
+            }
+        }
+
+        private async Task<(bool success, string accessToken, string refreshToken)> RefreshTokenAsync(string refreshToken)
         {
             var refreshRequest = new { RefreshToken = refreshToken };
             var content = new StringContent(JsonConvert.SerializeObject(refreshRequest), Encoding.UTF8, "application/json");
@@ -108,10 +130,6 @@ namespace OnboardingSystem.Authentication
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
                     var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(jsonResponse);
-
-                    await SecureStorage.SetAsync(Constants.ACCESS_TOKEN_KEY, tokenResponse.Token);
-                    await SecureStorage.SetAsync(Constants.REFRESH_TOKEN_KEY, tokenResponse.RefreshToken);
-
                     return (true, tokenResponse.Token, tokenResponse.RefreshToken);
                 }
 
@@ -119,39 +137,30 @@ namespace OnboardingSystem.Authentication
             }
             catch (Exception ex)
             {
-                // Log the exception if you have a logging mechanism
                 Console.WriteLine($"Error refreshing token: {ex.Message}");
                 return (false, null, null);
             }
         }
- 
-    }
 
-    public class UserService : IUserService
-    {
-        private readonly HttpClient _httpClient;
-        private readonly IAuthenticationService _authService;
-
-        public UserService(HttpClient httpClient, IAuthenticationService authService)
+        private bool IsTokenExpired(string token)
         {
-            _httpClient = httpClient;
-            _authService = authService;
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            return DateTime.UtcNow >= jwtToken.ValidTo;
         }
 
-        public async Task<string> GetUserListAsync()
+        public async Task<string> GetUserRoleAsync()
         {
-            var token = await _authService.GetTokenAsync();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var token = await GetValidTokenAsync();
+            if (string.IsNullOrEmpty(token))
+                return null;
 
-            var response = await _httpClient.GetAsync($"{Constants.API_BASE_URL}{Constants.GET_USER_LIST_ENDPOINT}");
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsStringAsync();
-            }
-            
-            // Handle errors as necessary
-            return null;
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var roleClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "role" || claim.Type == ClaimTypes.Role);
+            return roleClaim?.Value;
         }
-    }
 
+    }
 }

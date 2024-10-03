@@ -5,10 +5,10 @@ namespace OnboardingSystem
 {
     public partial class LoginPage : ContentPage
     {
-        public LoginPage(IAuthenticationService authService)
+        public LoginPage()
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(authService);
+            BindingContext = new LoginViewModel();
         }
     }
 }

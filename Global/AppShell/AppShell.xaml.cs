@@ -19,10 +19,9 @@ public partial class AppShell : Shell
 		new ShellContent()
             { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "logout_96dp_icon.png", Route = $"{nameof(LoginPage)}"},
     };
-    public AppShell(IAuthenticationService authService)
+    public AppShell()
     {
         InitializeComponent();
-        _authService = authService;
         // var flyoutItems = new FlyoutItem()
         // {
         //     Title = "Main Page",
@@ -35,7 +34,6 @@ public partial class AppShell : Shell
         // }
         // Items.Add(flyoutItems);
         LoadMenuItems();
-         RegisterRoutes();
     }
     private void LoadMenuItems() {
         var flyoutItems = new FlyoutItem()
@@ -60,14 +58,7 @@ public partial class AppShell : Shell
         Items.Add(flyoutItems);
     }
 
-    private void RegisterRoutes()
-    {
-        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-        Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
-        Routing.RegisterRoute(nameof(UserListPage), typeof(UserListPage));
-        Routing.RegisterRoute("Logout", typeof(LoginPage));
-        // Register other routes as needed
-    }
+  
     protected override async void OnNavigating(ShellNavigatingEventArgs args)
     {
         base.OnNavigating(args);
