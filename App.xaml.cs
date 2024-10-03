@@ -1,4 +1,5 @@
-﻿using OnboardingSystem.Authentication;
+﻿using CommunityToolkit.Maui.Views;
+using OnboardingSystem.Authentication;
 using OnboardingSystem.Global.Menu;
 
 namespace OnboardingSystem
@@ -9,6 +10,7 @@ namespace OnboardingSystem
         {
             InitializeComponent();
             MainPage = new LoginPage();
+            MenuInitializer.CreateTables();
         }
     }
 }

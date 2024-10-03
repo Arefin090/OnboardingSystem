@@ -14,7 +14,7 @@
             <Setter Property="FontSize" Value="18" />
             <Setter Property="BackgroundColor" Value="White" />
             <Setter Property="TextColor" Value="Black" />
-            <Setter Property="CornerRadius" Value="10" />
+            <!-- <Setter Property="CornerRadius" Value="10" /> -->
         </Style>
 
         <!-- Style for the label in the profile page -->

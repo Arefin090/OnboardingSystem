@@ -22,7 +22,6 @@
             <!-- Submit Button -->
             <Button 
                 Text="Submit" 
-                TextColor="Black"
                 CornerRadius="20"
                 HeightRequest="50"
                 FontSize="18"
@@ -31,7 +30,6 @@
             <!-- Cancel Button -->
             <Button 
                 Text="Cancel" 
-                TextColor="Black"
                 CornerRadius="20"
                 HeightRequest="50"
                 FontSize="18"
