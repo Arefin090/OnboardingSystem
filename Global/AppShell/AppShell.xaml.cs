@@ -1,15 +1,16 @@
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using OnboardingSystem.Management;
 using OnboardingSystem.Models.Menu;
-
 namespace OnboardingSystem.Global.Menu;
-
 using Microsoft.Maui.Controls;
+using OnboardingSystem.Authentication;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+
 public partial class AppShell : Shell
 {
+    private readonly IAuthenticationService _authService;
     private ShellContent[] _defaultShellItem = new[]
     {
         new ShellContent() { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "dashboard_96dp.png", Route = $"{nameof(DashboardPage)}"},
@@ -97,4 +98,5 @@ private void OnNavigated(object sender, ShellNavigatedEventArgs e)
         Shell.Current.Navigated -= OnNavigated; // Unsubscribe from the event
     }
 }
+
 
