@@ -13,12 +13,11 @@ public partial class ManagementPage : ContentPage
     private ManagementViewModel _viewModel;
     private String _route;
     private IAuthenticationService _authenticationService;
-
     public ManagementPage(IAuthenticationService authenticationService)
     {
         InitializeComponent();
         _authenticationService = authenticationService;
-        BindingContext = _viewModel;
+        
 
         // Programmatically modify UI or add labels dynamically if needed
         
@@ -28,6 +27,7 @@ public partial class ManagementPage : ContentPage
         base.OnNavigatedTo(args);
         _route = Shell.Current.CurrentState.Location.ToString().TrimStart('/');
         _viewModel = new ManagementViewModel(_route);
+        BindingContext = _viewModel;
         AddDataGrid(_route);
     }
 
@@ -141,5 +141,14 @@ public partial class ManagementPage : ContentPage
     private void DeleteButton_Clicked(object? sender, EventArgs e)
     {
         this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Delete Form", CrudOperation.DELETE));
+    }
+
+    private void NextButton_Clicked(object? sender, EventArgs e)
+    {
+        _viewModel.NextPage();
+    }
+    private void PrevButton_Clicked(object? sender, EventArgs e)
+    {
+        _viewModel.PrevPage();
     }
 }

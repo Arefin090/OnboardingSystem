@@ -3,33 +3,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnboardingSystem.Management.ManagementPage">
     <ContentPage.Content>
-        <ScrollView>
-        <!-- Main Layout -->
-        <VerticalStackLayout Spacing="10" Padding="20">
+        <Grid>
+            <!-- Main Content -->
+            <ScrollView>
+                <VerticalStackLayout Spacing="10" Padding="20">
 
-            <!-- Search and Action Buttons -->
-            <HorizontalStackLayout>
-                <Button Text="Filters" Clicked="FilterButton_Clicked" />
-                <Button Text="Insert" Clicked="InsertButton_Clicked"/>
-                <Button Text="Delete" Clicked="DeleteButton_Clicked"/>
-            </HorizontalStackLayout>
-            
+                    <!-- Search and Action Buttons -->
+                    <HorizontalStackLayout>
+                        <Button Text="Filters" Clicked="FilterButton_Clicked" />
+                        <Button Text="Insert" Clicked="InsertButton_Clicked"/>
+                        <Button Text="Delete" Clicked="DeleteButton_Clicked"/>
+                    </HorizontalStackLayout>
+                    
+                    <!-- Table Headers (Column Labels) -->
+                    <Grid x:Name="HeaderGrid" Padding="10" />
+                    <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" />
 
-            <!-- Table Headers (Column Labels) -->
-            <!-- ColumnDefinitions="Auto,*,*,*,*,*,*,*,*" -->
-            <Grid x:Name="HeaderGrid" Padding="10" />
-            <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="FillAndExpand" />
+                    <!-- Staff Details Grid -->
+                    <CollectionView x:Name="GridCollection"/>
 
-            <!-- Staff Details Grid -->
-            <CollectionView x:Name="GridCollection"/>
-            <!-- Pagination -->
-            <HorizontalStackLayout Margin="12, 0, 12, 0" HorizontalOptions="Center" VerticalOptions="Center">
-                <Button Text="Prev" />
-                <Label VerticalOptions="Center" Margin="8,0,8,0" Text="1" HorizontalOptions="CenterAndExpand" />
-                <Button Text="Next" />
-            </HorizontalStackLayout>
+                    <!-- Pagination -->
+                    <HorizontalStackLayout Margin="12, 0, 12, 0" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Button Text="Prev" Clicked="PrevButton_Clicked"/>
+                        <Label VerticalOptions="Center" Margin="8,0,8,0" Text="{Binding Page}" HorizontalOptions="CenterAndExpand" />
+                        <Button Text="Next" Clicked="NextButton_Clicked"/>
+                    </HorizontalStackLayout>
 
-        </VerticalStackLayout>
-        </ScrollView>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Loading Overlay -->
+            <Grid x:Name="LoadingOverlay" BackgroundColor="Transparent" IsVisible="{Binding IsLoading}">
+                <BoxView BackgroundColor="#80000000" /> <!-- Semi-transparent background -->
+                <ActivityIndicator IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center" />
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -31,8 +31,13 @@ public partial class DynamicUpdateForm : Popup
         _crudOperation = operation;
 		InitializeComponent();
         BindingContext = _formViewModel;
+        
         _entries = new Dictionary<String, Entry>();
         CreateDynamicEntries();
+        if (_crudOperation == CrudOperation.READ)
+        {
+            RetrieveSavedEntryData();
+        }
 	}
     private void CreateDynamicEntries()
     {
@@ -86,7 +91,28 @@ public partial class DynamicUpdateForm : Popup
             }
             requestData.Add(entry.Key, entry.Value.Text);
         }
+
+        if (_crudOperation == CrudOperation.READ)
+        {
+            Preferences.Set(_tableName, JsonSerializer.Serialize(requestData));
+        }
+        
         return requestData;
+    }
+
+    private void RetrieveSavedEntryData()
+    {
+        // Retrieve and deserialize from Preferences
+        string? storedJson = Preferences.Get(_tableName, null);
+        if(storedJson == null) return;
+        var retrievedState = JsonSerializer.Deserialize<Dictionary<string, string>>(storedJson);
+        foreach (var entry in _entries)
+        {
+            if(retrievedState.ContainsKey(entry.Key))
+            {
+                entry.Value.Text = retrievedState[entry.Key];
+            }
+        }
     }
 
     private async void Insert()
@@ -137,18 +163,16 @@ public partial class DynamicUpdateForm : Popup
         var response = await client.SendAsync(request);
         // Read the response body as a string
         var responseBody = await response.Content.ReadAsStringAsync();
-        var res = JsonSerializer.Deserialize<Dictionary<String, String>>(responseBody);
         switch (response.StatusCode)
         {
             case HttpStatusCode.OK:
-                
+                var res = JsonSerializer.Deserialize<Dictionary<String, String>>(responseBody);
                 Application.Current?.MainPage?.DisplayAlert("Delete Success", res?["message"], "OK");
                 _viewModel.FetchData(new Dictionary<string, string>());
                 Close();
                 break;
             case HttpStatusCode.BadRequest:
-                var errorResponse = JsonSerializer.Deserialize<SqlErrorResponse>(responseBody);
-                Application.Current?.MainPage?.DisplayAlert("Delete Error", res?["message"], "OK");
+                Application.Current?.MainPage?.DisplayAlert("Delete Error", "At least one fields should be filled", "OK");
                 break;
         };
     }
