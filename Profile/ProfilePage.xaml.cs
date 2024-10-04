@@ -207,14 +207,13 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 	// Helper method to find all Entry fields
     private IEnumerable<Entry> FindEntryFields()
     {
-        return new List<Entry> { UsernameEntry, PasswordEntry, FirstNameEntry, LastNameEntry, PhoneEntry };
+        return new List<Entry> { UsernameEntry, FirstNameEntry, LastNameEntry, PhoneEntry };
     }
 	 // Method to set all Entry fields as editable or non-editable
     private void SetFieldsEditable(bool isEnabled)
     {
 		
         UsernameEntry.IsEnabled = false;
-        PasswordEntry.IsEnabled = false;
         FirstNameEntry.IsEnabled = isEnabled;
         LastNameEntry.IsEnabled = isEnabled;
         PhoneEntry.IsEnabled = isEnabled;
