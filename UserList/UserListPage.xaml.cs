@@ -241,7 +241,7 @@ namespace OnboardingSystem
 
 			try
 			{
-				var response = await _httpClient.PostAsJsonAsync("https://localhost:44339/api/User/register", newUser);
+				var response = await _httpClient.PostAsJsonAsync($"{Constants.API_BASE_URL}{Constants.REGISTER_ENDPOINT}", newUser);
 				if (response.IsSuccessStatusCode)
 				{
 					await DisplayAlert("Success", "User registered successfully.", "OK");
@@ -263,7 +263,7 @@ namespace OnboardingSystem
 		{
 			try
 			{
-				var response = await _httpClient.DeleteAsync($"https://localhost:44339/api/User/{userId}");
+				var response = await _httpClient.DeleteAsync($"{Constants.API_BASE_URL}{Constants.GET_USERS_ENDPOINT}" + $"{userId}");
 				if (response.IsSuccessStatusCode)
 				{
 					await DisplayAlert("Success", "User deleted successfully.", "OK");
