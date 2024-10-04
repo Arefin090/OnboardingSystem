@@ -29,7 +29,7 @@ public class ManagementViewModel : INotifyPropertyChanged
         try
         {
             // Perform the POST request
-            var response = await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={0}&PageSize=20", requestData);
+            var response = await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={0}&PageSize=10", requestData);
 
             // Ensure the response was successful
             response.EnsureSuccessStatusCode();
@@ -41,13 +41,7 @@ public class ManagementViewModel : INotifyPropertyChanged
             // Deserialize to a dictionary
             var result = JsonSerializer.Deserialize<Dictionary<string, object>>(resultString);
             
-            // Access the "value" key
-            if (result != null && result.TryGetValue("value", out var valueObj))
-            {
-                var valueDict = JsonSerializer.Deserialize<Dictionary<string, object>>(valueObj.ToString());
-
-                // Access the "data" key
-                if (valueDict != null && valueDict.TryGetValue("data", out var dataObj))
+                if (result != null && result.TryGetValue("data", out var dataObj))
                 {
                     var dataArray = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(dataObj.ToString());
 
@@ -67,11 +61,6 @@ public class ManagementViewModel : INotifyPropertyChanged
                 {
                     Console.WriteLine("No 'data' found in the response.");
                 }
-            }
-            else
-            {
-                Console.WriteLine("No 'value' found in the response.");
-            }
         }
         catch (HttpRequestException ex)
         {

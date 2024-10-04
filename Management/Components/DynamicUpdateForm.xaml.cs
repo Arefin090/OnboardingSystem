@@ -1,3 +1,4 @@
+using System.Net;
 using CommunityToolkit.Maui.Markup;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls.Compatibility.Platform.UWP;
@@ -5,24 +6,32 @@ using Microsoft.Maui.Controls.Shapes;
 using OnboardingSystem.Enums;
 using OnboardingSystem.ViewModel;
 using System.Net.Http.Json;
+using Newtonsoft.Json;
+using OnboardingSystem.Authentication;
+using OnboardingSystem.Models.ErrorResponse;
+using OnboardingSystem.Models.SuccessResponse;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace OnboardingSystem.Management.Components;
 
 public partial class DynamicUpdateForm : Popup
 {
-    private String _tableName;
-    private ManagementViewModel _viewModel;
-    private DynamicFormViewModel _formViewModel = new DynamicFormViewModel();
-    private Dictionary<String, Entry> _entries= new Dictionary<String, Entry>();
-    private CrudOperation _crudOperation;
-    public DynamicUpdateForm(String tableName, ManagementViewModel viewModel, String title, CrudOperation operation)
+    private readonly String _tableName;
+    private readonly ManagementViewModel _viewModel;
+    private readonly DynamicFormViewModel _formViewModel = new DynamicFormViewModel();
+    private readonly Dictionary<String, Entry> _entries;
+    private readonly CrudOperation _crudOperation;
+    private readonly IAuthenticationService _authenticationService;
+    public DynamicUpdateForm(IAuthenticationService authenticationService,String tableName, ManagementViewModel viewModel, String title, CrudOperation operation)
 	{
         _tableName = tableName;
         _viewModel = viewModel;
         _formViewModel.FormTitle = title;
+        _authenticationService = authenticationService;
         _crudOperation = operation;
 		InitializeComponent();
         BindingContext = _formViewModel;
+        _entries = new Dictionary<String, Entry>();
         CreateDynamicEntries();
 	}
     private void CreateDynamicEntries()
@@ -87,17 +96,61 @@ public partial class DynamicUpdateForm : Popup
         client.BaseAddress = new Uri(Constants.API_BASE_URL);
 
         var response = await client.PostAsJsonAsync($"/api/Management?table={_tableName}", requestData);
-        try
+        // Read the response body as a string
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var res = JsonSerializer.Deserialize<Dictionary<String, String>>(responseBody);
+        switch (response.StatusCode)
+        {   
+            case HttpStatusCode.OK:
+                
+                Application.Current?.MainPage?.DisplayAlert("Insert Success", res?["message"], "OK");
+                _viewModel.FetchData(new Dictionary<string, string>());
+                Close();
+                break;
+            case HttpStatusCode.BadRequest:
+                Application.Current?.MainPage?.DisplayAlert("Insert Error", res?["message"], "OK");
+                break;
+        };
+    }
+
+    private async void Delete()
+    {
+        var requestData = RetrieveEntryData();
+        HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri(Constants.API_BASE_URL);
+
+        // Create the DELETE request with a body
+        // Retrieve the token securely
+        var token = await _authenticationService.GetValidTokenAsync();
+        var request = new HttpRequestMessage
         {
-            response.EnsureSuccessStatusCode();
-            _viewModel.FetchData(new Dictionary<string, string>());
-            Close();
-        }
-        catch (HttpRequestException ex)
+            Method = HttpMethod.Delete,
+            Headers =
+            {
+                { "x-ms-version", "2013-06-01" },
+                { "Authorization", $"Bearer {token}" }
+            },
+            RequestUri = new Uri($"/api/Management/batch?table={_tableName}", UriKind.Relative),
+            Content = JsonContent.Create(requestData) // Set the JSON content here
+        };
+        // Perform DELETE request
+        var response = await client.SendAsync(request);
+        // Read the response body as a string
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var res = JsonSerializer.Deserialize<Dictionary<String, String>>(responseBody);
+        switch (response.StatusCode)
         {
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(response.Content.ReadAsStringAsync());
-        }
+            case HttpStatusCode.OK:
+                
+                Application.Current?.MainPage?.DisplayAlert("Delete Success", res?["message"], "OK");
+                _viewModel.FetchData(new Dictionary<string, string>());
+                Close();
+                break;
+            case HttpStatusCode.BadRequest:
+                var errorResponse = JsonSerializer.Deserialize<SqlErrorResponse>(responseBody);
+                Application.Current?.MainPage?.DisplayAlert("Delete Error", res?["message"], "OK");
+                break;
+        };
     }
 
     private void OnSubmitClicked(object sender, EventArgs e)
@@ -107,13 +160,14 @@ public partial class DynamicUpdateForm : Popup
             case CrudOperation.CREATE:
                 Insert();
                 break;
+            case CrudOperation.DELETE:
+                Delete();
+                break;
             case CrudOperation.READ:
                 _viewModel.FetchData(RetrieveEntryData());
-                break;
-            default:
+                Close();
                 break;
         }
-        Close();
     }
 
     private void OnCancelClicked(object sender, EventArgs e)

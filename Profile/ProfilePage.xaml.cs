@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using OnboardingSystem.Authentication;
 
 
 namespace OnboardingSystem;
@@ -20,15 +21,16 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 	private bool isEditModeEnabled = false;  // This will track if the fields are editable
 
 	private HttpClient _httpClient;
+	private readonly IAuthenticationService _authenticationService;
 
-	public ProfilePage()
+	public ProfilePage(IAuthenticationService authenticationService)
 	{
 		InitializeComponent();
 		// Ensure all fields are non-editable when the page loads
         SetFieldsEditable(false);
 		SaveButton.IsVisible = false;
 		_httpClient = new HttpClient(); // HttpClient instance
-
+		_authenticationService = authenticationService;
 
         LoadUserProfile();  // Call to load the profile data on page load
 	}
@@ -90,7 +92,7 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
 		try
 		{
 			// Retrieve the token securely
-			var token = await SecureStorage.GetAsync("access_token");
+			var token = await _authenticationService.GetValidTokenAsync();
 
 			// Extract username from the token
 			var username = GetUsernameFromToken(token);
@@ -162,7 +164,7 @@ public partial class ProfilePage : ContentPage, INotifyPropertyChanged
         {
             try
             {
-                var token = await SecureStorage.GetAsync("access_token");
+                var token = await _authenticationService.GetValidTokenAsync();
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 

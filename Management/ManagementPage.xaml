@@ -11,7 +11,7 @@
             <HorizontalStackLayout>
                 <Button Text="Filters" Clicked="FilterButton_Clicked" />
                 <Button Text="Insert" Clicked="InsertButton_Clicked"/>
-                <Button Text="Delete" />
+                <Button Text="Delete" Clicked="DeleteButton_Clicked"/>
             </HorizontalStackLayout>
             
 
