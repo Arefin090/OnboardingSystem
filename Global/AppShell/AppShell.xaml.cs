@@ -74,16 +74,7 @@ public partial class AppShell : Shell
         // Finally, add the FlyoutItem to the Shell
         Items.Add(flyoutItems);
     }
-
-private void OnNavigated(object sender, ShellNavigatedEventArgs e)
-{
-    if (e?.Current?.Location != null)
-    {
-        CurrentRoute = e.Current.Location.ToString(); // Update the current route
-        // Notify the ManagementPage or any other pages that the route has changed
-        MessagingCenter.Send(this, "RouteChanged", CurrentRoute);
-    }
-}
+    
 
 
 
@@ -91,12 +82,7 @@ private void OnNavigated(object sender, ShellNavigatedEventArgs e)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
-        Shell.Current.Navigated -= OnNavigated; // Unsubscribe from the event
-    }
+    
 }
 
 

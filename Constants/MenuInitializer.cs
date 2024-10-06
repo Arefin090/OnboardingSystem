@@ -34,7 +34,7 @@ public class MenuInitializer {
                 new ColumnDefinitions { Name = "Stock", Key=false, Type = "INT" },
             }
         },
-
+        
         // Sales Table
         new AppShellItem { 
             Icon = "table_view_96dp.png", 
@@ -67,6 +67,7 @@ public class MenuInitializer {
         foreach(var item in menuItems)
         {
             var tableSchema = new TableSchema(item.TableName, item.ColumnDefinitions);
+            Preferences.Remove(item.TableName);
             tableSchemas.Add(tableSchema);
         }
 
@@ -83,7 +84,7 @@ public class MenuInitializer {
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
-                // Optionally, you could throw an exception here if needed
+                throw new Exception("Invalid array for mat: Could not initialize any tables");
             }
         }
         catch (HttpRequestException ex)
@@ -103,6 +104,7 @@ public class MenuInitializer {
             // Handle other unexpected exceptions
             Console.WriteLine($"An error occurred: {ex.Message}");
             await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            Application.Current.Quit();
         }
     }
     public static AppShellItem? GetItemByTableName(string tableName)

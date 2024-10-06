@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using OnboardingSystem.Authentication;
 using OnboardingSystem.Models;
 
 namespace OnboardingSystem.ViewModel;
@@ -35,25 +36,35 @@ public class ManagementViewModel : INotifyPropertyChanged
         }
     }
 
-    public ManagementViewModel(String tableName)
+    private readonly IAuthenticationService _authentication;
+    public ManagementViewModel(String tableName, IAuthenticationService authentication)
     {
         _tableName = tableName;
         _page = 1;
+        _authentication = authentication;
         // Populate the collection with initial data
         Rows = new ObservableCollection<Dictionary<string, string>>();
-        FetchData(new Dictionary<string, string>());
+        FetchData(GetSavedState());
+    }
+
+    public void FetchData(Dictionary<string, string> data, int page)
+    {
+        Page = page;
+        FetchData(data);
     }
     
     public async void FetchData(Dictionary<string, string> requestData)
     {
         HttpClient client = new HttpClient();
         client.BaseAddress = new Uri(Constants.API_BASE_URL);
+        var token = await _authentication.GetValidTokenAsync();
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
         try
         {
             // Perform the POST request
             IsLoading = true;
             var response =
-                await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={Page - 1}&PageSize=10",
+                await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={Page - 1}&PageSize=15",
                     requestData);
 
             // Ensure the response was successful
@@ -101,34 +112,39 @@ public class ManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    public void ResetPage()
+    {
+        Page = 1;
+        FetchData(new Dictionary<string, string>());
+    }
+
     public void NextPage()
     {
-        if (Page == TotalPage - 1) return;
+        if (Page > TotalPage - 1) return;
         Page += 1;
+
+        FetchData(GetSavedState());
+    }
+
+    private Dictionary<string, string> GetSavedState()
+    {
         // Retrieve and deserialize from Preferences
         string? storedJson = Preferences.Get(_tableName, null);
-        Dictionary<String, String> body = new Dictionary<String, String>();
+        Dictionary<String, String> savedState = new Dictionary<String, String>();
         if (storedJson != null)
         {
             var retrievedState = JsonSerializer.Deserialize<Dictionary<string, string>>(storedJson);
-            body = retrievedState;
+            savedState = retrievedState;
         }
-        FetchData(body);
+
+        return savedState;
     }
 
     public void PrevPage()
     {
-        if(Page == 0) return;
+        if(Page == 1) return;
         Page -= 1;
-        // Retrieve and deserialize from Preferences
-        string? storedJson = Preferences.Get(_tableName, null);
-        Dictionary<String, String> body = new Dictionary<String, String>();
-        if (storedJson != null)
-        {
-            var retrievedState = JsonSerializer.Deserialize<Dictionary<string, string>>(storedJson);
-            body = retrievedState;
-        }
-        FetchData(body);
+        FetchData(GetSavedState());
     }
     protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {

@@ -26,7 +26,7 @@ public partial class ManagementPage : ContentPage
     {
         base.OnNavigatedTo(args);
         _route = Shell.Current.CurrentState.Location.ToString().TrimStart('/');
-        _viewModel = new ManagementViewModel(_route);
+        _viewModel = new ManagementViewModel(_route, _authenticationService);
         BindingContext = _viewModel;
         AddDataGrid(_route);
     }

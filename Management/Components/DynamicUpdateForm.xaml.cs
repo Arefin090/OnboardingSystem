@@ -120,23 +120,43 @@ public partial class DynamicUpdateForm : Popup
         var requestData = RetrieveEntryData();
         HttpClient client = new HttpClient();
         client.BaseAddress = new Uri(Constants.API_BASE_URL);
+        var token = await _authenticationService.GetValidTokenAsync();
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
-        var response = await client.PostAsJsonAsync($"/api/Management?table={_tableName}", requestData);
         // Read the response body as a string
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var res = JsonSerializer.Deserialize<Dictionary<String, String>>(responseBody);
-        switch (response.StatusCode)
-        {   
-            case HttpStatusCode.OK:
-                
-                Application.Current?.MainPage?.DisplayAlert("Insert Success", res?["message"], "OK");
-                _viewModel.FetchData(new Dictionary<string, string>());
-                Close();
-                break;
-            case HttpStatusCode.BadRequest:
-                Application.Current?.MainPage?.DisplayAlert("Insert Error", res?["message"], "OK");
-                break;
-        };
+        try
+        {
+            var response = await client.PostAsJsonAsync($"/api/Management?table={_tableName}", requestData);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var res = JsonSerializer.Deserialize<Dictionary<String, object>>(responseBody);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+
+                    Application.Current?.MainPage?.DisplayAlert("Insert Success", res?["message"].ToString(), "OK");
+                    _viewModel.FetchData(new Dictionary<string, string>());
+                    Close();
+                    break;
+                case HttpStatusCode.BadRequest:
+                    Application.Current?.MainPage?.DisplayAlert("Insert Error", res?["message"].ToString(), "OK");
+                    break;
+            } 
+        }
+        catch (HttpRequestException ex)
+        {
+            // Handle specific network-related exceptions
+            Console.WriteLine($"Network error: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+        }
+        catch (Exception ex)
+        {
+            Application.Current.MainPage.DisplayAlert("Insert Error", ex.Message, "OK");
+        }
+        finally
+        {
+            _viewModel.ResetPage();
+        }
+
     }
 
     private async void Delete()
@@ -159,22 +179,39 @@ public partial class DynamicUpdateForm : Popup
             RequestUri = new Uri($"/api/Management/batch?table={_tableName}", UriKind.Relative),
             Content = JsonContent.Create(requestData) // Set the JSON content here
         };
-        // Perform DELETE request
-        var response = await client.SendAsync(request);
-        // Read the response body as a string
-        var responseBody = await response.Content.ReadAsStringAsync();
-        switch (response.StatusCode)
+        try
         {
-            case HttpStatusCode.OK:
-                var res = JsonSerializer.Deserialize<Dictionary<String, String>>(responseBody);
-                Application.Current?.MainPage?.DisplayAlert("Delete Success", res?["message"], "OK");
-                _viewModel.FetchData(new Dictionary<string, string>());
-                Close();
-                break;
-            case HttpStatusCode.BadRequest:
-                Application.Current?.MainPage?.DisplayAlert("Delete Error", "At least one fields should be filled", "OK");
-                break;
-        };
+            // Perform DELETE request
+            var response = await client.SendAsync(request);
+            // Read the response body as a string
+            var responseBody = await response.Content.ReadAsStringAsync();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    var res = JsonSerializer.Deserialize<Dictionary<String, object>>(responseBody);
+                    Application.Current?.MainPage?.DisplayAlert("Delete Success", res?["message"].ToString(), "OK");
+                    _viewModel.FetchData(new Dictionary<string, string>());
+                    Close();
+                    break;
+                case HttpStatusCode.BadRequest:
+                    Application.Current?.MainPage?.DisplayAlert("Delete Error", "At least one fields should be filled", "OK");
+                    break;
+            };
+        }
+        catch (HttpRequestException ex)
+        {
+            // Handle specific network-related exceptions
+            Console.WriteLine($"Network error: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+        }
+        catch (Exception ex)
+        {
+            Application.Current.MainPage.DisplayAlert("Insert Error", ex.Message, "OK");
+        }
+        finally
+        {
+            _viewModel.ResetPage();
+        }
     }
 
     private void OnSubmitClicked(object sender, EventArgs e)
