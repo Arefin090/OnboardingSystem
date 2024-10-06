@@ -6,6 +6,8 @@ using System.IO;
 using System;
 using System.Net.Http;
 using System.Text.Json; // For serialization
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 
 namespace OnboardingSystem;
 
@@ -745,4 +747,81 @@ public partial class DashboardPage : ContentPage
         
         return false; // Column or table not found
     }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+    }
+
+    // method for PDF generation
+    private async void OnGenerateReportClicked(object sender, EventArgs e)
+{
+    try
+    {
+        // Create a new PDF document
+        var pdfDocument = new PdfDocument();
+        var pdfPage = pdfDocument.AddPage();
+        var gfx = XGraphics.FromPdfPage(pdfPage);
+
+        // Set up fonts and formatting
+        var titleFont = new XFont("Verdana", 20, XFontStyle.Bold);
+        var tableTitleFont = new XFont("Verdana", 14, XFontStyle.Bold);
+        var tableDataFont = new XFont("Verdana", 10, XFontStyle.Regular);
+
+        // Starting coordinates
+        double yPoint = 40;
+
+        // Title for the PDF
+        gfx.DrawString("Database Tables Report", titleFont, XBrushes.Black, new XRect(0, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopCenter);
+        yPoint += 40;
+
+        // Loop through the tables in MenuInitializer and generate content
+        foreach (var menuItem in MenuInitializer.menuItems)
+        {
+            // Table name
+            gfx.DrawString($"Table: {menuItem.TableName}", tableTitleFont, XBrushes.Black, new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            yPoint += 20;
+
+            // Column headers
+            gfx.DrawString("Column Name", tableDataFont, XBrushes.Black, new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            gfx.DrawString("Type", tableDataFont, XBrushes.Black, new XRect(200, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            gfx.DrawString("Key", tableDataFont, XBrushes.Black, new XRect(300, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            gfx.DrawString("Constraint", tableDataFont, XBrushes.Black, new XRect(400, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            yPoint += 20;
+
+            // Loop through the column definitions of the table and add the data
+            foreach (var column in menuItem.ColumnDefinitions)
+            {
+                gfx.DrawString(column.Name, tableDataFont, XBrushes.Black, new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                gfx.DrawString(column.Type, tableDataFont, XBrushes.Black, new XRect(200, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                gfx.DrawString(column.Key ? "Yes" : "No", tableDataFont, XBrushes.Black, new XRect(300, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                gfx.DrawString(column.Constraint ?? "None", tableDataFont, XBrushes.Black, new XRect(400, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                yPoint += 20;
+
+                // Check if the page height is exceeded and create a new page if necessary
+                if (yPoint > pdfPage.Height - 40)
+                {
+                    pdfPage = pdfDocument.AddPage();
+                    gfx = XGraphics.FromPdfPage(pdfPage);
+                    yPoint = 40; // Reset yPoint for new page
+                }
+            }
+
+            yPoint += 20; // Space between tables
+        }
+
+        // Save the PDF to a file
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DatabaseReport.pdf");
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            pdfDocument.Save(stream);
+        }
+
+        // Optionally display a message after successful generation
+        await DisplayAlert("PDF Report", $"PDF report generated successfully at {filePath}", "OK");
+    }
+    catch (Exception ex)
+    {
+        await DisplayAlert("Error", $"Failed to generate PDF report: {ex.Message}", "OK");
+    }
+}
 }
