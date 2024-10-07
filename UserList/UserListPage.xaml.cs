@@ -263,7 +263,7 @@ namespace OnboardingSystem
 		{
 			try
 			{
-				var response = await _httpClient.DeleteAsync($"{Constants.API_BASE_URL}{Constants.GET_USERS_ENDPOINT}" + $"{userId}");
+				var response = await _httpClient.DeleteAsync($"{Constants.API_BASE_URL}{Constants.GET_USERS_ENDPOINT}" + $"/{userId}");
 				if (response.IsSuccessStatusCode)
 				{
 					await DisplayAlert("Success", "User deleted successfully.", "OK");

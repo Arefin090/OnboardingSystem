@@ -17,7 +17,8 @@
         <!-- Style for the label in the profile page -->
         <Style x:Key="ProfileLabelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextColor" Value="#424242" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="Margin" Value="0,20,0,10" />
         </Style>
 
         <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
@@ -43,7 +44,7 @@
                     Text="Edit Profile"
                     FontSize="30"
                     FontAttributes="Bold"
-                    TextColor="Black"
+                    TextColor="White"
                     HorizontalOptions="End"
                     Margin="10,20"
                     Grid.Row="0"
@@ -53,7 +54,9 @@
                     Source="edit_icon.png"
                     Clicked="OnEditClicked"
                     HeightRequest="5"
-                    BackgroundColor="Transparent"
+                    BackgroundColor="White"
+                    Padding="5"
+                    CornerRadius="10"
                     HorizontalOptions="Start"
                     Margin="10,20"
                     Grid.Row="0"
@@ -78,11 +81,11 @@
                     <RowDefinition Height="Auto" /> <!-- Row for Save Button -->
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".2*"/> <!--column 1-->
-                    <ColumnDefinition Width=".5*"/> <!--column 3-->
-                    <ColumnDefinition Width=".2*"/> <!--column 3-->
+                    <ColumnDefinition Width=".2*"/> <!--column left-->
                     <ColumnDefinition Width=".5*"/> <!--column 1-->
-                    <ColumnDefinition Width=".2*"/> <!--column 3-->
+                    <ColumnDefinition Width=".2*"/> <!--column middle-->
+                    <ColumnDefinition Width=".5*"/> <!--column 2-->
+                    <ColumnDefinition Width=".2*"/> <!--column right-->
                 </Grid.ColumnDefinitions>
 
                 <!-- Username Label -->
@@ -164,13 +167,11 @@
                     Text="Save Changes"
                     Command="{Binding SaveCommand}"
                     Clicked="OnSaveClicked"
-                    BackgroundColor="Black"
-                    TextColor="White"
                     HorizontalOptions="Center"
                     Margin="0,20"
                     IsVisible="False"
-                    Grid.Row="6"
                     Grid.ColumnSpan="3"
+                    Grid.Row="6"
                     Grid.Column="1"/>
             </Grid>
         </VerticalStackLayout>
