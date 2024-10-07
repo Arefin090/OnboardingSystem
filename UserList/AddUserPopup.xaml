@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="OnboardingSystem.AddUserPopup"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Size="400, 640">
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               x:Class="OnboardingSystem.AddUserPopup"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               Size="400, 640">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="10">
@@ -48,7 +49,10 @@
             </Border>
 
             <!-- Submit Button -->
-            <Button Text="Submit" Clicked="OnSubmitClicked" />
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Button Text="Submit" Clicked="OnSubmitClicked" CornerRadius="20"/>
+                <Button Text="Cancel" Clicked="OnCancelClicked" CornerRadius="20"/>
+            </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </toolkit:Popup>
