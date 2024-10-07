@@ -37,5 +37,10 @@ namespace OnboardingSystem
 			// Return the collected data as a result
 			Close(new { username, firstName, lastName, phone, role, password });
 		}
+		private void OnCancelClicked(object sender, EventArgs e)
+		{
+			// Close the popup
+			Close();
+		}
 	}
 }
