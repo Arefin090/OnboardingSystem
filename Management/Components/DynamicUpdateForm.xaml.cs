@@ -225,6 +225,7 @@ public partial class DynamicUpdateForm : Popup
                 Delete();
                 break;
             case CrudOperation.READ:
+                _viewModel.Page = 1;
                 _viewModel.FetchData(RetrieveEntryData());
                 Close();
                 break;
