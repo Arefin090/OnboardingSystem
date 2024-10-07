@@ -6,6 +6,8 @@ using System.IO;
 using System;
 using System.Net.Http;
 using System.Text.Json; // For serialization
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 
 namespace OnboardingSystem;
 
@@ -745,4 +747,120 @@ public partial class DashboardPage : ContentPage
         
         return false; // Column or table not found
     }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+    }
+
+    // method for PDF generation
+    private async void OnGenerateReportClicked(object sender, EventArgs e)
+{
+    try
+    {
+        // Create a new PDF document
+        var pdfDocument = new PdfDocument();
+        var pdfPage = pdfDocument.AddPage();
+        var gfx = XGraphics.FromPdfPage(pdfPage);
+
+        // Set up fonts and formatting
+        var titleFont = new XFont("Verdana", 20, XFontStyle.Bold);
+        var tableTitleFont = new XFont("Verdana", 14, XFontStyle.Bold);
+        var tableDataFont = new XFont("Verdana", 10, XFontStyle.Regular);
+        var errorFont = new XFont("Verdana", 10, XFontStyle.Italic);
+
+        // Starting coordinates for the PDF layout
+        double yPoint = 40;
+        double pageHeightLimit = pdfPage.Height - 40;
+
+        // Add Title for the PDF
+        gfx.DrawString("Database Tables Report", titleFont, XBrushes.Black, 
+            new XRect(0, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopCenter);
+        yPoint += 40;
+
+        // Loop through the tables in MenuInitializer and generate content
+        foreach (var menuItem in MenuInitializer.menuItems)
+        {
+            // Check if table is null or inaccessible
+            if (menuItem.ColumnDefinitions == null)
+            {
+                gfx.DrawString($"Table {menuItem.TableName} is inaccessible or not defined.", errorFont, XBrushes.Red, 
+                    new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                yPoint += 40;
+                CheckPageHeight(ref yPoint, ref pdfPage, ref gfx, pageHeightLimit);
+                continue; // Skip to the next table if inaccessible
+            }
+
+            // Ensure the table has columns defined
+            if (!menuItem.ColumnDefinitions.Any())
+            {
+                gfx.DrawString($"Table {menuItem.TableName} has no columns defined.", errorFont, XBrushes.Red, 
+                    new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                yPoint += 40;
+                CheckPageHeight(ref yPoint, ref pdfPage, ref gfx, pageHeightLimit);
+                continue; // Skip to the next table if no columns are defined
+            }
+
+            // Table Title
+            gfx.DrawString($"Table: {menuItem.TableName}", tableTitleFont, XBrushes.Black, 
+                new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            yPoint += 20;
+
+            // Column headers
+            gfx.DrawString("Column Name", tableDataFont, XBrushes.Black, 
+                new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            gfx.DrawString("Type", tableDataFont, XBrushes.Black, 
+                new XRect(200, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            gfx.DrawString("Key", tableDataFont, XBrushes.Black, 
+                new XRect(300, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            gfx.DrawString("Constraint", tableDataFont, XBrushes.Black, 
+                new XRect(400, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+            yPoint += 20;
+
+            // Loop through each column and print data
+            foreach (var column in menuItem.ColumnDefinitions)
+            {
+                gfx.DrawString(column.Name ?? "N/A", tableDataFont, XBrushes.Black, 
+                    new XRect(20, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                gfx.DrawString(column.Type ?? "N/A", tableDataFont, XBrushes.Black, 
+                    new XRect(200, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                gfx.DrawString(column.Key ? "Yes" : "No", tableDataFont, XBrushes.Black, 
+                    new XRect(300, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                gfx.DrawString(column.Constraint ?? "None", tableDataFont, XBrushes.Black, 
+                    new XRect(400, yPoint, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+                yPoint += 20;
+
+                // Check if new page is required
+                CheckPageHeight(ref yPoint, ref pdfPage, ref gfx, pageHeightLimit);
+            }
+
+            yPoint += 40; // Add more space between tables for readability
+        }
+
+        // Save the PDF to a file
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DatabaseReport.pdf");
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            pdfDocument.Save(stream);
+        }
+
+        // Notify user that the PDF was generated
+        await DisplayAlert("PDF Report", $"PDF report generated successfully at {filePath}", "OK");
+    }
+    catch (Exception ex)
+    {
+        // Handle errors and show a message to the user
+        await DisplayAlert("Error", $"Failed to generate PDF report: {ex.Message}", "OK");
+    }
+}
+
+// Helper function to check if a new page is required
+private void CheckPageHeight(ref double yPoint, ref PdfPage pdfPage, ref XGraphics gfx, double pageHeightLimit)
+{
+    if (yPoint > pageHeightLimit)
+    {
+        pdfPage = pdfPage.Owner.AddPage();
+        gfx = XGraphics.FromPdfPage(pdfPage);
+        yPoint = 40; // Reset yPoint for new page
+    }
+}
 }

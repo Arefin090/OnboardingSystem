@@ -51,6 +51,12 @@
                         Clicked="OnLoadClicked"
                         HorizontalOptions="End"
                         VerticalOptions="Center"/>
+                <!-- Generate PDF Button -->
+                <Button Text="Generate Database Report"
+                        Clicked="OnGenerateReportClicked"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        Margin="10,0,0,0"/>
         </HorizontalStackLayout>
 
         <!-- Content Block 1 (Pickers + Bar Chart) -->
