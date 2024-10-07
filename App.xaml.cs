@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Maui.Views;
-using OnboardingSystem.Authentication;
-using OnboardingSystem.Global.Menu;
-
-namespace OnboardingSystem
+﻿namespace OnboardingSystem
 {
     public partial class App : Application
     {

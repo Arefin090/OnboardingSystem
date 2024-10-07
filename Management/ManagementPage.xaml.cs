@@ -2,6 +2,7 @@ using OnboardingSystem.ViewModel;
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
 using CommunityToolkit.Maui.Views;
+using OnboardingSystem.Authentication;
 using OnboardingSystem.Management.Components;
 using OnboardingSystem.Enums;
 
@@ -11,12 +12,12 @@ public partial class ManagementPage : ContentPage
 {
     private ManagementViewModel _viewModel;
     private String _route;
-
-    public ManagementPage()
+    private IAuthenticationService _authenticationService;
+    public ManagementPage(IAuthenticationService authenticationService)
     {
         InitializeComponent();
+        _authenticationService = authenticationService;
         
-        BindingContext = _viewModel;
 
         // Programmatically modify UI or add labels dynamically if needed
         
@@ -25,7 +26,8 @@ public partial class ManagementPage : ContentPage
     {
         base.OnNavigatedTo(args);
         _route = Shell.Current.CurrentState.Location.ToString().TrimStart('/');
-        _viewModel = new ManagementViewModel(_route);
+        _viewModel = new ManagementViewModel(_route, _authenticationService);
+        BindingContext = _viewModel;
         AddDataGrid(_route);
     }
 
@@ -128,11 +130,25 @@ public partial class ManagementPage : ContentPage
 
     private void InsertButton_Clicked(object sender, EventArgs e)
     {
-        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel, "Insert Form", CrudOperation.CREATE));
+        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Insert Form", CrudOperation.CREATE));
     }
 
     private void FilterButton_Clicked(object sender, EventArgs e)
     {
-        this.ShowPopup(new DynamicUpdateForm(_route, _viewModel, "Search Form", CrudOperation.READ));
+        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Search Form", CrudOperation.READ));
+    }
+
+    private void DeleteButton_Clicked(object? sender, EventArgs e)
+    {
+        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Delete Form", CrudOperation.DELETE));
+    }
+
+    private void NextButton_Clicked(object? sender, EventArgs e)
+    {
+        _viewModel.NextPage();
+    }
+    private void PrevButton_Clicked(object? sender, EventArgs e)
+    {
+        _viewModel.PrevPage();
     }
 }
