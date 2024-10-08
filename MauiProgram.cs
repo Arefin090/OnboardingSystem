@@ -39,5 +39,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<AppShell>();
 
         return builder.Build();
+
     }
 }
