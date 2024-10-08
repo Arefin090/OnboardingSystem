@@ -9,8 +9,8 @@
         <VerticalStackLayout Spacing="10" Padding="20">
             <FlexLayout>
                 <SearchBar FlexLayout.Grow="1" TextChanged="OnSearchBarTextChanged" HorizontalOptions="Start" Placeholder="Search..." Margin="10,0" />
-                <Button Clicked="OnAddUserClicked" Text="Add user" Margin="10,0" />
-                <Button Clicked="OnDeleteUserClicked" Text="Delete" Margin="10,0" />
+                <Button Clicked="OnAddUserClicked" Text="Add user" Margin="10,0" Style="{StaticResource Interactive_Button}"/>
+                <Button Clicked="OnDeleteUserClicked" Text="Delete" Margin="10,0" Style="{StaticResource Interactive_Button}"/>
             </FlexLayout>
 
             <Grid x:Name="HeaderGrid" Padding="10" />
