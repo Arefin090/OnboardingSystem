@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:OnboardingSystem"
     FlyoutBehavior="Flyout"
+    FlyoutIcon="Resources/Images/icons8_hamburger_menu_32.png"
     TabBarIsVisible="False"
     Height="45"
     >
