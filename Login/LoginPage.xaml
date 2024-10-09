@@ -70,6 +70,33 @@
             <Setter Property="CornerRadius" Value="20" />
             <Setter Property="HorizontalOptions" Value="Fill" />
             <Setter Property="Margin" Value="0,10,0,20" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <!-- Normal State -->
+                    <VisualStateGroup>
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#7D24EE" /> 
+                                <Setter Property="Scale" Value="1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <!-- Hover / PointerOver State -->
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#9068F0" /> 
+                                <Setter Property="Scale" Value="1.05" /> 
+                            </VisualState.Setters>
+                        </VisualState>
+                        <!-- Pressed / Clicked State -->
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#6530C4" /> 
+                                <Setter Property="Scale" Value="0.95" /> 
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
         </Style>
     </ContentPage.Resources>
 
@@ -166,6 +193,7 @@
                         Command="{Binding LoginCommand}"
                         Grid.Row="6"
                         Grid.Column="1"
+                        Style="{StaticResource Login_Button}"
                     />
                 </Grid>
             </Grid>

@@ -9,10 +9,10 @@
                 <VerticalStackLayout Spacing="10" Padding="20">
 
                     <!-- Search and Action Buttons -->
-                    <HorizontalStackLayout HorizontalOptions="End" Spacing="20" >
-                        <Button Text="Filters" Clicked="FilterButton_Clicked"/>
-                        <Button Text="Insert" Clicked="InsertButton_Clicked"/>
-                        <Button Text="Delete" Clicked="DeleteButton_Clicked"/>
+                    <HorizontalStackLayout>
+                        <Button Text="Filters" Clicked="FilterButton_Clicked" Style="{StaticResource Interactive_Button}"/>
+                        <Button Text="Insert" Clicked="InsertButton_Clicked" Style="{StaticResource Interactive_Button}"/>
+                        <Button Text="Delete" Clicked="DeleteButton_Clicked" Style="{StaticResource Interactive_Button}"/>
                     </HorizontalStackLayout>
                     
                     <!-- Table Headers (Column Labels) -->
@@ -24,9 +24,9 @@
 
                     <!-- Pagination -->
                     <HorizontalStackLayout Margin="12, 0, 12, 0" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Button Text="Prev" Clicked="PrevButton_Clicked"/>
+                        <Button Text="Prev" Clicked="PrevButton_Clicked" Style="{StaticResource Interactive_Button}"/>
                         <Label VerticalOptions="Center" Margin="8,0,8,0" Text="{Binding Page}" HorizontalOptions="CenterAndExpand" />
-                        <Button Text="Next" Clicked="NextButton_Clicked"/>
+                        <Button Text="Next" Clicked="NextButton_Clicked" Style="{StaticResource Interactive_Button}"/>
                     </HorizontalStackLayout>
 
                 </VerticalStackLayout>

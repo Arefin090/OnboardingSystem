@@ -4,7 +4,8 @@ using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using OnboardingSystem.Authentication;
-
+using OnboardingSystem.Management.Components;
+using OnboardingSystem.ViewModel;
 
 namespace OnboardingSystem;
 
@@ -22,6 +23,7 @@ public partial class ProfilePage : ContentPage
 
 	private HttpClient _httpClient;
 	private readonly IAuthenticationService _authenticationService;
+	private ProfileViewModel _viewModel = new ProfileViewModel();
 
 	public ProfilePage(IAuthenticationService authenticationService)
 	{
@@ -31,9 +33,16 @@ public partial class ProfilePage : ContentPage
 		SaveButton.IsVisible = false;
 		_httpClient = new HttpClient(); // HttpClient instance
 		_authenticationService = authenticationService;
-
-        LoadUserProfile();  // Call to load the profile data on page load
+		BindingContext = _viewModel;
+		
+        //LoadUserProfile();  // Call to load the profile data on page load
 	}
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        await LoadUserProfile();
+    }
 
 	// Properties to bind user data
 	public string Username
@@ -91,6 +100,8 @@ public partial class ProfilePage : ContentPage
 	{
 		try
 		{
+			_viewModel.IsLoading = true; // Show loading overlay
+
 			// Retrieve the token securely
 			var token = await _authenticationService.GetValidTokenAsync();
 
@@ -130,6 +141,10 @@ public partial class ProfilePage : ContentPage
 		catch (Exception ex)
 		{
 			await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+		}
+		finally 
+		{
+			_viewModel.IsLoading = false; // Hide loading overlay regardless of success or failure
 		}
 	}
 
