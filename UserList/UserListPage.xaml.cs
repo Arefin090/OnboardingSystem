@@ -174,16 +174,6 @@ namespace OnboardingSystem
 						grid.Children.Add(item);
 						grid.SetColumn(item, column);
 
-						var separator = new BoxView
-						{
-							HeightRequest = 1, // Line thickness
-							BackgroundColor = Colors.Gray, // Line color
-							HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
-							Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
-						};
-						grid.Children.Add(separator);
-						grid.SetColumn(separator, column);
-
 						column++;
 					}
 				}
