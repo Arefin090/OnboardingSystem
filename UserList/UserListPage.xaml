@@ -8,22 +8,22 @@
         <ScrollView>
             <VerticalStackLayout Spacing="10" Padding="20">
                 <FlexLayout>
-                    <SearchBar FlexLayout.Grow="1" TextChanged="OnSearchBarTextChanged" HorizontalOptions="Start" WidthRequest="200" Placeholder="Search..." Margin="10,0" />
-                    <Button Clicked="OnAddUserClicked" Text="Add user" Margin="10,0" />
-                    <Button Clicked="OnDeleteUserClicked" Text="Delete" Margin="10,0" />
+                    <SearchBar FlexLayout.Grow="1" TextChanged="OnSearchBarTextChanged" HorizontalOptions="Start" WidthRequest="200" Placeholder="Search..." Margin="10,0" /> <!--Search Bar-->
+                    <Button Clicked="OnAddUserClicked" Text="Add user" Margin="10,0" /> <!--Add User-->
+                    <Button Clicked="OnDeleteUserClicked" Text="Delete" Margin="10,0" /> <!--Delete User-->
                 </FlexLayout>
 
-                <Grid x:Name="HeaderGrid" Padding="10" />
-                <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="Fill" />
+                <Grid x:Name="HeaderGrid" Padding="10" /> <!--Table header-->
+                <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="Fill" /> <!--A line to separate table header and table item-->
 
-                <CollectionView x:Name="GridCollection"/>
+                <CollectionView x:Name="GridCollection"/> <!--Table items-->
             </VerticalStackLayout>
         </ScrollView>
 
         <!-- Loading Overlay -->
         <Grid x:Name="LoadingOverlay" BackgroundColor="Transparent" IsVisible="False">
             <BoxView BackgroundColor="#80000000" /> <!-- Semi-transparent background -->
-            <ActivityIndicator IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center" />
+            <ActivityIndicator IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center" /> <!--Loading Indicator-->
         </Grid>
     </Grid>
 </ContentPage>
