@@ -8,7 +8,7 @@ using OnboardingSystem.Authentication;
 
 namespace OnboardingSystem;
 
-public partial class ProfilePage : ContentPage, INotifyPropertyChanged
+public partial class ProfilePage : ContentPage
 {
 	 private string _id = "";
 	private string _username = "";
