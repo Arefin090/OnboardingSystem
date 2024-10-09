@@ -33,8 +33,13 @@ namespace OnboardingSystem
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await LoadData();
-        }
+
+			LoadingOverlay.IsVisible = true;
+
+			await LoadData();
+
+			LoadingOverlay.IsVisible = false;
+		}
 
         private async Task LoadData()
         {

@@ -9,8 +9,8 @@
                 <VerticalStackLayout Spacing="10" Padding="20">
 
                     <!-- Search and Action Buttons -->
-                    <HorizontalStackLayout>
-                        <Button Text="Filters" Clicked="FilterButton_Clicked" />
+                    <HorizontalStackLayout HorizontalOptions="End" Spacing="20" >
+                        <Button Text="Filters" Clicked="FilterButton_Clicked"/>
                         <Button Text="Insert" Clicked="InsertButton_Clicked"/>
                         <Button Text="Delete" Clicked="DeleteButton_Clicked"/>
                     </HorizontalStackLayout>

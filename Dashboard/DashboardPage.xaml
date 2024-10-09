@@ -35,28 +35,36 @@
 
         <!-- Stack for Save and Load buttons -->
         <HorizontalStackLayout Grid.Row="0"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Grid.ColumnSpan="2"
-                        Margin="0,0,10,0">
-                <!-- Save Button -->
-                <Button Text="Save"
-                        Clicked="OnSaveClicked"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Margin="0,0,10,0"/>
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"
+                                Grid.ColumnSpan="2"
+                                Margin="0,0,10,0">
+            <!-- Save Button -->
+            <Button Text="Save"
+                    Clicked="OnSaveClicked"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    Margin="0,0,10,0"/>
 
-                <!-- Load Button -->
-                <Button Text="Reload"
-                        Clicked="OnLoadClicked"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"/>
+            <!-- Load Button -->
+            <Button Text="Reload"
+                    Clicked="OnLoadClicked"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"/>
+
+            <Grid HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0">
                 <!-- Generate PDF Button -->
-                <Button Text="Generate Database Report"
-                        Clicked="OnGenerateReportClicked"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Margin="10,0,0,0"/>
+                <Button x:Name="GenerateReportButton"
+                        Text="Generate Database Report"
+                        Clicked="OnGenerateReportClicked" />
+
+                <!-- Loading Animation (ActivityIndicator) -->
+                <ActivityIndicator x:Name="LoadingIndicator"
+                                    IsRunning="False"
+                                    IsVisible="False"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"/>
+            </Grid>
         </HorizontalStackLayout>
 
         <!-- Content Block 1 (Pickers + Bar Chart) -->
