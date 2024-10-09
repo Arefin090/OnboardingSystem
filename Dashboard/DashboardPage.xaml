@@ -44,19 +44,23 @@
                         Clicked="OnSaveClicked"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
-                        Margin="0,0,10,0"/>
+                        Margin="0,0,10,0"
+                        Style="{StaticResource Interactive_Button}"/>
 
                 <!-- Load Button -->
                 <Button Text="Reload"
                         Clicked="OnLoadClicked"
                         HorizontalOptions="End"
-                        VerticalOptions="Center"/>
+                        VerticalOptions="Center"
+                        Style="{StaticResource Interactive_Button}"/>
+
                 <!-- Generate PDF Button -->
                 <Button Text="Generate Database Report"
                         Clicked="OnGenerateReportClicked"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
-                        Margin="10,0,0,0"/>
+                        Margin="10,0,0,0"
+                        Style="{StaticResource Interactive_Button}"/>
         </HorizontalStackLayout>
 
         <!-- Content Block 1 (Pickers + Bar Chart) -->
@@ -78,7 +82,8 @@
                             HorizontalOptions="StartAndExpand"/>
                     <Button Text="Load Bar Chart"
                             Clicked="OnLoadBarChartClicked"
-                            HorizontalOptions="End"/>
+                            HorizontalOptions="End"
+                            Style="{StaticResource Interactive_Button}"/>
                 </StackLayout>
 
                 <!-- Placeholder for Bar Chart -->
@@ -107,7 +112,8 @@
                         HorizontalOptions="StartAndExpand"/>
                 <Button Text="Load Pie Chart"
                         Clicked="OnLoadPieChartClicked"
-                        HorizontalOptions="End"/>
+                        HorizontalOptions="End"
+                        Style="{StaticResource Interactive_Button}"/>
                 </StackLayout>
 
                 <!-- Placeholder for Pie Chart -->
@@ -148,7 +154,8 @@
                         </Picker>
                         <Button Text="Load Line Chart"
                                 Clicked="OnLoadLineChartClicked"
-                                HorizontalOptions="End"/>
+                                HorizontalOptions="End"
+                                Style="{StaticResource Interactive_Button}"/>
                 </StackLayout>
 
                 <!-- Placeholder for Line Chart -->
