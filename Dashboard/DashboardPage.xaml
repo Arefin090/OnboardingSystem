@@ -44,19 +44,33 @@
                         Clicked="OnSaveClicked"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
-                        Margin="0,0,10,0"/>
+                        Margin="0,0,10,0"
+                        Style="{StaticResource Interactive_Button}"/>
 
                 <!-- Load Button -->
                 <Button Text="Reload"
                         Clicked="OnLoadClicked"
                         HorizontalOptions="End"
-                        VerticalOptions="Center"/>
-                <!-- Generate PDF Button -->
-                <Button Text="Generate Database Report"
-                        Clicked="OnGenerateReportClicked"
-                        HorizontalOptions="End"
                         VerticalOptions="Center"
-                        Margin="10,0,0,0"/>
+                        Style="{StaticResource Interactive_Button}"/>
+
+                <Grid HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0">
+                    <!--Generate PDF Button-->
+                    <Button x:Name="GenerateReportButton"
+                            Text="Generate Database Report"
+                            Clicked="OnGenerateReportClicked"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource Interactive_Button}"/>
+
+                    <!--Loading Animation (ActivityIndicator)--> 
+                    <ActivityIndicator x:Name="LoadingIndicator"
+                                        IsRunning="False"
+                                        IsVisible="False"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"/>
+                </Grid>
         </HorizontalStackLayout>
 
         <!-- Content Block 1 (Pickers + Bar Chart) -->
@@ -78,7 +92,8 @@
                             HorizontalOptions="StartAndExpand"/>
                     <Button Text="Load Bar Chart"
                             Clicked="OnLoadBarChartClicked"
-                            HorizontalOptions="End"/>
+                            HorizontalOptions="End"
+                            Style="{StaticResource Interactive_Button}"/>
                 </StackLayout>
 
                 <!-- Placeholder for Bar Chart -->
@@ -107,7 +122,8 @@
                         HorizontalOptions="StartAndExpand"/>
                 <Button Text="Load Pie Chart"
                         Clicked="OnLoadPieChartClicked"
-                        HorizontalOptions="End"/>
+                        HorizontalOptions="End"
+                        Style="{StaticResource Interactive_Button}"/>
                 </StackLayout>
 
                 <!-- Placeholder for Pie Chart -->
@@ -148,7 +164,8 @@
                         </Picker>
                         <Button Text="Load Line Chart"
                                 Clicked="OnLoadLineChartClicked"
-                                HorizontalOptions="End"/>
+                                HorizontalOptions="End"
+                                Style="{StaticResource Interactive_Button}"/>
                 </StackLayout>
 
                 <!-- Placeholder for Line Chart -->

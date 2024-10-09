@@ -95,17 +95,31 @@ public partial class ManagementPage : ContentPage
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
             }
-            foreach (var row in _viewModel.Rows)
-            {   
+			foreach (var row in _viewModel.Rows)
+            {
                 int column = 0;
                 foreach (var key in row.Keys)
                 {
                     var item = new Label();
                     item.SetBinding(Label.TextProperty, $"[{key}]");
                     item.Margin = new Thickness(2, 0, 2, 0);
+                    item.VerticalTextAlignment = TextAlignment.Start;
+                    //item.VerticalOptions = LayoutOptions.Start; 
                     grid.Children.Add(item);
                     grid.SetColumn(item, column);
-                    column++;
+
+					var separator1 = new BoxView
+					{
+						HeightRequest = 1, // Line thickness
+						BackgroundColor = Colors.Gray, // Line color
+						HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
+						Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
+					};
+
+					grid.Children.Add(separator1);
+					grid.SetColumn(separator1, column);
+
+					column++;
                 }
                 var button = new Button
                 {
@@ -113,15 +127,26 @@ public partial class ManagementPage : ContentPage
                     TextColor = Colors.White,
                     BackgroundColor = (Color)Application.Current.Resources["Primary"],
                     CornerRadius = 10,
-                    FontSize = 18,
                     HorizontalOptions = LayoutOptions.Start // or LayoutOptions.Center
                 };
                 button.Clicked += (sender, e) => {
                     
                 };
-                grid.Children.Add(button);
-                Grid.SetColumn(button, column);
-            }
+				
+				grid.Children.Add(button);
+				grid.SetColumn(button, column);
+
+				var separator2 = new BoxView
+				{
+					HeightRequest = 1, // Line thickness
+					BackgroundColor = Colors.Gray, // Line color
+					HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
+					Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
+				};
+
+				grid.Children.Add(separator2);
+				grid.SetColumn(separator2, column);
+			}
 
             return grid;
         });

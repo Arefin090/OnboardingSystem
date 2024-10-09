@@ -42,7 +42,8 @@
                 CornerRadius="20"
                 HeightRequest="50"
                 FontSize="18"
-                Clicked="OnSubmitClicked" />
+                Clicked="OnSubmitClicked" 
+                Style="{StaticResource Interactive_Button}"/>
 
             <!-- Cancel Button -->
             <Button 
@@ -50,7 +51,8 @@
                 CornerRadius="20"
                 HeightRequest="50"
                 FontSize="18"
-                Clicked="OnCancelClicked" />
+                Clicked="OnCancelClicked" 
+                Style="{StaticResource Interactive_Button}"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
     </Frame>
