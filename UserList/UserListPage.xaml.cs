@@ -12,11 +12,11 @@ namespace OnboardingSystem
 {
     public partial class UserListPage : ContentPage, IDisposable
     {
-        private readonly IAuthenticationService _authService;
-        private readonly HttpClient _httpClient;
+        private readonly IAuthenticationService _authService; //user authentication
+        private readonly HttpClient _httpClient; //database connection
 
-        public ObservableCollection<JsonObject> Items { get; private set; }
-        private ObservableCollection<JsonObject> _itemList;
+        public ObservableCollection<JsonObject> Items { get; private set; } //list of items for filtered search
+        private ObservableCollection<JsonObject> _itemList; //original list of items from database
 
         public UserListPage(IAuthenticationService authService)
         {
@@ -33,48 +33,44 @@ namespace OnboardingSystem
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await LoadData();
-        }
+
+			LoadingOverlay.IsVisible = true; //show loading indicator
+
+			await LoadData(); //load table items from database
+
+			LoadingOverlay.IsVisible = false; //remove loading indicator
+		}
 
         private async Task LoadData()
         {
             try
             {
-                Console.WriteLine("Starting LoadData method");
-
-                var token = await _authService.GetValidTokenAsync();
+				var token = await _authService.GetValidTokenAsync(); //get user token for role based access
                 if (string.IsNullOrEmpty(token))
                 {
-                    Console.WriteLine("Failed to obtain a valid token. Navigating to login page.");
                     await DisplayAlert("Error", "Please log in to access this page.", "OK");
                     await Shell.Current.GoToAsync("//LoginPage");
                     return;
                 }
 
-                Console.WriteLine("Valid token obtained. Fetching user list.");
-
                 var userList = await GetUserListAsync(token);
                 if (userList != null)
                 {
-                    Console.WriteLine($"User list fetched successfully. Count: {userList.Count}");
                     UpdateItemsList(userList);
                     GenerateTable();
                 }
                 else
                 {
-                    Console.WriteLine("Failed to parse user list.");
                     await DisplayAlert("Error", "Failed to retrieve user list.", "OK");
                 }
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
             {
-                Console.WriteLine("User is not authorized to access this resource.");
                 await DisplayAlert("Access Denied", "You do not have permission to view this page.", "OK");
                 await Shell.Current.GoToAsync("//DashboardPage"); // Or another appropriate page
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in LoadData: {ex.Message}");
                 await DisplayAlert("Error", $"Failed to load data: {ex.Message}", "OK");
             }
         }
@@ -177,16 +173,6 @@ namespace OnboardingSystem
 						item.Margin = new Thickness(2, 0, 2, 0);
 						grid.Children.Add(item);
 						grid.SetColumn(item, column);
-
-						var separator = new BoxView
-						{
-							HeightRequest = 1, // Line thickness
-							BackgroundColor = Colors.Gray, // Line color
-							HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
-							Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
-						};
-						grid.Children.Add(separator);
-						grid.SetColumn(separator, column);
 
 						column++;
 					}

@@ -95,8 +95,8 @@ public partial class ManagementPage : ContentPage
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = width });
             }
-            foreach (var row in _viewModel.Rows)
-            {   
+			foreach (var row in _viewModel.Rows)
+            {
                 int column = 0;
                 foreach (var key in row.Keys)
                 {
@@ -105,7 +105,8 @@ public partial class ManagementPage : ContentPage
                     item.Margin = new Thickness(2, 0, 2, 0);
                     grid.Children.Add(item);
                     grid.SetColumn(item, column);
-                    column++;
+
+					column++;
                 }
                 var button = new Button
                 {
@@ -113,15 +114,15 @@ public partial class ManagementPage : ContentPage
                     TextColor = Colors.White,
                     BackgroundColor = (Color)Application.Current.Resources["Primary"],
                     CornerRadius = 10,
-                    FontSize = 18,
                     HorizontalOptions = LayoutOptions.Start // or LayoutOptions.Center
                 };
                 button.Clicked += (sender, e) => {
                     
                 };
-                grid.Children.Add(button);
-                Grid.SetColumn(button, column);
-            }
+				
+				grid.Children.Add(button);
+				grid.SetColumn(button, column);
+			}
 
             return grid;
         });
