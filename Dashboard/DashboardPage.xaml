@@ -59,6 +59,7 @@
                     <Button x:Name="GenerateReportButton"
                             Text="Generate Database Report"
                             Clicked="OnGenerateReportClicked"
+                            IsEnabled="True"
                             HorizontalOptions="End"
                             VerticalOptions="Center"
                             Margin="10,0,0,0"

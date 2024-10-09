@@ -103,21 +103,8 @@ public partial class ManagementPage : ContentPage
                     var item = new Label();
                     item.SetBinding(Label.TextProperty, $"[{key}]");
                     item.Margin = new Thickness(2, 0, 2, 0);
-                    item.VerticalTextAlignment = TextAlignment.Start;
-                    //item.VerticalOptions = LayoutOptions.Start; 
                     grid.Children.Add(item);
                     grid.SetColumn(item, column);
-
-					var separator1 = new BoxView
-					{
-						HeightRequest = 1, // Line thickness
-						BackgroundColor = Colors.Gray, // Line color
-						HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
-						Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
-					};
-
-					grid.Children.Add(separator1);
-					grid.SetColumn(separator1, column);
 
 					column++;
                 }
@@ -135,17 +122,6 @@ public partial class ManagementPage : ContentPage
 				
 				grid.Children.Add(button);
 				grid.SetColumn(button, column);
-
-				var separator2 = new BoxView
-				{
-					HeightRequest = 1, // Line thickness
-					BackgroundColor = Colors.Gray, // Line color
-					HorizontalOptions = LayoutOptions.Fill, // Expand to fill width
-					Margin = new Thickness(0, 40, 0, 0) // Add some spacing above and below
-				};
-
-				grid.Children.Add(separator2);
-				grid.SetColumn(separator2, column);
 			}
 
             return grid;

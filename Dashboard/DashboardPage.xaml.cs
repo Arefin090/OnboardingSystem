@@ -762,6 +762,7 @@ public partial class DashboardPage : ContentPage
 		// Ensure the button width is fixed when changing text
 		GenerateReportButton.Text = "";
 		GenerateReportButton.WidthRequest = originalButtonWidth;
+		GenerateReportButton.IsEnabled = false;
 		LoadingIndicator.IsVisible = true;
 		LoadingIndicator.IsRunning = true;
         await Task.Delay(800);
@@ -917,6 +918,7 @@ public partial class DashboardPage : ContentPage
 
 		// After PDF generation is complete, replace the loading indicator with the saved button text
 		GenerateReportButton.Text = generateReportButtonText; //revert to original button text
+		GenerateReportButton.IsEnabled = true;
 		LoadingIndicator.IsRunning = false;
 		LoadingIndicator.IsVisible = false;
 		GenerateReportButton.WidthRequest = -1; //reset width request
