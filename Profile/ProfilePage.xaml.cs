@@ -173,6 +173,16 @@ public partial class ProfilePage : ContentPage
         SaveButton.IsVisible = isEditModeEnabled;
     }
 
+	private void OnPressed(object sender, EventArgs e)
+		{
+			EditButton.ScaleTo(1.2, 100); // Scale the button up to 1.2 times its original size
+		}
+
+		// Event handler for when the button is released (simulating hover exit)
+		private void OnReleased(object sender, EventArgs e)
+		{
+			EditButton.ScaleTo(1.0, 100); // Scale the button back to its original size
+		}
 	// Event handler for Save button click (optional)
    // Event handler for save button click
         private async void OnSaveClicked(object sender, EventArgs e)
