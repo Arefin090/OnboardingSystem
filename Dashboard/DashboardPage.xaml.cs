@@ -251,11 +251,6 @@ public partial class DashboardPage : ContentPage
         }
     }
 
-    // private void OnLoadClicked(object sender, EventArgs e)
-    // {
-    //     LoadConfig();
-    // }
-
     public class ChartConfig
     {
         public string? BarChartTable { get; set; }

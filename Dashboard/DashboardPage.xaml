@@ -23,7 +23,7 @@
             <ColumnDefinition Width="*" />   
         </Grid.ColumnDefinitions>
 
-        <!-- Stack for Save and Load buttons -->
+        <!-- Stack for Save and Pdf buttons -->
         <HorizontalStackLayout Grid.Row="0"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
@@ -36,13 +36,6 @@
                         VerticalOptions="Center"
                         Margin="0,0,10,0"
                         Style="{StaticResource Interactive_Button}"/>
-
-                <!-- Load Button -->
-                <!-- <Button Text="Reload"
-                        Clicked="OnLoadClicked"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Style="{StaticResource Interactive_Button}"/> -->
 
                 <!-- Generate PDF Button -->
                 <Button Text="Generate Database Report"
