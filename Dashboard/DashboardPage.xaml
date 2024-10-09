@@ -150,7 +150,7 @@
         </Frame>
 
         <!-- Error Message -->
-        <Label x:Name="errorMessageLabel"
+        <Label x:Name="messageLabel"
                TextColor="Red"
                FontAttributes="Bold"
                IsVisible="False"

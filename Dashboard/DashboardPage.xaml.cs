@@ -242,12 +242,12 @@ public partial class DashboardPage : ContentPage
                 yAxisPicker.SelectedItem = config.LineChartYAxis;
                 dateGroupingPicker.SelectedItem = config.DateGrouping;
 
-                await DisplayAlert("Load", "Configuration loaded successfully!", "OK");
+                await ShowTemporaryMessage("Logged in successfully!");
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Failed to load configuration: {ex.Message}", "OK");
+            await ShowTemporaryMessage($"Error: {ex.Message}");
         }
     }
 
@@ -278,7 +278,7 @@ public partial class DashboardPage : ContentPage
     //
     private async void OnLoadLineChartClicked(object sender, EventArgs e)
     {
-        errorMessageLabel.IsVisible = false;
+        messageLabel.IsVisible = false;
         lineChartView.IsVisible = false;
 
         // Gets table, X, Y, and date grouping
@@ -431,7 +431,7 @@ public partial class DashboardPage : ContentPage
     //
     private async void OnLoadBarChartClicked(object sender, EventArgs e)
     {
-        errorMessageLabel.IsVisible = false;
+        messageLabel.IsVisible = false;
 
         // Gets table, columns, and aggregation
         string? selectedTable = barChartTablePicker.SelectedItem?.ToString();
@@ -566,7 +566,7 @@ public partial class DashboardPage : ContentPage
     //
     private async void OnLoadPieChartClicked(object sender, EventArgs e)
     {
-        errorMessageLabel.IsVisible = false;
+        messageLabel.IsVisible = false;
         pieChartView.IsVisible = false;
 
         // Get table and columns for the pie chart
@@ -705,10 +705,26 @@ public partial class DashboardPage : ContentPage
         return new SKColor(r, g, b);
     }
 
-
+    //
+    //
 
     //
     //
+    //Shows login message
+    //
+    //
+    private async Task ShowTemporaryMessage(string message)
+    {
+        messageLabel.Text = message;
+        messageLabel.IsVisible = true;
+
+        // Wait for 3 seconds
+        await Task.Delay(2000);
+
+        // Hide the message
+        messageLabel.IsVisible = false;
+    }
+
 
     //
     //
@@ -717,8 +733,8 @@ public partial class DashboardPage : ContentPage
     //
     private void ShowErrorMessage(string message)
     {
-        errorMessageLabel.Text = message;
-        errorMessageLabel.IsVisible = true;
+        messageLabel.Text = message;
+        messageLabel.IsVisible = true;
     }
 
     //
