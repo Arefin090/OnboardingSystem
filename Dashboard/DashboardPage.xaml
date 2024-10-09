@@ -54,13 +54,23 @@
                         VerticalOptions="Center"
                         Style="{StaticResource Interactive_Button}"/>
 
-                <!-- Generate PDF Button -->
-                <Button Text="Generate Database Report"
-                        Clicked="OnGenerateReportClicked"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Margin="10,0,0,0"
-                        Style="{StaticResource Interactive_Button}"/>
+                <Grid HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0">
+                    <!--Generate PDF Button-->
+                    <Button x:Name="GenerateReportButton"
+                            Text="Generate Database Report"
+                            Clicked="OnGenerateReportClicked"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource Interactive_Button}"/>
+
+                    <!--Loading Animation (ActivityIndicator)--> 
+                    <ActivityIndicator x:Name="LoadingIndicator"
+                                        IsRunning="False"
+                                        IsVisible="False"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"/>
+                </Grid>
         </HorizontalStackLayout>
 
         <!-- Content Block 1 (Pickers + Bar Chart) -->
