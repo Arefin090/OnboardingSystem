@@ -6,14 +6,28 @@
                CanBeDismissedByTappingOutsideOfPopup="False"
                Color="Transparent"
                >
-    <Frame CornerRadius="20" Padding="0" HasShadow="True" Background="White" >
-    <VerticalStackLayout WidthRequest="800" Padding="40, 20, 40, 20">
+    <!-- <toolkit:Popup.Resources> -->
+    <!--     ~1~ Updated the style to use Material components correctly @1@ -->
+    <!--     <Style TargetType="Entry"> -->
+    <!--         <Setter Property="FontSize" Value="18" /> -->
+    <!--         <Setter Property="BackgroundColor" Value="White" /> -->
+    <!--         <Setter Property="TextColor" Value="Black" /> -->
+    <!--         <Setter Property="PlaceholderColor" Value="Black" /> -->
+    <!--     </Style> -->
+    <!--      -->
+    <!-- -->
+    <!--     <Style x:Key="Entry_Shape" TargetType="RoundRectangle"> -->
+    <!--         ~1~Entry Bar Label@1@ -->
+    <!--         <Setter Property="CornerRadius" Value="20" /> -->
+    <!--     </Style> -->
+    <!-- </toolkit:Popup.Resources> -->
+    <Frame CornerRadius="20" Padding="0" HasShadow="True" >
+        <VerticalStackLayout WidthRequest="800" Padding="40, 20, 40, 20">
         <Label 
             Text="{Binding FormTitle}"
             FontSize="26"
             VerticalOptions="Center" 
             HorizontalOptions="Center" 
-            TextColor="Black" 
             FontAttributes="Bold"
             Margin="0,0,0,20" />
 

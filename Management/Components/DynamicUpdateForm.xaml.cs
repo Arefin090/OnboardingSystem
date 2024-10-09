@@ -51,7 +51,7 @@ public partial class DynamicUpdateForm : Popup
             var label = new Label
             {
                 Text = entry.Label,
-                TextColor = Colors.Black,
+                // TextColor = Colors.Black,
                 Margin = new Thickness(0, 10, 0, 0)
             };
 
@@ -60,8 +60,10 @@ public partial class DynamicUpdateForm : Popup
             {
                 Placeholder = entry.Placeholder,
                 Keyboard = entry.Keyboard,
-                TextColor = Colors.White,
-                BackgroundColor = Color.FromArgb("#303030"),
+                
+                // TextColor = Colors.White,
+                AutomationId = "MaterialEntryStyle",
+                // BackgroundColor = Color.FromArgb("#303030"),
                 Margin = new Thickness(0, 5),
             };
 

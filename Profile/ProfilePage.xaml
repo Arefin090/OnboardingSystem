@@ -13,14 +13,14 @@
             <Setter Property="BackgroundColor" Value="White" />
             <Setter Property="TextColor" Value="Black" />
         </Style>
-
+    
         <!-- Style for the label in the profile page -->
         <Style x:Key="ProfileLabelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="18" />
             <Setter Property="TextColor" Value="White" />
             <Setter Property="Margin" Value="0,20,0,10" />
         </Style>
-
+    
         <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
             <!--Entry Bar Label-->
             <Setter Property="CornerRadius" Value="20" />
