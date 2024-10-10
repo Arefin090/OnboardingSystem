@@ -16,7 +16,7 @@ public partial class AppShell : Shell
         new ShellContent() { Title = "Dashboard", ContentTemplate = new DataTemplate(typeof(DashboardPage)), Icon = "icons8_dashboard_96.png", Route = $"{nameof(DashboardPage)}"},
         new ShellContent() { Title = "User List", ContentTemplate = new DataTemplate(typeof(UserListPage)), Icon = "icons8_user_96.png", Route = $"{nameof(UserListPage)}"},
         new ShellContent() { Title = "Profile", ContentTemplate = new DataTemplate(typeof(ProfilePage)), Icon = "icons8_profile.png", Route = $"{nameof(ProfilePage)}"},
-        new ShellContent() { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "icons8_logout_96.png", Route = $"{nameof(LoginPage)}"},
+        new ShellContent() { Title = "Log Out", ContentTemplate = new DataTemplate(typeof(LoginPage)), Icon = "icons8_logout_50.png", Route = $"{nameof(LoginPage)}"},
     };
 
     public event PropertyChangedEventHandler? PropertyChanged;

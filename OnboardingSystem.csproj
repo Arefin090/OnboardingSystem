@@ -61,7 +61,7 @@
 	<ItemGroup>
 	  <None Remove="Resources\Images\icons8_dashboard_96.png" />
 	  <None Remove="Resources\Images\icons8_user_96.png" />
-	  <None Remove="Resources\Images\icons8_logout_96.png" />
+	  <None Remove="Resources\Images\icons8_logout_50.png" />
 	  <None Remove="Resources\Images\table_view_96dp.png" />
 	</ItemGroup>
 
