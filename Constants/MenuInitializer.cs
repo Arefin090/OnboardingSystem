@@ -9,7 +9,7 @@ public class MenuInitializer {
     public static List<AppShellItem> menuItems = new List<AppShellItem> {
         // Staff Table
         new AppShellItem { 
-            Icon = "table_view_96dp.png", 
+            Icon = "icons8_staff_96.png", 
             Title = "Staff", 
             TableName = "Staff", 
             ColumnDefinitions = new List<ColumnDefinitions> {
@@ -22,7 +22,7 @@ public class MenuInitializer {
         },
         // Products Table
         new AppShellItem { 
-            Icon = "table_view_96dp.png", 
+            Icon = "icons8_products_100.png", 
             Title = "Products", 
             TableName = "Products", 
             ColumnDefinitions = new List<ColumnDefinitions> {
@@ -37,7 +37,7 @@ public class MenuInitializer {
         
         // Sales Table
         new AppShellItem { 
-            Icon = "table_view_96dp.png", 
+            Icon = "icons8_sales_100.png", 
             Title = "Sales", 
             TableName = "Sales", 
             ColumnDefinitions = new List<ColumnDefinitions> {

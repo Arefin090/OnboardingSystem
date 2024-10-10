@@ -55,12 +55,13 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		 <MauiAsset Include="Resources/Images/icons8_hamburger_menu_32.png" LogicalName="Resources/Images/icons8_hamburger_menu_32.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Images\dashboard_96dp.png" />
-	  <None Remove="Resources\Images\group_96dp.png" />
-	  <None Remove="Resources\Images\logout_96dp.png" />
+	  <None Remove="Resources\Images\icons8_dashboard_96.png" />
+	  <None Remove="Resources\Images\icons8_user_96.png" />
+	  <None Remove="Resources\Images\icons8_logout_96.png" />
 	  <None Remove="Resources\Images\table_view_96dp.png" />
 	</ItemGroup>
 
