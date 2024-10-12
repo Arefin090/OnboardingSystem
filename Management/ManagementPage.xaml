@@ -10,9 +10,13 @@
 
                     <!-- Search and Action Buttons -->
                     <HorizontalStackLayout>
-                        <Button Text="Filters" Clicked="FilterButton_Clicked" Style="{StaticResource Interactive_Button}"/>
-                        <Button Text="Insert" Clicked="InsertButton_Clicked" Style="{StaticResource Interactive_Button}"/>
-                        <Button Text="Delete" Clicked="DeleteButton_Clicked" Style="{StaticResource Interactive_Button}"/>
+                        <!-- Picker as Dropdown -->
+                        <Picker Title="Select an option"
+                                ItemsSource="{Binding OptionsList}"
+                                
+                                SelectedItem="{Binding SelectedOption}" />
+                        <Button Text="Perform Operation" Clicked="Picker_OnSelectedIndexChanged" Style="{StaticResource Interactive_Button}"/>
+                        <!-- <Button Text="Delete" Clicked="DeleteButton_Clicked" Style="{StaticResource Interactive_Button}"/> -->
                     </HorizontalStackLayout>
                     
                     <!-- Table Headers (Column Labels) -->

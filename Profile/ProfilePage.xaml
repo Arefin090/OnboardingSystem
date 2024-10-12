@@ -90,75 +90,73 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Username Label -->
-                    <Label Text="Username" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="1" />
+                    <Label Text="Username" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="1" />
                     <!-- Username Entry -->
                     <Border MaximumWidthRequest="400" Grid.Row="1" Grid.Column="1">
                         <Border.StrokeShape>
-                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                            <RoundRectangle  />
                         </Border.StrokeShape>
                         <Entry
                             x:Name="UsernameEntry"
                             Text="{Binding Username}"
-                            Style="{StaticResource MaterialEntryStyle}"
                             IsReadOnly="True" />
                     </Border>
 
                     <!-- First Name Label -->
-                    <Label Text="First Name" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="3" />
+                    <Label Text="First Name" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="3" />
                     <!-- First Name Entry -->
                     <Border MaximumWidthRequest="400" Grid.Row="1" Grid.Column="3">
                         <Border.StrokeShape>
-                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                            <RoundRectangle />
                         </Border.StrokeShape>
                         <Entry
                             x:Name="FirstNameEntry"
                             Text="{Binding FirstName}"
-                            Style="{StaticResource MaterialEntryStyle}"
+                            
                             IsEnabled="False" />
                     </Border>
 
                     <!-- Last Name Label -->
-                    <Label Text="Last Name" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="2" Grid.Column="1" />
+                    <Label Text="Last Name" MaximumWidthRequest="400" Grid.Row="2" Grid.Column="1" />
                     <!-- Last Name Entry -->
                     <Border MaximumWidthRequest="400" Grid.Row="3" Grid.Column="1">
                         <Border.StrokeShape>
-                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                            <RoundRectangle />
                         </Border.StrokeShape>
                         <Entry
                             x:Name="LastNameEntry"
                             Text="{Binding LastName}"
-                            Style="{StaticResource MaterialEntryStyle}"
+                            
                             IsEnabled="False" />
                     </Border>
 
                     <!-- Phone Label -->
-                    <Label Text="Phone" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="2" Grid.Column="3" />
+                    <Label Text="Phone"  MaximumWidthRequest="400" Grid.Row="2" Grid.Column="3" />
                     <!-- Phone Entry -->
                     <Border MaximumWidthRequest="400" Grid.Row="3" Grid.Column="3">
                         <Border.StrokeShape>
-                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                            <RoundRectangle  />
                         </Border.StrokeShape>
                         <Entry
                             x:Name="PhoneEntry"
                             Text="{Binding Phone}"
-                            Style="{StaticResource MaterialEntryStyle}"
                             IsEnabled="False"
                             Keyboard="Telephone" />
                     </Border>
 
                     <!-- Role Label -->
-                    <Label Text="Role" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="1" />
+                    <Label Text="Role" MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="1" />
                     <!-- Role Entry -->
                     <Border MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="5" Grid.Column="1">
                         <Border.StrokeShape>
-                            <RoundRectangle Style="{StaticResource Entry_Shape}" />
+                            <RoundRectangle/>
                         </Border.StrokeShape>
                         <Entry
                             x:Name="RoleEntry"
                             Text="{Binding Role}"
                             IsReadOnly="True"
                             IsEnabled="False"
-                            Style="{StaticResource MaterialEntryStyle}"
+                            
                             />
                     </Border>
 

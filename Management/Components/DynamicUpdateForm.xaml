@@ -22,6 +22,7 @@
     <!--     </Style> -->
     <!-- </toolkit:Popup.Resources> -->
     <Frame CornerRadius="20" Padding="0" HasShadow="True" >
+        <ScrollView>
         <VerticalStackLayout WidthRequest="800" Padding="40, 20, 40, 20">
         <Label 
             Text="{Binding FormTitle}"
@@ -33,6 +34,8 @@
 
         <!-- StackLayout for Dynamic Entries -->
         <StackLayout x:Name="DynamicEntryStack" />
+        
+        <StackLayout x:Name="UpdateForm" />
 
         <!-- Horizontal Stack for Buttons -->
         <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,30,0,20">
@@ -54,6 +57,6 @@
                 Clicked="OnCancelClicked" 
                 Style="{StaticResource Interactive_Button}"/>
         </HorizontalStackLayout>
-    </VerticalStackLayout>
+    </VerticalStackLayout></ScrollView>
     </Frame>
 </toolkit:Popup>
