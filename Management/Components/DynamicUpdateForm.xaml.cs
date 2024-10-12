@@ -1,18 +1,11 @@
 using System.Net;
-using CommunityToolkit.Maui.Markup;
 using CommunityToolkit.Maui.Views;
-using Microsoft.Maui.Controls.Compatibility.Platform.UWP;
 using Microsoft.Maui.Controls.Shapes;
 using OnboardingSystem.Enums;
 using OnboardingSystem.ViewModel;
 using System.Net.Http.Json;
-using Newtonsoft.Json;
 using OnboardingSystem.Authentication;
-using OnboardingSystem.Models.ErrorResponse;
-using OnboardingSystem.Models.SuccessResponse;
-using Font = Microsoft.Maui.Font;
 using JsonSerializer = System.Text.Json.JsonSerializer;
-using LayoutAlignment = Microsoft.Maui.Primitives.LayoutAlignment;
 
 namespace OnboardingSystem.Management.Components;
 
