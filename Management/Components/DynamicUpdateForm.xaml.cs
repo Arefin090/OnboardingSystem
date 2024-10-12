@@ -44,7 +44,7 @@ public partial class DynamicUpdateForm : Popup
     {
         // Example entries to create
         var tableSchema = MenuInitializer.menuItems.Find(x => x.TableName == _tableName);
-        var entryData = tableSchema.ColumnDefinitions.Select(col => new { Label = col.Name, Placeholder = $"Enter {col.Name}", Keyboard = Keyboard.Default, Key = col.Name }).ToList();
+        var entryData = tableSchema.ColumnDefinitions.Select(col => new { Label = col.Name, Placeholder = (col.Type.ToLower().Contains("date") || col.Type.ToLower().Contains("time")) ? $"Enter {col.Name} in yyyy-mm-dd format" : $"Enter {col.Name}", Keyboard = Keyboard.Default, Key = col.Name }).ToList();
         var title = new Label
         {
             Text= "Update The Following Information",
@@ -64,7 +64,8 @@ public partial class DynamicUpdateForm : Popup
                 // TextColor = Colors.Black,
                 Margin = new Thickness(0, 10, 0, 0)
             };
-
+            
+            
             // Create the Entry
             var entryField = new Entry
             {
@@ -76,14 +77,7 @@ public partial class DynamicUpdateForm : Popup
             };
 
             _updatedEntries.Add(entry.Key, entryField);
-
-            // Create a Border for Entry
-            var border = new Border
-            {
-                StrokeShape = new RoundRectangle { CornerRadius = 10 },
-                Content = entryField,
-                // HeightRequest = entryField.HeightRequest,
-            };
+            
             // Add to the StackLayout
             UpdateForm.Children.Add(label);
             UpdateForm.Children.Add(entryField);
@@ -93,7 +87,7 @@ public partial class DynamicUpdateForm : Popup
     {
         // Example entries to create
         var tableSchema = MenuInitializer.menuItems.Find(x => x.TableName == _tableName);
-        var entryData = tableSchema.ColumnDefinitions.Select(col => new { Label = col.Name, Placeholder = $"Enter {col.Name}", Keyboard = Keyboard.Default, Key = col.Name }).ToList();
+        var entryData =  tableSchema.ColumnDefinitions.Select(col => new { Label = col.Name, Placeholder = (col.Type.ToLower().Contains("date") || col.Type.ToLower().Contains("time")) ? $"Enter {col.Name} in yyyy-mm-dd format" : $"Enter {col.Name}", Keyboard = Keyboard.Default, Key = col.Name }).ToList();
   
         foreach (var entry in entryData)
         {
