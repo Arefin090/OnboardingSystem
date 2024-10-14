@@ -6,4 +6,5 @@ public class AppShellItem
     public String Icon { get; set; }
     public String TableName {get;set;}
     public List<ColumnDefinitions> ColumnDefinitions { get;set;}
+    public List<String>? Constraints { get;set;}
 }

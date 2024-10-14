@@ -9,10 +9,15 @@
                 <VerticalStackLayout Spacing="10" Padding="20">
 
                     <!-- Search and Action Buttons -->
-                    <HorizontalStackLayout>
-                        <Button Text="Filters" Clicked="FilterButton_Clicked" Style="{StaticResource Interactive_Button}"/>
-                        <Button Text="Insert" Clicked="InsertButton_Clicked" Style="{StaticResource Interactive_Button}"/>
-                        <Button Text="Delete" Clicked="DeleteButton_Clicked" Style="{StaticResource Interactive_Button}"/>
+                    <HorizontalStackLayout VerticalOptions="End">
+                        <!-- Picker as Dropdown -->
+                        <Picker Title="Select an option"
+                                VerticalOptions="End"
+                                ItemsSource="{Binding OptionsList}"
+                                
+                                SelectedItem="{Binding SelectedOption}" />
+                        <Button VerticalOptions="End" Margin="20,0" HeightRequest="0" Height="12" Text="Perform Operation" Clicked="Picker_OnSelectedIndexChanged" Style="{StaticResource Interactive_Button}"/>
+                        <!-- <Button Text="Delete" Clicked="DeleteButton_Clicked" Style="{StaticResource Interactive_Button}"/> -->
                     </HorizontalStackLayout>
                     
                     <!-- Table Headers (Column Labels) -->

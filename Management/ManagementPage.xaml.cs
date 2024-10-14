@@ -59,17 +59,6 @@ public partial class ManagementPage : ContentPage
             HeaderGrid.Children.Add(label);
             HeaderGrid.SetColumn(label, i);
         }
-        i++;
-        var updateButtonLabel = new Label
-        {
-            Text = "Operation",
-            FontAttributes = FontAttributes.Bold,
-            HorizontalOptions = LayoutOptions.Start,
-            VerticalOptions = LayoutOptions.Center,
-            FontSize = 18
-        };
-        HeaderGrid.Children.Add(updateButtonLabel);
-        HeaderGrid.SetColumn(updateButtonLabel, i);
 
         AddCollectionView(headers.Count());
     }
@@ -77,7 +66,7 @@ public partial class ManagementPage : ContentPage
     private List<GridLength> GetColumnDefinitions(int numOfColumns)
     {
         var columnWidths = new List<GridLength>();
-        for (int i = 0; i <= numOfColumns; i++)
+        for (int i = 0; i < numOfColumns; i++)
         {
             columnWidths.Add(new GridLength(1, GridUnitType.Star)); // Defines Column Size
         }
@@ -103,25 +92,11 @@ public partial class ManagementPage : ContentPage
                     var item = new Label();
                     item.SetBinding(Label.TextProperty, $"[{key}]");
                     item.Margin = new Thickness(2, 0, 2, 0);
+                    item.VerticalOptions = LayoutOptions.Start;
                     grid.Children.Add(item);
                     grid.SetColumn(item, column);
-
 					column++;
                 }
-                var button = new Button
-                {
-                    Text = "Update",
-                    TextColor = Colors.White,
-                    BackgroundColor = (Color)Application.Current.Resources["Primary"],
-                    CornerRadius = 10,
-                    HorizontalOptions = LayoutOptions.Start // or LayoutOptions.Center
-                };
-                button.Clicked += (sender, e) => {
-                    
-                };
-				
-				grid.Children.Add(button);
-				grid.SetColumn(button, column);
 			}
 
             return grid;
@@ -129,20 +104,22 @@ public partial class ManagementPage : ContentPage
 
     }
 
-    private void InsertButton_Clicked(object sender, EventArgs e)
-    {
-        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Insert Form", CrudOperation.CREATE));
-    }
-
-    private void FilterButton_Clicked(object sender, EventArgs e)
-    {
-        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Search Form", CrudOperation.READ));
-    }
-
-    private void DeleteButton_Clicked(object? sender, EventArgs e)
-    {
-        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Delete Form", CrudOperation.DELETE));
-    }
+    // private void InsertButton_Clicked(object sender, EventArgs e)
+    // {
+    //     this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Insert Form", CrudOperation.CREATE));
+    // }
+    //
+    //
+    //
+    // private void FilterButton_Clicked(object sender, EventArgs e)
+    // {
+    //     this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Search Form", CrudOperation.READ));
+    // }
+    //
+    // private void DeleteButton_Clicked(object? sender, EventArgs e)
+    // {
+    //     this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, "Delete Form", CrudOperation.DELETE));
+    // }
 
     private void NextButton_Clicked(object? sender, EventArgs e)
     {
@@ -151,5 +128,30 @@ public partial class ManagementPage : ContentPage
     private void PrevButton_Clicked(object? sender, EventArgs e)
     {
         _viewModel.PrevPage();
+    }
+
+    private void Picker_OnSelectedIndexChanged(object? sender, EventArgs e)
+    {
+        var operation = CrudOperation.READ;
+        var title = "";
+        if (_viewModel.SelectedOption == CrudOperation.READ.ToString())
+        {
+            operation = CrudOperation.READ;
+            title = "Search Form";
+        }else if (_viewModel.SelectedOption == CrudOperation.CREATE.ToString())
+        {
+            operation = CrudOperation.CREATE;
+            title = "Create Form";
+        }else if (_viewModel.SelectedOption == CrudOperation.DELETE.ToString())
+        {
+            operation = CrudOperation.DELETE;
+            title = "Delete Form";
+        }
+        else
+        {
+            operation = CrudOperation.UPDATE;
+            title = "Update Form";
+        }
+        this.ShowPopup(new DynamicUpdateForm(_authenticationService,_route, _viewModel, title,operation));
     }
 }
