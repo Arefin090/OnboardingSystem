@@ -3,7 +3,7 @@ namespace OnboardingSystem
     public static class Constants
     {
         // API Base URL
-        public const string API_BASE_URL = "https://localhost:5087";
+        public const string API_BASE_URL = "https://localhost:44339";
 
         // API Endpoints FOR USER
         public const string LOGIN_ENDPOINT = "/api/User/login";
