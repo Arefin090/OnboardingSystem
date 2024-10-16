@@ -3,20 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnboardingSystem.UserListPage"
              Title=""
-             Shell.NavBarIsVisible="False"> <!--Disable top bar-->
+             Shell.NavBarIsVisible="False">
+    <!--Disable top bar-->
     <Grid>
         <ScrollView>
             <VerticalStackLayout Spacing="10" Padding="20">
                 <FlexLayout>
                     <SearchBar FlexLayout.Grow="1" TextChanged="OnSearchBarTextChanged" HorizontalOptions="Start" WidthRequest="200" Placeholder="Search..." Margin="10,0" /> <!--Search Bar-->
-                    <Button Clicked="OnAddUserClicked" Text="Add user" Margin="10,0" /> <!--Add User-->
-                    <Button Clicked="OnDeleteUserClicked" Text="Delete" Margin="10,0" /> <!--Delete User-->
+                    <Button Clicked="OnAddUserClicked" Text="Add user" Margin="10,0" Style="{StaticResource Interactive_Button}" /> <!--Add User-->
+                    <Button Clicked="OnDeleteUserClicked" Text="Delete" Margin="10,0" Style="{StaticResource Interactive_Button}" /> <!--Delete User-->
                 </FlexLayout>
 
                 <Grid x:Name="HeaderGrid" Padding="10" /> <!--Table header-->
                 <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="Fill" /> <!--A line to separate table header and table item-->
 
                 <CollectionView x:Name="GridCollection"/> <!--Table items-->
+
+                <!-- Pagination -->
+                <HorizontalStackLayout Margin="12, 0" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Button Text="Prev" Clicked="PrevButton_Clicked" Style="{StaticResource Interactive_Button}"/>
+                    <Label VerticalOptions="Center" Margin="8,0" Text="{Binding CurrentPage}" HorizontalOptions="CenterAndExpand" />
+                    <Label VerticalOptions="Center" Margin="8,0" Text="of" />
+                    <Label VerticalOptions="Center" Margin="8,0" Text="{Binding TotalPages}" HorizontalOptions="CenterAndExpand" />
+                    <Button Text="Next" Clicked="NextButton_Clicked" Style="{StaticResource Interactive_Button}"/>
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
