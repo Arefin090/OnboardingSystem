@@ -4,6 +4,7 @@ using OnboardingSystem.Models.Menu;
 namespace OnboardingSystem.Global.Menu;
 using Microsoft.Maui.Controls;
 using OnboardingSystem.Authentication;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -38,6 +39,17 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         LoadMenuItems();
+        Navigating += OnShellNavigating;
+    }
+
+    private async void OnShellNavigating(object? sender, ShellNavigatingEventArgs e)
+    {
+        if (e.Target.Location.OriginalString.EndsWith(nameof(LoginPage)))
+        {
+            // Perform logout
+            var authService = ServiceHelper.GetService<IAuthenticationService>();
+            await authService.ClearAuthStateAsync();
+        }
     }
 
     private void LoadMenuItems()
@@ -68,7 +80,7 @@ public partial class AppShell : Shell
             flyoutItems.Items.Add(content);
         }
 
-        // Adding the last default item
+       // Adding the last default item (Logout)
         flyoutItems.Items.Add(_defaultShellItem[3]);
 
         // Finally, add the FlyoutItem to the Shell
