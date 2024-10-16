@@ -9,11 +9,11 @@ public class MenuInitializer {
     public static List<AppShellItem> menuItems = new List<AppShellItem> {
         // Staff Table
         new AppShellItem { 
-            Icon = "table_view_96dp.png", 
+            Icon = "icons8_staff_96.png", 
             Title = "Staff", 
             TableName = "Staff", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "StaffId", Key=true, Type = "INT AUTO_INCREMENT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "StaffId", Key=true, Type = "INT AUTO_INCREMENT"},
                 new ColumnDefinitions { Name = "Name", Key=false, Type = "VARCHAR(100)" },
                 new ColumnDefinitions { Name = "Role", Key=false, Type = "VARCHAR(50)" },
                 new ColumnDefinitions { Name = "PhoneNumber", Key=false, Type = "VARCHAR(20)" },
@@ -22,11 +22,11 @@ public class MenuInitializer {
         },
         // Products Table
         new AppShellItem { 
-            Icon = "table_view_96dp.png", 
+            Icon = "icons8_products_100.png", 
             Title = "Products", 
             TableName = "Products", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "ProductId", Key=true, Type = "INT AUTO_INCREMENT", Constraint = "AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "ProductId", Key=true, Type = "INT AUTO_INCREMENT" },
                 new ColumnDefinitions { Name = "ProductName", Key=false, Type = "VARCHAR(100)" },
                 new ColumnDefinitions { Name = "Details", Key=false, Type = "VARCHAR(255)" },
                 new ColumnDefinitions { Name = "Gender", Key=false, Type = "VARCHAR(10)" },
@@ -37,17 +37,35 @@ public class MenuInitializer {
         
         // Sales Table
         new AppShellItem { 
-            Icon = "table_view_96dp.png", 
+            Icon = "icons8_sales_100.png", 
             Title = "Sales", 
             TableName = "Sales", 
             ColumnDefinitions = new List<ColumnDefinitions> {
-                new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT AUTO_INCREMENT", Constraint = "AUTO_INCREMENT" },
-                new ColumnDefinitions { Name = "ProductId", Key=false, Type = "INT", Constraint = "FOREIGN KEY REFERENCES Products(ProductId)" },
+                new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT AUTO_INCREMENT" },
+                new ColumnDefinitions { Name = "ProductId", Key=false, Type = "INT" },
                 new ColumnDefinitions { Name = "Qty", Key=false, Type = "INT" },
                 new ColumnDefinitions { Name = "Branch", Key=false, Type = "VARCHAR(50)" },
                 new ColumnDefinitions { Name = "Date", Key=false, Type = "DATE" },
             }
-        }
+        },
+        // Sales Table
+        // new AppShellItem { 
+        //     Icon = "table_view_96dp.png", 
+        //     Title = "TestTable", 
+        //     TableName = "TestTable12345", 
+        //     ColumnDefinitions = new List<ColumnDefinitions> {
+        //         new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT AUTO_INCREMENT" },
+        //         new ColumnDefinitions { Name = "ProductId", Key=false, Type = "INT" },
+        //         new ColumnDefinitions { Name = "Qty", Key=false, Type = "INT" },
+        //         new ColumnDefinitions { Name = "Branch", Key=false, Type = "VARCHAR(50)" },
+        //         new ColumnDefinitions { Name = "Date", Key=false, Type = "DATE" },
+        //     },
+        //     Constraints = new List<string>
+        //     {
+        //         "CONSTRAINT Fk_testTable FOREIGN KEY (ProductId) REFERENCES Products(ProductId)",
+        //         "CONSTRAINT unique_order UNIQUE (SaleId)"
+        //     }
+        // }
     };
 
     private record CreateTableRequest(
@@ -55,7 +73,8 @@ public class MenuInitializer {
     );
     private record TableSchema(
         String TableName,
-        List<ColumnDefinitions> ColumnDefinitions
+        List<ColumnDefinitions> ColumnDefinitions,
+        List<String>? Constraints
     );
 
     public static async void CreateTables()
@@ -66,7 +85,7 @@ public class MenuInitializer {
         var tableSchemas = new List<TableSchema>();
         foreach(var item in menuItems)
         {
-            var tableSchema = new TableSchema(item.TableName, item.ColumnDefinitions);
+            var tableSchema = new TableSchema(item.TableName, item.ColumnDefinitions, item.Constraints);
             Preferences.Remove(item.TableName);
             tableSchemas.Add(tableSchema);
         }

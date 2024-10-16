@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using OnboardingSystem.Authentication;
+using OnboardingSystem.Enums;
 using OnboardingSystem.Models;
 
 namespace OnboardingSystem.ViewModel;
@@ -12,6 +13,7 @@ namespace OnboardingSystem.ViewModel;
 public class ManagementViewModel : INotifyPropertyChanged
 {
     public ObservableCollection<Dictionary<String, String>> Rows { get; set; }
+    public ObservableCollection<String> OptionsList { get; set; }
     public event PropertyChangedEventHandler? PropertyChanged;
     private String _tableName = String.Empty;
     private int _page;
@@ -22,6 +24,19 @@ public class ManagementViewModel : INotifyPropertyChanged
         {
             _page = value;
             OnPropertyChanged(nameof(Page));
+        }
+    }
+    private string _selectedOption = CrudOperation.READ.ToString();
+    public string SelectedOption
+    {
+        get => _selectedOption;
+        set
+        {
+            if (_selectedOption != value)
+            {
+                _selectedOption = value;
+                OnPropertyChanged(nameof(SelectedOption));
+            }
         }
     }
     private int TotalPage { get; set; }
@@ -45,6 +60,15 @@ public class ManagementViewModel : INotifyPropertyChanged
         // Populate the collection with initial data
         Rows = new ObservableCollection<Dictionary<string, string>>();
         FetchData(GetSavedState());
+        // Populate the dropdown list with items
+        
+        OptionsList = new ObservableCollection<string>
+        {
+            CrudOperation.READ.ToString(),
+            CrudOperation.UPDATE.ToString(),
+            CrudOperation.DELETE.ToString(),
+            CrudOperation.CREATE.ToString()
+        };
     }
 
     public void FetchData(Dictionary<string, string> data, int page)
