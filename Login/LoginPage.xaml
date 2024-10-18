@@ -7,98 +7,6 @@
              Title=""
              Shell.NavBarIsVisible="False">
 
-    <ContentPage.Resources>
-        <Style x:Key="Login_Background" TargetType="BoxView">
-            <Setter Property="Color" Value="#303030" />
-        </Style>
-
-
-        <Style x:Key="Login_Image" TargetType="Image">
-            <Setter Property="Source" Value="racket.png" />
-            <Setter Property="Aspect" Value="AspectFit" />
-            <Setter Property="Margin" Value="100,0,0,0" />
-            <Setter Property="HorizontalOptions" Value="End" />
-        </Style>
-
-        <Style x:Key="Login_Separater" TargetType="Line">
-            <Setter Property="WidthRequest" Value="20" />
-            <Setter Property="HeightRequest" Value="400" />
-            <Setter Property="Y2" Value="380" />
-            <Setter Property="StrokeLineCap" Value="Round" />
-            <Setter Property="Stroke" Value="White" />
-            <Setter Property="StrokeThickness" Value="8" />
-        </Style>
-
-        <Style x:Key="Login_Form" TargetType="BoxView">
-            <Setter Property="Color" Value="Black" />
-            <Setter Property="CornerRadius" Value="30" />
-            <Setter Property="Opacity" Value="0.15" />
-        </Style>
-
-        <Style x:Key="Title" TargetType="Label">
-            <Setter Property="Text" Value="Welcome..." />
-            <Setter Property="FontSize" Value="30" />
-            <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,40" />
-        </Style>
-
-        <Style x:Key="Entry_Title" TargetType="Label">
-
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,20,0,0" />
-        </Style>
-
-        <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
-            <Setter Property="CornerRadius" Value="20" />
-        </Style>
-
-        <Style x:Key="Entry_Text" TargetType="Entry">
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Background" Value="#555555" />
-        </Style>
-
-        <Style x:Key="Forgot_Password" TargetType="Label">
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="TextDecorations" Value="Underline" />
-            <Setter Property="Margin" Value="0,10,0,0" />
-        </Style>
-
-        <Style x:Key="Login_Button" TargetType="Button">
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Background" Value="#7D24EE" />
-            <Setter Property="CornerRadius" Value="20" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
-            <Setter Property="Margin" Value="0,10,0,20" />
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <!-- Normal State -->
-                    <VisualStateGroup>
-                        <VisualState x:Name="Normal">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="#7D24EE" /> 
-                                <Setter Property="Scale" Value="1" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <!-- Hover / PointerOver State -->
-                        <VisualState x:Name="PointerOver">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="#9068F0" /> 
-                                <Setter Property="Scale" Value="1.05" /> 
-                            </VisualState.Setters>
-                        </VisualState>
-                        <!-- Pressed / Clicked State -->
-                        <VisualState x:Name="Pressed">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="#6530C4" /> 
-                                <Setter Property="Scale" Value="0.95" /> 
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
-    </ContentPage.Resources>
     <Grid>
         <ScrollView>
             <Grid>
@@ -107,19 +15,12 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width=".49*"/>
-                    <ColumnDefinition Width=".02*"/>
                     <ColumnDefinition Width=".49*"/>
                 </Grid.ColumnDefinitions>
 
-
-                <BoxView Style="{StaticResource Login_Background}" />
                 <Image Style="{StaticResource Login_Image}" />
 
-                <BoxView Style="{StaticResource Login_Background}" Grid.Column="1" />
-                <Line Style="{StaticResource Login_Separater}" Grid.Column="1" />
-
-                <BoxView Style="{StaticResource Login_Background}" Grid.Column="2" />
-                <Grid Grid.Column="2">
+                <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height=".2*"/>
                         <RowDefinition Height="*"/>
@@ -149,7 +50,7 @@
                             <ColumnDefinition Width=".05*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Style="{StaticResource Title}" Grid.Column="1" />
+                        <Label Text="Welcome..." Style="{StaticResource Title}" Grid.Column="1" />
 
                         <Label Text="Username" Grid.Row="1" Grid.Column="1" Style="{StaticResource Entry_Title}" />
 
