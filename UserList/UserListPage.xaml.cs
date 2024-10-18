@@ -7,21 +7,20 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using OnboardingSystem.Authentication;
+using PdfSharpCore;
 
 namespace OnboardingSystem
 {
 	public partial class UserListPage : ContentPage, IDisposable
 	{
-		private readonly IAuthenticationService _authService; //user authentication
-		private readonly HttpClient _httpClient; //database connection
+		private readonly IAuthenticationService _authService; // user authentication
+		private readonly HttpClient _httpClient; // database connection
 
-		public ObservableCollection<JsonObject> Items { get; private set; } //list of items for display
-		private ObservableCollection<JsonObject> _itemList; //paginated list of items from database
-		private ObservableCollection<JsonObject> _allList = []; //original list of items from database
+		private ObservableCollection<JsonObject> Items = new ObservableCollection<JsonObject>(); // list of items for display
+		private List<ObservableCollection<JsonObject>> _paginateItemList = new List<ObservableCollection<JsonObject>>(); // paginated list of items
+		private ObservableCollection<JsonObject> _allItemList = []; // original list of items
 
-		private int _currentPage = 1; //current page for pagination
-		private int _pageSize = 10; //number of items in a page
-		private int _totalPages; //total number of pages for pagination
+		private int _currentPage = 1; // current page for pagination
 
 		public UserListPage(IAuthenticationService authService)
 		{
@@ -30,8 +29,6 @@ namespace OnboardingSystem
 			_authService = authService;
 			_httpClient = new HttpClient { BaseAddress = new Uri(Constants.API_BASE_URL) };
 
-			Items = new ObservableCollection<JsonObject>();
-			_itemList = new ObservableCollection<JsonObject>();
 			BindingContext = this;
 		}
 
@@ -47,36 +44,20 @@ namespace OnboardingSystem
 				}
 			}
 		}
-		public int TotalPages
-		{
-			get => _totalPages;
-			set
-			{
-				if (_totalPages != value)
-				{
-					_totalPages = value;
-					OnPropertyChanged(nameof(TotalPages));
-				}
-			}
-		}
-
 
 		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
 
-			LoadingOverlay.IsVisible = true; //show loading indicator
-
-			await LoadData(); //load table items from database
-
-			LoadingOverlay.IsVisible = false; //remove loading indicator
+			await LoadData(); // load table items from database
 		}
 
 		private async Task LoadData()
 		{
+			LoadingOverlay.IsVisible = true; // show loading indicator
 			try
 			{
-				var token = await _authService.GetValidTokenAsync(); //get user token for role based access
+				var token = await _authService.GetValidTokenAsync(); // get user token for role based access
 				if (string.IsNullOrEmpty(token))
 				{
 					await DisplayAlert("Error", "Please log in to access this page.", "OK");
@@ -84,14 +65,14 @@ namespace OnboardingSystem
 					return;
 				}
 
-				var userList = await GetUserListAsync(token, _currentPage, _pageSize);
+				var userList = await GetUserListAsync(token); // get items from daatabase
 				if (userList != null)
 				{
-					UpdateItemsList(userList);
+					UpdateItemsList(userList); // for paginated list of items
+					UpdateAllItemsList(userList); // for search bar list of items
 					GenerateTable();
 
-					OnPropertyChanged(nameof(CurrentPage)); //update current page number
-					OnPropertyChanged(nameof(TotalPages)); //update total page number
+					OnPropertyChanged(nameof(CurrentPage)); // update current page number
 				}
 				else
 				{
@@ -100,89 +81,26 @@ namespace OnboardingSystem
 			}
 			catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
 			{
+				LoadingOverlay.IsVisible = false; // remove loading indicator
 				await DisplayAlert("Access Denied", "You do not have permission to view this page.", "OK");
 				await Shell.Current.GoToAsync("//DashboardPage"); // Or another appropriate page
 			}
 			catch (Exception ex)
 			{
+				LoadingOverlay.IsVisible = false; // remove loading indicator
 				await DisplayAlert("Error", $"Failed to load data: {ex.Message}", "OK");
 			}
+			LoadingOverlay.IsVisible = false; // remove loading indicator
 		}
 
-		private async Task<JsonArray> GetUserListAsync(string token, int page, int pageSize)
+		private async Task<JsonArray> GetUserListAsync(string token) // get all items from database
 		{
 			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-			// get all items for search bar
-			var response2 = await _httpClient.GetStringAsync($"{Constants.GET_USER_LIST_ENDPOINT}?all=true");
-			var allList = JsonNode.Parse(response2)?.AsArray();
-			UpdateAllItemsList(allList);
+			var response = await _httpClient.GetStringAsync($"{Constants.GET_USER_LIST_ENDPOINT}?all=true");
+			var allList = JsonNode.Parse(response)?.AsArray();
 
-			//get the data for current page pagination
-			var response = await _httpClient.GetStringAsync($"{Constants.GET_USER_LIST_ENDPOINT}?page={page}&pageSize={pageSize}");
-
-			var jsonResponse = JsonNode.Parse(response)?.AsObject();
-
-			if (jsonResponse != null)
-			{
-				// Extract the data from the response
-				_totalPages = jsonResponse["totalPage"]?.GetValue<int>() ?? 1;
-
-				// Extract the user list (Data) and return it
-				return jsonResponse["data"]?.AsArray();
-			}
-
-			return null;
-		}
-
-		private void UpdateItemsList(JsonArray userList) //update the list of paginated users
-		{
-			_itemList.Clear();
-			Items.Clear();
-			foreach (var item in userList)
-			{
-				_itemList.Add(item.AsObject());
-				Items.Add(item.AsObject());
-			}
-		}
-
-		private void UpdateAllItemsList(JsonArray allList) //update the list of all users
-		{
-			_allList.Clear();
-			foreach (var item in allList)
-			{
-				_allList.Add(item.AsObject());
-			}
-		}
-
-		private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
-		{
-			// Get the search text
-			string searchText = e.NewTextValue.ToLower();
-
-			// Clear the current Items collection
-			Items.Clear();
-
-
-			if (searchText != "") //if not empty searchbar, load all data for searching
-			{
-				// Filter the _allItems collection and add matching items to Items
-				foreach (var item in _allList)
-				{
-					// Assuming "Username", "FirstName", "LastName" are fields you want to search
-					if (item["username"]?.ToString().ToLower().Contains(searchText) == true ||
-						item["firstName"]?.ToString().ToLower().Contains(searchText) == true ||
-						item["lastName"]?.ToString().ToLower().Contains(searchText) == true)
-					{
-						Items.Add(item); // Add matching item to filtered Items collection
-					}
-				}
-			}
-			else //if empty searchbar, load the pagination data
-			{
-				LoadData();
-			}
-
+			return allList;
 		}
 
 		private async void GenerateTable()
@@ -253,7 +171,7 @@ namespace OnboardingSystem
 			});
 		}
 
-		private async void OnAddUserClicked(object sender, EventArgs e)
+		private async void OnAddUserClicked(object sender, EventArgs e) // add user button clicked
 		{
 			var popup = new AddUserPopup();
 
@@ -266,7 +184,7 @@ namespace OnboardingSystem
 			}
 		}
 
-		private async void OnDeleteUserClicked(object sender, EventArgs e)
+		private async void OnDeleteUserClicked(object sender, EventArgs e) // delete user button clicked
 		{
 			string delete = await DisplayPromptAsync("Delete User", "Enter user id:");
 
@@ -284,7 +202,7 @@ namespace OnboardingSystem
 			}
 		}
 
-		private async Task RegisterUserAsync(string username, string firstName, string lastName, string phone, string role, string password)
+		private async Task RegisterUserAsync(string username, string firstName, string lastName, string phone, string role, string password) // add user
 		{
 			var newUser = new
 			{
@@ -316,7 +234,7 @@ namespace OnboardingSystem
 			}
 		}
 
-		private async Task DeleteUserAsync(int userId)
+		private async Task DeleteUserAsync(int userId) // delete user
 		{
 			try
 			{
@@ -338,20 +256,104 @@ namespace OnboardingSystem
 			}
 		}
 
-		private void NextButton_Clicked(object? sender, EventArgs e)
+		private void UpdateItemsList(JsonArray userList) // update the list of paginated items
 		{
-			if (_currentPage < _totalPages)
+			_paginateItemList.Clear();
+			Items.Clear();
+
+			List<JsonObject> currentBatch = new List<JsonObject>();
+
+			foreach (var item in userList)
 			{
-				_currentPage++;
-				LoadData(); // Load the next page
+				currentBatch.Add(item.AsObject());
+
+				// When we have 10 items, add them as a batch to _itemList
+				if (currentBatch.Count == 10)
+				{
+					_paginateItemList.Add(new ObservableCollection<JsonObject>(currentBatch));
+					currentBatch.Clear();
+				}
+			}
+
+			// If there are any remaining items less than 10, add them as a separate batch
+			if (currentBatch.Count > 0)
+			{
+				_paginateItemList.Add(new ObservableCollection<JsonObject>(currentBatch));
+			}
+
+			// Load a page of paginated items
+			LoadPage(_currentPage);
+		}
+
+		private void LoadPage(int pageIndex) // load a page of paginated items
+		{
+			int zeroIndex = pageIndex - 1;
+			if (zeroIndex < 0 || zeroIndex >= _paginateItemList.Count)
+			{
+				return; // Invalid page index, do nothing
+			}
+
+			Items.Clear();
+
+			foreach (var items in _paginateItemList[zeroIndex])
+			{
+				Items.Add(items.AsObject()); // add items for display
+			}
+			_currentPage = pageIndex;
+			OnPropertyChanged(nameof(CurrentPage));
+		}
+
+		private void UpdateAllItemsList(JsonArray allList) // update the list of all items
+		{
+			_allItemList.Clear();
+			foreach (var item in allList)
+			{
+				_allItemList.Add(item.AsObject());
 			}
 		}
-		private void PrevButton_Clicked(object? sender, EventArgs e)
+
+		private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e) // search bar, triggers when text inside the search bar changes
+		{
+			// Get the search text
+			string searchText = e.NewTextValue.ToLower();
+
+			// Clear the current Items collection
+			Items.Clear();
+
+
+			if (searchText != "") // if not empty searchbar, load all data for searching
+			{
+				// Filter the _allItems collection and add matching items to Items
+				foreach (var item in _allItemList)
+				{
+					// Assuming "Username", "FirstName", "LastName" are fields you want to search
+					if (item["username"]?.ToString().ToLower().Contains(searchText) == true ||
+						item["firstName"]?.ToString().ToLower().Contains(searchText) == true ||
+						item["lastName"]?.ToString().ToLower().Contains(searchText) == true)
+					{
+						Items.Add(item); // Add matching item to filtered Items collection
+					}
+				}
+			}
+			else // if empty searchbar, load the pagination data
+			{
+				LoadPage(_currentPage);
+			}
+
+		}
+
+		private void NextButton_Clicked(object? sender, EventArgs e) // clicked next page
+		{
+			if (_currentPage < _paginateItemList.Count)
+			{
+				LoadPage(_currentPage + 1);
+			}
+		}
+		private void PrevButton_Clicked(object? sender, EventArgs e) // clicked previous page
 		{
 			if (_currentPage > 1)
 			{
-				_currentPage--;
-				LoadData(); // Load the previous page
+				LoadPage(_currentPage - 1);
 			}
 		}
 
