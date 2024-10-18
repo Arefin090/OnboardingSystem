@@ -2,88 +2,47 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                x:Class="OnboardingSystem.AddUserPopup"
-               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:toolkit="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
                CanBeDismissedByTappingOutsideOfPopup="False"
-               Color="Transparent"
-               Size="400, 640">
+               Color="Transparent">
 
-    <ContentPage.Resources>
-        <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
-            <!--Entry Bar Label-->
-            <Setter Property="CornerRadius" Value="20" />
-        </Style>
-    </ContentPage.Resources>
-
-    <Border BackgroundColor="LightGray" StrokeThickness="0">
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="20"/>
-        </Border.StrokeShape>
+    <Frame Padding="0" HasShadow="True" >
         <ScrollView>
-            <VerticalStackLayout Padding="20" Spacing="10">
+            <VerticalStackLayout WidthRequest="800" Padding="40, 20, 40, 20" Spacing="10" >
                 <!-- Form Fields for Adding a User -->
-                <Label Text="Add User" TextColor="Black" HorizontalOptions="Center"/>
+                <Label Text="Add User" HorizontalOptions="Center"/>
 
-                <Label Text="Username:" TextColor="Black"/>
-                <Border>
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="UsernameEntry" Placeholder="Username" TextColor="Black" />
-                </Border>
+                <Label Text="Username:"/>
+                <Entry x:Name="UsernameEntry" Placeholder="Username"/>
 
-                <Label Text="First Name:" TextColor="Black"/>
-                <Border>
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="FirstNameEntry" Placeholder="First Name" TextColor="Black" />
-                </Border>
+                <Label Text="First Name:"/>
+                <Entry x:Name="FirstNameEntry" Placeholder="First Name"/>
 
-                <Label Text="Last Name:" TextColor="Black"/>
-                <Border>
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="LastNameEntry" Placeholder="Last Name" TextColor="Black" />
-                </Border>
+                <Label Text="Last Name:"/>
+                <Entry x:Name="LastNameEntry" Placeholder="Last Name"/>
 
-                <Label Text="Phone:" TextColor="Black"/>
-                <Border>
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="PhoneEntry" Placeholder="Phone Number" Keyboard="Telephone" TextColor="Black" />
-                </Border>
+                <Label Text="Phone:"/>
+                <Entry x:Name="PhoneEntry" Placeholder="Phone Number" Keyboard="Telephone"/>
 
-                <Label Text="Select Role:" TextColor="Black"/>
-                <Border>
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
-                    <Picker x:Name="RolePicker" TextColor="Black" >
-                        <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>Admin</x:String>
-                                <x:String>Staff</x:String>
-                            </x:Array>
-                        </Picker.ItemsSource>
-                    </Picker>
-                </Border>
+                <Label Text="Select Role:"/>
+                <Picker x:Name="RolePicker" BackgroundColor="LightGray">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Admin</x:String>
+                            <x:String>Staff</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
 
-                <Label Text="Password:" TextColor="Black"/>
-                <Border>
-                    <Border.StrokeShape>
-                        <RoundRectangle Style="{StaticResource Entry_Shape}" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" TextColor="Black" />
-                </Border>
+                <Label Text="Password:"/>
+                <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True"/>
 
                 <!-- Submit Button -->
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                    <Button Text="Submit" Clicked="OnSubmitClicked" CornerRadius="20"/>
-                    <Button Text="Cancel" Clicked="OnCancelClicked" CornerRadius="20"/>
+                    <Button Text="Submit" Clicked="OnSubmitClicked" Style="{StaticResource Interactive_Button}"/>
+                    <Button Text="Cancel" Clicked="OnCancelClicked" Style="{StaticResource Interactive_Button}"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
-    </Border>
+    </Frame>
 </toolkit:Popup>
