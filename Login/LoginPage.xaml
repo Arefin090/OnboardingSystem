@@ -7,9 +7,6 @@
              Title=""
              Shell.NavBarIsVisible="False">
 
-    <ContentPage.Resources>
-        
-    </ContentPage.Resources>
     <Grid>
         <ScrollView>
             <Grid>
