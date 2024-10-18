@@ -1,186 +1,139 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:material="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
              x:Class="OnboardingSystem.ProfilePage"
              Title=""
              Shell.NavBarIsVisible="False">
 
-    <ContentPage.Resources>
-        <!-- Updated the style to use Material components correctly -->
-        <Style x:Key="MaterialEntryStyle" TargetType="Entry">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="BackgroundColor" Value="White" />
-            <Setter Property="TextColor" Value="Black" />
-        </Style>
-    
-        <!-- Style for the label in the profile page -->
-        <Style x:Key="ProfileLabelStyle" TargetType="Label">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,20,0,10" />
-        </Style>
-    
-        <Style x:Key="Entry_Shape" TargetType="RoundRectangle">
-            <!--Entry Bar Label-->
-            <Setter Property="CornerRadius" Value="20" />
-        </Style>
-    </ContentPage.Resources>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Grid HorizontalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".6*"/>
+                    <ColumnDefinition Width=".4*"/>
+                </Grid.ColumnDefinitions>
 
-    <Grid>
-        <ScrollView>
-            <!-- Title for the page with pen icon -->
-            <VerticalStackLayout>
-                <Grid HorizontalOptions="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".6*"/> <!--column 1-->
-                        <ColumnDefinition Width=".4*"/> <!--column 3-->
-                    </Grid.ColumnDefinitions>
+                <Label
+                    Text="Edit Profile"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                    HorizontalOptions="End"
+                    Margin="10,20"
+                    Grid.Row="0"
+                    Grid.Column="0"/>
+                
+                <ImageButton
+                    x:Name="EditButton"
+                    Style="{StaticResource EditIconButtonStyle}"
+                    Source="edit_icon.png"
+                    Clicked="OnEditClicked"
+                    Margin="10,20"
+                    Grid.Row="0"
+                    Grid.Column="1" />  
+            </Grid>
 
-                    <Label
-                        Text="Edit Profile"
-                        FontSize="30"
-                        FontAttributes="Bold"
-                        TextColor="White"
-                        HorizontalOptions="End"
-                        Margin="10,20"
-                        Grid.Row="0"
-                        Grid.Column="0"/>
-                    <!-- Pen Icon Button -->
-                    <ImageButton
-                        Source="edit_icon.png"
-                        Clicked="OnEditClicked"
-                        HeightRequest="5"
-                        BackgroundColor="White"
-                        Padding="5"
-                        CornerRadius="10"
-                        HorizontalOptions="Start"
-                        Margin="10,20"
-                        Grid.Row="0"
-                        Grid.Column="1"/>
-                </Grid>
+            <Image
+                Source="user_icon.png"
+                WidthRequest="100"
+                HeightRequest="100"
+                HorizontalOptions="Center"/>
 
-                <Image
-                    Source="user_icon.png"
-                    WidthRequest="100"
-                    HeightRequest="100"
-                    HorizontalOptions="Center"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".2*"/>
+                    <ColumnDefinition Width=".5*"/>
+                    <ColumnDefinition Width=".2*"/>
+                    <ColumnDefinition Width=".5*"/>
+                    <ColumnDefinition Width=".2*"/>
+                </Grid.ColumnDefinitions>
 
+                <Label Text="Username" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="1" />
+                <Border MaximumWidthRequest="400" Grid.Row="1" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource EntryShapeStyle}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        x:Name="UsernameEntry"
+                        Text="{Binding Username}"
+                        Style="{StaticResource DisabledEntryStyle}"
+                        IsReadOnly="True" />
+                </Border>
 
-                <Grid> <!-- Define rows and columns for compact field placement -->
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" /> <!-- Label Row for Username and First Name-->
-                        <RowDefinition Height="Auto" /> <!-- Entry Row for Username and First Name-->
-                        <RowDefinition Height="Auto" /> <!-- Label Row for Last Name and Phone -->
-                        <RowDefinition Height="Auto" /> <!-- Entry Row for Last Name and Phone -->
-                        <RowDefinition Height="Auto" /> <!-- Label Row for Role -->
-                        <RowDefinition Height="Auto" /> <!-- Entry Row for Role -->
-                        <RowDefinition Height="Auto" /> <!-- Row for Save Button -->
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width=".2*"/> <!--column left-->
-                        <ColumnDefinition Width=".5*"/> <!--column 1-->
-                        <ColumnDefinition Width=".2*"/> <!--column middle-->
-                        <ColumnDefinition Width=".5*"/> <!--column 2-->
-                        <ColumnDefinition Width=".2*"/> <!--column right-->
-                    </Grid.ColumnDefinitions>
+                <Label Text="First Name" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="3" />
+                <Border MaximumWidthRequest="400" Grid.Row="1" Grid.Column="3">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource EntryShapeStyle}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        x:Name="FirstNameEntry"
+                        Text="{Binding FirstName}"
+                        Style="{StaticResource MaterialEntryStyle}"
+                        IsEnabled="False" />
+                </Border>
 
-                    <!-- Username Label -->
-                    <Label Text="Username" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="1" />
-                    <!-- Username Entry -->
-                    <Border MaximumWidthRequest="400" Grid.Row="1" Grid.Column="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle  />
-                        </Border.StrokeShape>
-                        <Entry
-                            x:Name="UsernameEntry"
-                            Text="{Binding Username}"
-                            IsReadOnly="True" />
-                    </Border>
+                <Label Text="Last Name" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="2" Grid.Column="1" />
+                <Border MaximumWidthRequest="400" Grid.Row="3" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource EntryShapeStyle}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        x:Name="LastNameEntry"
+                        Text="{Binding LastName}"
+                        Style="{StaticResource MaterialEntryStyle}"
+                        IsEnabled="False" />
+                </Border>
 
-                    <!-- First Name Label -->
-                    <Label Text="First Name" MaximumWidthRequest="400" Grid.Row="0" Grid.Column="3" />
-                    <!-- First Name Entry -->
-                    <Border MaximumWidthRequest="400" Grid.Row="1" Grid.Column="3">
-                        <Border.StrokeShape>
-                            <RoundRectangle />
-                        </Border.StrokeShape>
-                        <Entry
-                            x:Name="FirstNameEntry"
-                            Text="{Binding FirstName}"
-                            
-                            IsEnabled="False" />
-                    </Border>
+                <Label Text="Phone" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.Row="2" Grid.Column="3" />
+                <Border MaximumWidthRequest="400" Grid.Row="3" Grid.Column="3">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource EntryShapeStyle}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        x:Name="PhoneEntry"
+                        Text="{Binding Phone}"
+                        Style="{StaticResource MaterialEntryStyle}"
+                        IsEnabled="False"
+                        Keyboard="Telephone" />
+                </Border>
 
-                    <!-- Last Name Label -->
-                    <Label Text="Last Name" MaximumWidthRequest="400" Grid.Row="2" Grid.Column="1" />
-                    <!-- Last Name Entry -->
-                    <Border MaximumWidthRequest="400" Grid.Row="3" Grid.Column="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle />
-                        </Border.StrokeShape>
-                        <Entry
-                            x:Name="LastNameEntry"
-                            Text="{Binding LastName}"
-                            
-                            IsEnabled="False" />
-                    </Border>
+                <Label Text="Role" Style="{StaticResource ProfileLabelStyle}" MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="1" />
+                <Border MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="5" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle Style="{StaticResource EntryShapeStyle}" />
+                    </Border.StrokeShape>
+                    <Entry
+                        x:Name="RoleEntry"
+                        Text="{Binding Role}"
+                        Style="{StaticResource DisabledEntryStyle}"
+                        IsReadOnly="True" />
+                </Border>
 
-                    <!-- Phone Label -->
-                    <Label Text="Phone"  MaximumWidthRequest="400" Grid.Row="2" Grid.Column="3" />
-                    <!-- Phone Entry -->
-                    <Border MaximumWidthRequest="400" Grid.Row="3" Grid.Column="3">
-                        <Border.StrokeShape>
-                            <RoundRectangle  />
-                        </Border.StrokeShape>
-                        <Entry
-                            x:Name="PhoneEntry"
-                            Text="{Binding Phone}"
-                            IsEnabled="False"
-                            Keyboard="Telephone" />
-                    </Border>
-
-                    <!-- Role Label -->
-                    <Label Text="Role" MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="4" Grid.Column="1" />
-                    <!-- Role Entry -->
-                    <Border MaximumWidthRequest="400" Grid.ColumnSpan="3" Grid.Row="5" Grid.Column="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle/>
-                        </Border.StrokeShape>
-                        <Entry
-                            x:Name="RoleEntry"
-                            Text="{Binding Role}"
-                            IsReadOnly="True"
-                            IsEnabled="False"
-                            
-                            />
-                    </Border>
-
-                    <!-- Save Button -->
-                    <Button
-                        x:Name="SaveButton"
-                        Text="Save Changes"
-                        Command="{Binding SaveCommand}"
-                        Clicked="OnSaveClicked"
-                        HorizontalOptions="Center"
-                        Margin="0,20"
-                        IsVisible="False"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="6"
-                        Grid.Column="1"
-                        Style="{StaticResource Interactive_Button}"/>
-                </Grid>
-            </VerticalStackLayout>
-        </ScrollView>
-
-        <!-- Loading Overlay -->
-        <Grid x:Name="LoadingOverlay" BackgroundColor="Transparent" IsVisible="{Binding IsLoading}">
-            <BoxView BackgroundColor="#80000000" /> <!-- Semi-transparent background -->
-            <ActivityIndicator IsRunning="True" VerticalOptions="Center" HorizontalOptions="Center" />
-        </Grid>
-    </Grid>
+                <Button
+                    x:Name="SaveButton"
+                    Text="Save Changes"
+                    Command="{Binding SaveCommand}"
+                    Clicked="OnSaveClicked"
+                    HorizontalOptions="Center"
+                    Margin="0,20"
+                    IsVisible="False"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="6"
+                    Grid.Column="1"/>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -12,6 +12,7 @@ namespace OnboardingSystem.ViewModels
         private string _password = "";
         private bool _hasError;
         private string _errorMessage = "";
+        private bool _isLoading;
 
         public string Username
         {
@@ -65,19 +66,38 @@ namespace OnboardingSystem.ViewModels
             }
         }
 
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                if (_isLoading != value)
+                {
+                    _isLoading = value;
+                    OnPropertyChanged(nameof(IsLoading));
+                }
+            }
+        }
+
         public ICommand LoginCommand { get; }
 
-       public LoginViewModel()
-    {
-        _authService = ServiceHelper.GetService<IAuthenticationService>();
-        LoginCommand = new Command(OnLoginClicked);
-    }
+        public LoginViewModel()
+        {
+            _authService = ServiceHelper.GetService<IAuthenticationService>();
+            LoginCommand = new Command(OnLoginClicked);
+        }
 
         private async void OnLoginClicked()
         {
+            if (IsLoading) return; // Prevent multiple login attempts
+
             try
             {
+                IsLoading = true;
                 var (isValid, errorMessage) = await _authService.ValidateUserAsync(Username, Password);
+
+                // Hide loading indicator immediately after receiving response
+                IsLoading = false;
 
                 if (isValid)
                 {
@@ -85,12 +105,13 @@ namespace OnboardingSystem.ViewModels
                 }
                 else
                 {
-                    await ShowErrorAsync(errorMessage);
+                    ShowError(errorMessage);
                 }
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync(Constants.GENERIC_ERROR);
+                IsLoading = false;
+                ShowError(Constants.GENERIC_ERROR);
             }
         }
 
@@ -102,13 +123,16 @@ namespace OnboardingSystem.ViewModels
             await Shell.Current.GoToAsync($"//{nameof(DashboardPage)}");
         }
 
-        private async Task ShowErrorAsync(string message)
+        private void ShowError(string message)
         {
             HasError = true;
             ErrorMessage = message;
-            await Task.Delay(4000);
-            HasError = false;
-            ErrorMessage = string.Empty;
+            Device.StartTimer(TimeSpan.FromSeconds(4), () =>
+            {
+                HasError = false;
+                ErrorMessage = string.Empty;
+                return false; // Don't repeat the timer
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
