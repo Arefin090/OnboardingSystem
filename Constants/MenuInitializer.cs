@@ -48,22 +48,48 @@ public class MenuInitializer {
                 new ColumnDefinitions { Name = "Date", Key=false, Type = "DATE" },
             }
         },
-        // Sales Table
+        // // Sales Table
         // new AppShellItem { 
-        //     Icon = "table_view_96dp.png", 
-        //     Title = "TestTable", 
-        //     TableName = "TestTable12345", 
+        //     Icon = "icons8_staff_96.png", 
+        //     Title = "Student", 
+        //     TableName = "student", 
         //     ColumnDefinitions = new List<ColumnDefinitions> {
-        //         new ColumnDefinitions { Name = "SaleId", Key=true, Type = "INT AUTO_INCREMENT" },
-        //         new ColumnDefinitions { Name = "ProductId", Key=false, Type = "INT" },
-        //         new ColumnDefinitions { Name = "Qty", Key=false, Type = "INT" },
-        //         new ColumnDefinitions { Name = "Branch", Key=false, Type = "VARCHAR(50)" },
+        //         new ColumnDefinitions { Name = "StudentId", Key=true, Type = "INT AUTO_INCREMENT" },
+        //         new ColumnDefinitions { Name = "Firstname", Key=false, Type = "VARCHAR(50)" },
+        //         new ColumnDefinitions { Name = "Lastname", Key=false, Type = "VARCHAR(50)" },
+        //         new ColumnDefinitions { Name = "Age", Key=false, Type = "INT" },
+        //         new ColumnDefinitions { Name = "Gender", Key=false, Type = "VARCHAR(10)" },
+        //         new ColumnDefinitions { Name = "Background", Key=false, Type = "VARCHAR(50)" },
+        //     },
+        // },
+        // new AppShellItem { 
+        //     Icon = "icons8_staff_96.png", 
+        //     Title = "Teacher", 
+        //     TableName = "teacher", 
+        //     ColumnDefinitions = new List<ColumnDefinitions> {
+        //         new ColumnDefinitions { Name = "TeacherId", Key=true, Type = "INT AUTO_INCREMENT" },
+        //         new ColumnDefinitions { Name = "Firstname", Key=false, Type = "VARCHAR(50)" },
+        //         new ColumnDefinitions { Name = "Lastname", Key=false, Type = "VARCHAR(50)" },
+        //         new ColumnDefinitions { Name = "Age", Key=false, Type = "INT" },
+        //         new ColumnDefinitions { Name = "Gender", Key=false, Type = "VARCHAR(10)" },
+        //         new ColumnDefinitions { Name = "Background", Key=false, Type = "VARCHAR(50)" },
+        //     },
+        // },
+        // new AppShellItem { 
+        //     Icon = "icons8_sales_100.png", 
+        //     Title = "Payment", 
+        //     TableName = "payment", 
+        //     ColumnDefinitions = new List<ColumnDefinitions> {
+        //         new ColumnDefinitions { Name = "PaymentId", Key=true, Type = "INT AUTO_INCREMENT" },
+        //         new ColumnDefinitions { Name = "Amount", Key=false, Type = "INT" },
+        //         new ColumnDefinitions { Name = "StudentId", Key=false, Type = "INT" },
+        //         new ColumnDefinitions { Name = "Description", Key=false, Type = "VARCHAR(255)" },
         //         new ColumnDefinitions { Name = "Date", Key=false, Type = "DATE" },
         //     },
         //     Constraints = new List<string>
         //     {
-        //         "CONSTRAINT Fk_testTable FOREIGN KEY (ProductId) REFERENCES Products(ProductId)",
-        //         "CONSTRAINT unique_order UNIQUE (SaleId)"
+        //         "CONSTRAINT Fk_studentId FOREIGN KEY (StudentId) REFERENCES student(StudentId)",
+        //         "CONSTRAINT unique_order UNIQUE (PaymentId)"
         //     }
         // }
     };
