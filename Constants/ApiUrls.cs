@@ -15,6 +15,12 @@ namespace OnboardingSystem
 
         // API Endpoints FOR DASHBOARD
         public const string DASHBOARD_ENDPOINT = "/api/Management/aggregate-chart";
+        
+        // API Endpoints FOR DYNAMIC INVENTORY MANAGEMENT
+        public const string INVENTORY_MANAGEMENT_BASE_ENDPOINT = "/api/Management";
+        public const string GET_INVENTORY_ENDPOINT = $"{INVENTORY_MANAGEMENT_BASE_ENDPOINT}/get-data";
+        // Endpoint used for delete or update numerous inventory
+        public const string INVENTORY_MANAGEMENT_BATCH_ENDPOINT = $"{INVENTORY_MANAGEMENT_BASE_ENDPOINT}/batch"; 
 
 		// Local Storage Keys
 		public const string ACCESS_TOKEN_KEY = "access_token";

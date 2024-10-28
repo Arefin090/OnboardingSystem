@@ -16,6 +16,7 @@ public class ManagementViewModel : INotifyPropertyChanged
     public ObservableCollection<String> OptionsList { get; set; }
     public event PropertyChangedEventHandler? PropertyChanged;
     private String _tableName = String.Empty;
+    // Page of the content
     private int _page;
     public int Page
     {
@@ -88,7 +89,7 @@ public class ManagementViewModel : INotifyPropertyChanged
             // Perform the POST request
             IsLoading = true;
             var response =
-                await client.PostAsJsonAsync($"/api/Management/get-data?table={_tableName}&Page={Page - 1}&PageSize=15",
+                await client.PostAsJsonAsync($"{Constants.GET_INVENTORY_ENDPOINT}?table={_tableName}&Page={Page - 1}&PageSize=15",
                     requestData);
 
             // Ensure the response was successful
@@ -136,12 +137,14 @@ public class ManagementViewModel : INotifyPropertyChanged
         }
     }
 
+    // Reset the page
     public void ResetPage()
     {
         Page = 1;
         FetchData(new Dictionary<string, string>());
     }
 
+    // Go to next page
     public void NextPage()
     {
         if (Page > TotalPage - 1) return;
@@ -150,6 +153,7 @@ public class ManagementViewModel : INotifyPropertyChanged
         FetchData(GetSavedState());
     }
 
+    /* Get saved state if it exists */
     private Dictionary<string, string> GetSavedState()
     {
         // Retrieve and deserialize from Preferences
@@ -164,6 +168,7 @@ public class ManagementViewModel : INotifyPropertyChanged
         return savedState;
     }
 
+    /* Go to the previous page */
     public void PrevPage()
     {
         if(Page == 1) return;
