@@ -127,9 +127,13 @@ public class MenuInitializer {
             }
             else
             {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
-                throw new Exception("Invalid array for mat: Could not initialize any tables");
+                // The it is a bad request then throw exception fo bad array initializer
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
+                    throw new Exception("Invalid array for mat: Could not initialize any tables");   
+                }
             }
         }
         catch (HttpRequestException ex)

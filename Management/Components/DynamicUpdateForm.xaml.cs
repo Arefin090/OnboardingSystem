@@ -185,18 +185,19 @@ public partial class DynamicUpdateForm : Popup
         // Read the response body as a string
         try
         {
-            var response = await client.PostAsJsonAsync($"/api/Management?table={_tableName}", requestData);
+            var response = await client.PostAsJsonAsync($"{Constants.INVENTORY_MANAGEMENT_BASE_ENDPOINT}?table={_tableName}", requestData);
             var responseBody = await response.Content.ReadAsStringAsync();
             var res = JsonSerializer.Deserialize<Dictionary<String, object>>(responseBody);
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-
+                    // Display success alert
                     Application.Current?.MainPage?.DisplayAlert("Insert Success", res?["message"].ToString(), "OK");
                     _viewModel.FetchData(new Dictionary<string, string>());
                     Close();
                     break;
                 case HttpStatusCode.BadRequest:
+                    // Display the error if bad request
                     Application.Current?.MainPage?.DisplayAlert("Insert Error", res?["message"].ToString(), "OK");
                     break;
             } 
@@ -209,7 +210,7 @@ public partial class DynamicUpdateForm : Popup
         }
         catch (Exception ex)
         {
-            Application.Current.MainPage.DisplayAlert("Insert Error", ex.Message, "OK");
+            Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
         }
         finally
         {
@@ -235,7 +236,7 @@ public partial class DynamicUpdateForm : Popup
                 { "x-ms-version", "2013-06-01" },
                 { "Authorization", $"Bearer {token}" }
             },
-            RequestUri = new Uri($"/api/Management/batch?table={_tableName}", UriKind.Relative),
+            RequestUri = new Uri($"{Constants.INVENTORY_MANAGEMENT_BATCH_ENDPOINT}?table={_tableName}", UriKind.Relative),
             Content = JsonContent.Create(requestData) // Set the JSON content here
         };
         try
@@ -247,6 +248,7 @@ public partial class DynamicUpdateForm : Popup
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    // Pop up 
                     var res = JsonSerializer.Deserialize<Dictionary<String, object>>(responseBody);
                     Application.Current?.MainPage?.DisplayAlert("Delete Success", res?["message"].ToString(), "OK");
                     _viewModel.FetchData(new Dictionary<string, string>());
@@ -265,7 +267,7 @@ public partial class DynamicUpdateForm : Popup
         }
         catch (Exception ex)
         {
-            Application.Current.MainPage.DisplayAlert("Insert Error", ex.Message, "OK");
+            Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
         }
         finally
         {
@@ -283,6 +285,7 @@ public partial class DynamicUpdateForm : Popup
         // Create the Update request with a body
         // Retrieve the token securely
         var token = await _authenticationService.GetValidTokenAsync();
+        // Configure HTTP request
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
@@ -291,7 +294,7 @@ public partial class DynamicUpdateForm : Popup
                 { "x-ms-version", "2013-06-01" },
                 { "Authorization", $"Bearer {token}" }
             },
-            RequestUri = new Uri($"/api/Management/batch?table={_tableName}", UriKind.Relative),
+            RequestUri = new Uri($"{Constants.INVENTORY_MANAGEMENT_BATCH_ENDPOINT}?table={_tableName}", UriKind.Relative),
             Content = JsonContent.Create(new { where = whereData, updatedField = updateData }) 
         };
         try
@@ -304,12 +307,13 @@ public partial class DynamicUpdateForm : Popup
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    
-                    Application.Current?.MainPage?.DisplayAlert("Delete Success", res?["message"].ToString(), "OK");
+                    // Pop up the alert box for the success
+                    Application.Current?.MainPage?.DisplayAlert("Update Success", res?["message"].ToString(), "OK");
                     _viewModel.FetchData(new Dictionary<string, string>());
                     Close();
                     break;
                 case HttpStatusCode.BadRequest:
+                    // If bad request then display the error
                     Application.Current?.MainPage?.DisplayAlert("Update Error", res["message"].ToString(), "OK");
                     break;
             };
@@ -322,7 +326,7 @@ public partial class DynamicUpdateForm : Popup
         }
         catch (Exception ex)
         {
-            Application.Current.MainPage.DisplayAlert("Insert Error", ex.Message, "OK");
+            Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
         }
         finally
         {
@@ -330,6 +334,7 @@ public partial class DynamicUpdateForm : Popup
         }
     }
 
+    /* Handles the form submission based on the operation of the user */
     private void OnSubmitClicked(object sender, EventArgs e)
     {
         switch (_crudOperation)
@@ -344,6 +349,7 @@ public partial class DynamicUpdateForm : Popup
                 Update();
                 break;
             case CrudOperation.READ:
+                // IF the operation is READ --> Reset the page and fetch the data again
                 _viewModel.Page = 1;
                 _viewModel.FetchData(RetrieveEntryData());
                 Close();
